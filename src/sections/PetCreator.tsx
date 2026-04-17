@@ -121,17 +121,17 @@ export function PetCreator({ allPetTypes, students, onBatchAssignPet }: PetCreat
   const [assignNames, setAssignNames] = useState('');
 
   const eggTypes: { type: PokemonType; label: string; preview: string }[] = [
-    { type: 'grass', label: '🟢 草属性', preview: '/pokemon/egg_grass.svg' },
-    { type: 'fire', label: '🔴 火属性', preview: '/pokemon/egg_fire.svg' },
-    { type: 'water', label: '🔵 水属性', preview: '/pokemon/egg_water.svg' },
-    { type: 'bug', label: '🐛 虫属性', preview: '/pokemon/egg_bug.svg' },
-    { type: 'flying', label: '🟣 飞行属性', preview: '/pokemon/egg_flying.svg' },
-    { type: 'normal', label: '🟠 普通属性', preview: '/pokemon/egg_normal.svg' },
-    { type: 'electric', label: '⚡ 电属性', preview: '/pokemon/egg_electric.svg' },
-    { type: 'ice', label: '❄️ 冰属性', preview: '/pokemon/egg_ice.svg' },
-    { type: 'fighting', label: '👊 格斗属性', preview: '/pokemon/egg_fighting.svg' },
-    { type: 'ghost', label: '👻 幽灵属性', preview: '/pokemon/egg_ghost.svg' },
-    { type: 'rock', label: '🪨 岩石属性', preview: '/pokemon/egg_rock.svg' },
+    { type: 'grass', label: '🟢 草属性', preview: './pokemon/egg_grass.svg' },
+    { type: 'fire', label: '🔴 火属性', preview: './pokemon/egg_fire.svg' },
+    { type: 'water', label: '🔵 水属性', preview: './pokemon/egg_water.svg' },
+    { type: 'bug', label: '🐛 虫属性', preview: './pokemon/egg_bug.svg' },
+    { type: 'flying', label: '🟣 飞行属性', preview: './pokemon/egg_flying.svg' },
+    { type: 'normal', label: '🟠 普通属性', preview: './pokemon/egg_normal.svg' },
+    { type: 'electric', label: '⚡ 电属性', preview: './pokemon/egg_electric.svg' },
+    { type: 'ice', label: '❄️ 冰属性', preview: './pokemon/egg_ice.svg' },
+    { type: 'fighting', label: '👊 格斗属性', preview: './pokemon/egg_fighting.svg' },
+    { type: 'ghost', label: '👻 幽灵属性', preview: './pokemon/egg_ghost.svg' },
+    { type: 'rock', label: '🪨 岩石属性', preview: './pokemon/egg_rock.svg' },
     { type: 'dragon', label: '🐉 龙属性', preview: '/pokemon/egg_dragon.svg' },
   ];
 
