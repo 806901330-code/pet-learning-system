@@ -207,11 +207,11 @@ export function getNextStageExp(experience: number): number | null {
 // 获取宠物图片路径
 export function getPetImagePath(petId: string, stage: PetStage, pokemonType: PokemonType, petType?: PetType): string {
   if (stage === 'egg') {
-    return `/pokemon/egg_${pokemonType}.svg`;
+    return `./pokemon/egg_${pokemonType}.svg`;
   }
   // 如果是自定义宠物且有对应阶段的图片
   if (petType?.isCustom && petType.customImages?.[stage as 'baby' | 'teen' | 'adult']) {
     return petType.customImages[stage as 'baby' | 'teen' | 'adult']!;
   }
-  return `/pokemon/${petId}_${stage}.png`;
+  return `./pokemon/${petId}_${stage}.png`;
 }
