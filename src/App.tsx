@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Toaster, toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { StudentManagement } from '@/sections/StudentManagement';
 import { BatchPoints } from '@/sections/BatchPoints';
 import { BatchPetAssignment } from '@/sections/BatchPetAssignment';
@@ -23,6 +25,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+
+// GitHub 仓库信息
+const GITHUB_OWNER = '806901330-code';
+const GITHUB_REPO = 'pet-learning-system';
+const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
+const DATA_FILE_PATH = 'docs/data/students.json';
+const TOKEN_STORAGE_KEY = 'github-sync-token';
 
 function App() {
   const [activeTab, setActiveTab] = useState('students');
@@ -58,12 +67,29 @@ function App() {
   // === 数据同步相关状态 ===
   const [syncing, setSyncing] = useState(false);
   const [hasPendingSync, setHasPendingSync] = useState(false);
+  const [showTokenSetup, setShowTokenSetup] = useState(false);
+  const [tokenInput, setTokenInput] = useState('');
   const isInitialLoad = useRef(true);
 
-  // 检测是否在 Vite 开发服务器上运行（API 端点仅 dev server 可用）
+  // 检测运行环境
   const isDevServer =
     typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const isGitHubPages =
+    typeof window !== 'undefined' &&
+    window.location.hostname.endsWith('github.io');
+
+  // GitHub Pages 上数据变更时标记待同步
+  useEffect(() => {
+    if (!loaded || !customPetsLoaded) return;
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      return;
+    }
+    if (!isGitHubPages) return;
+    // GitHub Pages 无法自动导出，只标记"待同步"
+    setHasPendingSync(true);
+  }, [students, customPets, loaded, customPetsLoaded, isGitHubPages]);
 
   // 自动导出：数据变更后 2 秒自动写入 public/data/students.json（仅 dev server）
   useEffect(() => {
@@ -72,7 +98,7 @@ function App() {
       isInitialLoad.current = false;
       return;
     }
-    if (!isDevServer) return;  // 非 dev server 跳过（GitHub Pages / file:// 等）
+    if (!isDevServer) return;
 
     const timer = setTimeout(() => {
       const payload = {
@@ -97,49 +123,141 @@ function App() {
     return () => clearTimeout(timer);
   }, [students, customPets, loaded, customPetsLoaded, isDevServer]);
 
-  // 一键同步：构建 + 提交 + 推送到 GitHub
-  const handleSync = async () => {
-    if (!isDevServer) {
-      toast.error('请在本地开发服务器中操作', {
-        description: '同步功能需要 Vite dev server（npm run dev），请访问 http://localhost:5173',
-        duration: 6000,
-      });
+  // 获取/保存 GitHub Token
+  const getToken = (): string | null => {
+    try { return localStorage.getItem(TOKEN_STORAGE_KEY); } catch { return null; }
+  };
+  const saveToken = (token: string) => {
+    try { localStorage.setItem(TOKEN_STORAGE_KEY, token); } catch { /* ignore */ }
+  };
+
+  // GitHub API 同步：通过 Contents API 直接提交数据文件
+  const githubSync = async () => {
+    const token = getToken();
+    if (!token) {
+      setShowTokenSetup(true);
       return;
     }
 
     setSyncing(true);
     try {
-      // Step 1：导出最新数据
-      const payload = { students, customPets, exportedAt: new Date().toISOString() };
-      const exportRes = await fetch('/api/export-query-data', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+      const payload = JSON.stringify({
+        students,
+        customPets,
+        exportedAt: new Date().toISOString(),
+      }, null, 2);
+
+      // Step 1：获取当前文件的 SHA（更新需要）
+      let sha = '';
+      try {
+        const getRes = await fetch(`${GITHUB_API_BASE}/contents/${DATA_FILE_PATH}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (getRes.ok) {
+          const data = await getRes.json();
+          sha = data.sha;
+        }
+      } catch { /* 文件可能不存在，首次创建 */ }
+
+      // Step 2：提交文件
+      const body: Record<string, string> = {
+        message: `sync: ${new Date().toLocaleString('zh-CN')}`,
+        content: btoa(unescape(encodeURIComponent(payload))),
+      };
+      if (sha) body.sha = sha;
+
+      const putRes = await fetch(`${GITHUB_API_BASE}/contents/${DATA_FILE_PATH}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
       });
-      if (!exportRes.ok) throw new Error('导出接口返回 ' + exportRes.status);
 
-      // Step 2：构建 + 提交 + 推送
-      const syncRes = await fetch('/api/sync-to-github', { method: 'POST' });
-      const result = await syncRes.json();
-
-      if (result.ok) {
-        setHasPendingSync(false);
-        toast.success('已同步！GitHub Pages 将在 1-2 分钟内更新', {
-          description: result.logs?.join(' → ') || '',
-          duration: 5000,
-        });
-      } else {
-        toast.error('同步失败', {
-          description: result.error || '未知错误',
-        });
+      if (!putRes.ok) {
+        const err = await putRes.json().catch(() => ({}));
+        if (putRes.status === 401) {
+          // Token 无效，清除并让用户重新输入
+          try { localStorage.removeItem(TOKEN_STORAGE_KEY); } catch { /* ignore */ }
+          setShowTokenSetup(true);
+          throw new Error('Token 无效或已过期，请重新设置');
+        }
+        throw new Error(err.message || `GitHub API 返回 ${putRes.status}`);
       }
+
+      setHasPendingSync(false);
+      toast.success('已同步！GitHub Pages 将在 1-2 分钟内更新', {
+        description: `${students.length} 名学生数据已提交到仓库`,
+        duration: 5000,
+      });
     } catch (e: any) {
       toast.error('同步失败', {
-        description: e?.message || '请确保 dev server 正在运行：npm run dev',
+        description: e?.message || '网络错误，请重试',
         duration: 6000,
       });
     }
     setSyncing(false);
+  };
+
+  // Token 设置确认
+  const handleTokenConfirm = () => {
+    const trimmed = tokenInput.trim();
+    if (!trimmed) {
+      toast.error('请输入有效的 GitHub Token');
+      return;
+    }
+    saveToken(trimmed);
+    setTokenInput('');
+    setShowTokenSetup(false);
+    toast.success('Token 已保存', {
+      description: '正在尝试同步...',
+      duration: 2000,
+    });
+    // 自动触发同步
+    setTimeout(() => githubSync(), 500);
+  };
+
+  // 一键同步：dev server 走本地 API，GitHub Pages 走 GitHub API
+  const handleSync = async () => {
+    if (isDevServer) {
+      setSyncing(true);
+      try {
+        const payload = { students, customPets, exportedAt: new Date().toISOString() };
+        const exportRes = await fetch('/api/export-query-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!exportRes.ok) throw new Error('导出接口返回 ' + exportRes.status);
+
+        const syncRes = await fetch('/api/sync-to-github', { method: 'POST' });
+        const result = await syncRes.json();
+
+        if (result.ok) {
+          setHasPendingSync(false);
+          toast.success('已同步！GitHub Pages 将在 1-2 分钟内更新', {
+            description: result.logs?.join(' → ') || '',
+            duration: 5000,
+          });
+        } else {
+          toast.error('同步失败', { description: result.error || '未知错误' });
+        }
+      } catch (e: any) {
+        toast.error('同步失败', {
+          description: e?.message || '请确保 dev server 正在运行：npm run dev',
+          duration: 6000,
+        });
+      }
+      setSyncing(false);
+    } else if (isGitHubPages) {
+      await githubSync();
+    } else {
+      toast.error('请在 GitHub Pages 或本地开发服务器中操作', {
+        description: '当前环境不支持同步功能',
+        duration: 5000,
+      });
+    }
   };
 
   const handleClearAll = () => {
@@ -199,10 +317,9 @@ function App() {
                     variant="default"
                     size="sm"
                     onClick={handleSync}
-                    disabled={syncing || !isDevServer}
-                    title={!isDevServer ? '同步功能仅限本地开发服务器 (localhost:5173)，请运行 npm run dev' : undefined}
+                    disabled={syncing}
                     className={`text-white shadow-md transition-all ${
-                      isDevServer
+                      (isDevServer || isGitHubPages)
                         ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
                         : 'bg-gray-400 cursor-not-allowed'
                     }`}
@@ -211,8 +328,6 @@ function App() {
                       <span className="flex items-center gap-1.5">
                         <span className="animate-spin">⏳</span> 同步中...
                       </span>
-                    ) : !isDevServer ? (
-                      '🔁 请先启动 npm run dev'
                     ) : (
                       '🔁 一键同步到学生端'
                     )}
@@ -337,6 +452,50 @@ function App() {
               onClick={handleClearAll}
             >
               确认清空
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* GitHub Token 设置 */}
+      <AlertDialog open={showTokenSetup} onOpenChange={setShowTokenSetup}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>🔑 设置 GitHub Token</AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3">
+              <p>同步需要 GitHub Personal Access Token 来提交数据文件。</p>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-left text-sm">
+                <p className="font-medium mb-1">📋 获取 Token 步骤：</p>
+                <ol className="list-decimal list-inside space-y-0.5 text-amber-800">
+                  <li>打开 <a href="https://github.com/settings/tokens" target="_blank" className="underline text-blue-600">github.com/settings/tokens</a></li>
+                  <li>点击「Generate new token (classic)」</li>
+                  <li>Note 填写 <code>pet-learning-sync</code></li>
+                  <li>勾选 <code>repo</code> 权限</li>
+                  <li>生成后复制 Token 粘贴到下方</li>
+                </ol>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Token 仅保存在你的浏览器中，不会上传到任何服务器。
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-2 py-2">
+            <Label htmlFor="github-token">Personal Access Token</Label>
+            <Input
+              id="github-token"
+              type="password"
+              placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+              value={tokenInput}
+              onChange={(e) => setTokenInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleTokenConfirm()}
+            />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => { setTokenInput(''); }}>
+              取消
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleTokenConfirm}>
+              保存并同步
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

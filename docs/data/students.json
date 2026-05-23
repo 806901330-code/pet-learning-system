@@ -1,5 +1,16 @@
 {
-  "students": [],
+  "students": [
+    {
+      "id": "mp9flfuw5r0qcqttiow",
+      "name": "123",
+      "pet": {
+        "petTypeId": "bulbasaur",
+        "experience": 0,
+        "stage": "egg"
+      },
+      "createdAt": 1779001558664
+    }
+  ],
   "customPets": [],
-  "exportedAt": "2026-05-23T09:39:00Z"
+  "exportedAt": "2026-05-23T09:48:52.896Z"
 }
