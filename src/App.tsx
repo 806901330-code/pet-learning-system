@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Toaster, toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -55,6 +55,74 @@ function App() {
   // 合并系统宠物和自定义宠物
   const allPetTypes = [...PET_TYPES, ...customPets];
 
+  // === 数据同步相关状态 ===
+  const [syncing, setSyncing] = useState(false);
+  const [hasPendingSync, setHasPendingSync] = useState(false);
+  const isInitialLoad = useRef(true);
+
+  // 自动导出：数据变更后 2 秒自动写入 public/data/students.json
+  useEffect(() => {
+    if (!loaded || !customPetsLoaded) return;
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      const payload = {
+        students,
+        customPets,
+        exportedAt: new Date().toISOString(),
+      };
+      fetch('/api/export-query-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).then(res => res.json()).then(result => {
+        if (result.ok) {
+          setHasPendingSync(true);
+          console.log('📤 自动导出:', result.count, '名学生');
+        }
+      }).catch(() => {
+        // 开发服务器不可用，忽略
+      });
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [students, customPets, loaded, customPetsLoaded]);
+
+  // 一键同步：构建 + 提交 + 推送
+  const handleSync = async () => {
+    setSyncing(true);
+    try {
+      // 先确保最新数据已导出
+      const payload = { students, customPets, exportedAt: new Date().toISOString() };
+      await fetch('/api/export-query-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const res = await fetch('/api/sync-to-github', { method: 'POST' });
+      const result = await res.json();
+
+      if (result.ok) {
+        setHasPendingSync(false);
+        toast.success('已同步！GitHub Pages 将在 1-2 分钟内更新', {
+          description: result.logs?.join(' → ') || '',
+          duration: 5000,
+        });
+      } else {
+        toast.error('同步失败', {
+          description: result.error || '未知错误',
+        });
+      }
+    } catch {
+      toast.error('同步失败，请确保在开发服务器 (localhost:5173) 中运行');
+    }
+    setSyncing(false);
+  };
+
   const handleClearAll = () => {
     clearAll();
     setShowClearConfirm(false);
@@ -102,34 +170,26 @@ function App() {
               </div>
               {students.length > 0 && (
                 <>
+                  {hasPendingSync && (
+                    <span className="hidden md:inline-flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                      待同步
+                    </span>
+                  )}
                   <Button
-                    variant="ghost"
+                    variant="default"
                     size="sm"
-                    onClick={async () => {
-                      try {
-                        const payload = {
-                          students,
-                          customPets,
-                          exportedAt: new Date().toISOString(),
-                        };
-                        const res = await fetch('/api/export-query-data', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify(payload),
-                        });
-                        const result = await res.json();
-                        if (result.ok) {
-                          toast.success(`已导出 ${result.count} 名学生数据到 public/data/students.json，构建后将同步到查询页面`);
-                        } else {
-                          toast.error('导出失败: ' + (result.error || '未知错误'));
-                        }
-                      } catch {
-                        toast.error('导出失败，请确保在开发服务器 (localhost:5173) 中运行');
-                      }
-                    }}
-                    className="text-primary hover:text-primary"
+                    onClick={handleSync}
+                    disabled={syncing}
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-md"
                   >
-                    📤 导出供学生查询
+                    {syncing ? (
+                      <span className="flex items-center gap-1.5">
+                        <span className="animate-spin">⏳</span> 同步中...
+                      </span>
+                    ) : (
+                      '🔁 一键同步到学生端'
+                    )}
                   </Button>
                   <Button
                     variant="ghost"
