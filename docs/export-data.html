@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>读取宠物养成数据</title>
+<style>
+  body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+  button { background: #22c55e; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer; margin: 8px 4px; }
+  button:hover { background: #16a34a; }
+  pre { background: #f5f5f5; padding: 12px; border-radius: 8px; overflow: auto; max-height: 300px; }
+  .status { padding: 12px; border-radius: 8px; margin: 12px 0; }
+  .ok { background: #f0fdf4; color: #166534; }
+</style>
+</head>
+<body>
+<h2>🐾 宠物养成数据导出</h2>
+<p>此页面会读取 <b>pet-learning-system-data</b> 的 localStorage 数据，并导出为 CSV 表格。</p>
+<button onclick="exportCSV()">📥 导出为 CSV 表格</button>
+<button onclick="showData()">👁 预览数据</button>
+<div id="status"></div>
+<pre id="preview" style="display:none"></pre>
+
+<script>
+function getStudents() {
+  const raw = localStorage.getItem('pet-learning-system-data');
+  if (!raw) return [];
+  return JSON.parse(raw);
+}
+
+function getCustomPets() {
+  const raw = localStorage.getItem('pet-learning-system-custom-pets');
+  if (!raw) return [];
+  return JSON.parse(raw);
+}
+
+function showData() {
+  const students = getStudents();
+  const el = document.getElementById('preview');
+  if (students.length === 0) {
+    el.style.display = 'block';
+    el.textContent = '（没有找到学生数据，请确认已在宠物养成系统中添加学生）';
+    return;
+  }
+  el.style.display = 'block';
+  el.textContent = JSON.stringify(students, null, 2);
+}
+
+function exportCSV() {
+  const students = getStudents();
+  if (students.length === 0) {
+    document.getElementById('status').innerHTML = '<div class="status">❌ 没有找到学生数据</div>';
+    return;
+  }
+
+  // 读取自定义宠物
+  const customPets = getCustomPets();
+  const allPets = [
+    { id: 'bulbasaur', name: '妙蛙种子', pokemonType: 'grass' },
+    { id: 'charmander', name: '小火龙', pokemonType: 'fire' },
+    { id: 'squirtle', name: '杰尼龟', pokemonType: 'water' },
+    { id: 'caterpie', name: '绿毛虫', pokemonType: 'bug' },
+    { id: 'pidgey', name: '波波', pokemonType: 'normal' },
+    { id: 'oddish', name: '走路草', pokemonType: 'grass' },
+    { id: 'growlithe', name: '卡蒂狗', pokemonType: 'fire' },
+    { id: 'magikarp', name: '鲤鱼王', pokemonType: 'water' },
+    { id: 'eevee', name: '伊布', pokemonType: 'normal' },
+    { id: 'mewtwo', name: '超梦', pokemonType: 'psychic' },
+    ...customPets,
+  ];
+
+  // CSV 表头
+  const header = '学生姓名,宠物名称,经验值,阶段\n';
+  
+  const rows = students.map(s => {
+    const pet = allPets.find(p => p.id === s.pet?.petTypeId) || {};
+    const petName = pet.name || s.pet?.petTypeId || '未知';
+    const stageMap = { egg: '蛋', baby: '幼年', teen: '成长', adult: '完全' };
+    const stage = stageMap[s.pet?.stage] || s.pet?.stage || '';
+    return `${s.name},${petName},${s.pet?.experience || 0},${stage}`;
+  });
+
+  const csv = '\uFEFF' + header + rows.join('\n'); // \uFEFF = BOM for Excel
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `宠物养成数据_${new Date().toLocaleDateString('zh-CN')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  document.getElementById('status').innerHTML =
+    `<div class="status ok">✅ 已导出 ${students.length} 条数据！</div>`;
+}
+
+// 自动检查数据
+const students = getStudents();
+if (students.length > 0) {
+  document.getElementById('status').innerHTML =
+    `<div class="status ok">✅ 找到 ${students.length} 名学生数据，可以导出</div>`;
+} else {
+  document.getElementById('status').innerHTML =
+    `<div class="status" style="background:#fef2f2;color:#991b1b;">⚠️ 未找到数据，请确认：1) 在宠物养成系统页面打开此文件，或 2) 将宠物养成系统的 localhost 地址替换为此页面的地址</div>`;
+}
+</script>
+</body>
+</html>
