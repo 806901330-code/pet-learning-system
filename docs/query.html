@@ -355,15 +355,32 @@ var likeSection = document.getElementById('likeSection');
 var allStudents = [];
 var customPets = [];
 
-function loadData() {
-  try {
-    var data = localStorage.getItem('pet-learning-system-data');
-    allStudents = data ? JSON.parse(data) : [];
-  } catch(e) { allStudents = []; }
-  try {
-    var cp = localStorage.getItem('pet-learning-system-custom-pets');
-    customPets = cp ? JSON.parse(cp) : [];
-  } catch(e) { customPets = []; }
+// 优先从服务器 JSON 文件加载（支持跨设备），失败时降级到 localStorage（本地开发）
+function loadData(callback) {
+  fetch('./data/students.json')
+    .then(function(res) {
+      if (!res.ok) throw new Error('No data file');
+      return res.json();
+    })
+    .then(function(data) {
+      allStudents = data.students || [];
+      customPets = data.customPets || [];
+      console.log('📡 从服务器加载了 ' + allStudents.length + ' 名学生数据');
+      callback();
+    })
+    .catch(function() {
+      // 降级：从 localStorage 读取
+      try {
+        var data = localStorage.getItem('pet-learning-system-data');
+        allStudents = data ? JSON.parse(data) : [];
+      } catch(e) { allStudents = []; }
+      try {
+        var cp = localStorage.getItem('pet-learning-system-custom-pets');
+        customPets = cp ? JSON.parse(cp) : [];
+      } catch(e) { customPets = []; }
+      console.log('💾 从本地存储加载了 ' + allStudents.length + ' 名学生数据');
+      callback();
+    });
 }
 
 // ============ 点赞相关 ============
@@ -607,16 +624,17 @@ function initBgDecoration() {
 }
 
 // ============ 初始化 ============
-loadData();
 initBgDecoration();
 
-// 如果 URL 带 name 参数，自动查询
-var urlParams = new URLSearchParams(window.location.search);
-var nameParam = urlParams.get('name');
-if (nameParam) {
-  nameInput.value = nameParam;
-  doSearch();
-}
+loadData(function() {
+  // 如果 URL 带 name 参数，自动查询
+  var urlParams = new URLSearchParams(window.location.search);
+  var nameParam = urlParams.get('name');
+  if (nameParam) {
+    nameInput.value = nameParam;
+    doSearch();
+  }
+});
 </script>
 </body>
 </html>

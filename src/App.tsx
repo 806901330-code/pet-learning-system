@@ -101,14 +101,45 @@ function App() {
                 <span>🐉 {students.filter(s => s.pet.stage === 'adult').length} 只完全体</span>
               </div>
               {students.length > 0 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowClearConfirm(true)}
-                  className="text-destructive hover:text-destructive"
-                >
-                  🗑️ 清空数据
-                </Button>
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={async () => {
+                      try {
+                        const payload = {
+                          students,
+                          customPets,
+                          exportedAt: new Date().toISOString(),
+                        };
+                        const res = await fetch('/api/export-query-data', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(payload),
+                        });
+                        const result = await res.json();
+                        if (result.ok) {
+                          toast.success(`已导出 ${result.count} 名学生数据到 public/data/students.json，构建后将同步到查询页面`);
+                        } else {
+                          toast.error('导出失败: ' + (result.error || '未知错误'));
+                        }
+                      } catch {
+                        toast.error('导出失败，请确保在开发服务器 (localhost:5173) 中运行');
+                      }
+                    }}
+                    className="text-primary hover:text-primary"
+                  >
+                    📤 导出供学生查询
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowClearConfirm(true)}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    🗑️ 清空数据
+                  </Button>
+                </>
               )}
             </div>
           </div>
