@@ -468,16 +468,31 @@ function showResult(student) {
 }
 
 function getRank(studentId) {
-  var sorted = allStudents.slice().sort(function(a, b) { return b.pet.experience - a.pet.experience; });
-  for (var i = 0; i < sorted.length; i++) {
-    if (sorted[i].id === studentId) {
-      if (i === 0) return '🥇 第1名';
-      if (i === 1) return '🥈 第2名';
-      if (i === 2) return '🥉 第3名';
-      return '第' + (i + 1) + '名';
+  // 找到目标学生的经验值
+  var targetExp = null;
+  for (var i = 0; i < allStudents.length; i++) {
+    if (allStudents[i].id === studentId) {
+      targetExp = allStudents[i].pet.experience;
+      break;
     }
   }
-  return 'N/A';
+  if (targetExp === null) return 'N/A';
+
+  // 并列排名：计算严格高于该分数的学生数量
+  // 同分学生共享同一最高名次，如第2/3/4名同分→均为第2名
+  var higherCount = 0;
+  for (var j = 0; j < allStudents.length; j++) {
+    if (allStudents[j].pet.experience > targetExp) {
+      higherCount++;
+    }
+  }
+
+  var rank = higherCount + 1;
+
+  if (rank === 1) return '🥇 第1名';
+  if (rank === 2) return '🥈 第2名';
+  if (rank === 3) return '🥉 第3名';
+  return '第' + rank + '名';
 }
 
 function escapeHtml(str) {

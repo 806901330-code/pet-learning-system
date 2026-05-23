@@ -10,16 +10,26 @@ interface LeaderboardProps {
 }
 
 export function Leaderboard({ students, petTypes }: LeaderboardProps) {
+  // 并列排名：同分共享最高名次（如第2/3/4名同分→均为第2名）
+  const getRank = (studentExp: number): number => {
+    let higherCount = 0;
+    for (const s of students) {
+      if (s.pet.experience > studentExp) higherCount++;
+    }
+    return higherCount + 1;
+  };
+
   const sortedStudents = [...students]
     .map(s => ({
       ...s,
       stage: getStageByExperience(s.pet.experience),
+      rank: getRank(s.pet.experience),
     }))
     .sort((a, b) => b.pet.experience - a.pet.experience);
 
   const topThree = sortedStudents.slice(0, 3);
 
-  const medals = ['🥇', '🥈', '🥉'];
+  const medals: Record<number, string> = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
   if (students.length === 0) {
     return (
@@ -95,19 +105,20 @@ export function Leaderboard({ students, petTypes }: LeaderboardProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {sortedStudents.map((student, index) => {
+            {sortedStudents.map((student) => {
               const petType = petTypes.find(p => p.id === student.pet.petTypeId) || petTypes[0];
+              const isTop3 = student.rank <= 3;
               return (
                 <div
                   key={student.id}
                   className={`flex items-center gap-4 p-3 rounded-lg transition-colors ${
-                    index < 3 ? 'bg-amber-50 border border-amber-200' : 'hover:bg-secondary/50'
+                    isTop3 ? 'bg-amber-50 border border-amber-200' : 'hover:bg-secondary/50'
                   }`}
                 >
                   {/* 排名 */}
                   <div className="w-8 text-center font-bold text-lg">
-                    {index < 3 ? medals[index] : (
-                      <span className="text-muted-foreground">{index + 1}</span>
+                    {isTop3 ? medals[student.rank] : (
+                      <span className="text-muted-foreground">{student.rank}</span>
                     )}
                   </div>
 
