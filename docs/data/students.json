@@ -1,16 +1,5 @@
 {
-  "students": [
-    {
-      "id": "t1",
-      "name": "测试",
-      "pet": {
-        "petTypeId": "bulbasaur",
-        "experience": 200,
-        "stage": "baby"
-      },
-      "createdAt": 0
-    }
-  ],
+  "students": [],
   "customPets": [],
-  "exportedAt": "2026-05-23T09:34:00Z"
+  "exportedAt": "2026-05-23T09:39:00Z"
 }

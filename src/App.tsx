@@ -60,13 +60,19 @@ function App() {
   const [hasPendingSync, setHasPendingSync] = useState(false);
   const isInitialLoad = useRef(true);
 
-  // 自动导出：数据变更后 2 秒自动写入 public/data/students.json
+  // 检测是否在 Vite 开发服务器上运行（API 端点仅 dev server 可用）
+  const isDevServer =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+  // 自动导出：数据变更后 2 秒自动写入 public/data/students.json（仅 dev server）
   useEffect(() => {
     if (!loaded || !customPetsLoaded) return;
     if (isInitialLoad.current) {
       isInitialLoad.current = false;
       return;
     }
+    if (!isDevServer) return;  // 非 dev server 跳过（GitHub Pages / file:// 等）
 
     const timer = setTimeout(() => {
       const payload = {
@@ -83,28 +89,38 @@ function App() {
           setHasPendingSync(true);
           console.log('📤 自动导出:', result.count, '名学生');
         }
-      }).catch(() => {
-        // 开发服务器不可用，忽略
+      }).catch((e) => {
+        console.warn('自动导出失败（dev server 不可用）:', e.message);
       });
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [students, customPets, loaded, customPetsLoaded]);
+  }, [students, customPets, loaded, customPetsLoaded, isDevServer]);
 
-  // 一键同步：构建 + 提交 + 推送
+  // 一键同步：构建 + 提交 + 推送到 GitHub
   const handleSync = async () => {
+    if (!isDevServer) {
+      toast.error('请在本地开发服务器中操作', {
+        description: '同步功能需要 Vite dev server（npm run dev），请访问 http://localhost:5173',
+        duration: 6000,
+      });
+      return;
+    }
+
     setSyncing(true);
     try {
-      // 先确保最新数据已导出
+      // Step 1：导出最新数据
       const payload = { students, customPets, exportedAt: new Date().toISOString() };
-      await fetch('/api/export-query-data', {
+      const exportRes = await fetch('/api/export-query-data', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+      if (!exportRes.ok) throw new Error('导出接口返回 ' + exportRes.status);
 
-      const res = await fetch('/api/sync-to-github', { method: 'POST' });
-      const result = await res.json();
+      // Step 2：构建 + 提交 + 推送
+      const syncRes = await fetch('/api/sync-to-github', { method: 'POST' });
+      const result = await syncRes.json();
 
       if (result.ok) {
         setHasPendingSync(false);
@@ -117,8 +133,11 @@ function App() {
           description: result.error || '未知错误',
         });
       }
-    } catch {
-      toast.error('同步失败，请确保在开发服务器 (localhost:5173) 中运行');
+    } catch (e: any) {
+      toast.error('同步失败', {
+        description: e?.message || '请确保 dev server 正在运行：npm run dev',
+        duration: 6000,
+      });
     }
     setSyncing(false);
   };
@@ -180,13 +199,20 @@ function App() {
                     variant="default"
                     size="sm"
                     onClick={handleSync}
-                    disabled={syncing}
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-md"
+                    disabled={syncing || !isDevServer}
+                    title={!isDevServer ? '同步功能仅限本地开发服务器 (localhost:5173)，请运行 npm run dev' : undefined}
+                    className={`text-white shadow-md transition-all ${
+                      isDevServer
+                        ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
+                        : 'bg-gray-400 cursor-not-allowed'
+                    }`}
                   >
                     {syncing ? (
                       <span className="flex items-center gap-1.5">
                         <span className="animate-spin">⏳</span> 同步中...
                       </span>
+                    ) : !isDevServer ? (
+                      '🔁 请先启动 npm run dev'
                     ) : (
                       '🔁 一键同步到学生端'
                     )}
