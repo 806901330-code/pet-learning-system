@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的宠物 - 查询</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+
+    /* 背景装饰 */
+    .bg-decoration {
+      position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;
+    }
+    .bg-decoration .bubble {
+      position: absolute; border-radius: 50%; opacity: 0.08;
+      animation: float-up linear infinite;
+    }
+    @keyframes float-up {
+      0% { transform: translateY(110vh) scale(0); }
+      10% { opacity: 0.1; }
+      90% { opacity: 0.1; }
+      100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+    }
+
+    .container {
+      position: relative; z-index: 1;
+      max-width: 480px; margin: 0 auto; padding: 40px 20px;
+    }
+
+    /* 头部 */
+    .header {
+      text-align: center; margin-bottom: 32px;
+    }
+    .header .logo {
+      font-size: 56px; margin-bottom: 8px;
+      animation: bounce 2s ease-in-out infinite;
+      display: inline-block;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .header h1 {
+      font-size: 28px; font-weight: 800;
+      background: linear-gradient(to right, #fff, #f0d5ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header p { color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 4px; }
+
+    /* 搜索卡片 */
+    .search-card {
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
+      border-radius: 20px; padding: 32px 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      margin-bottom: 20px;
+    }
+    .search-label {
+      font-size: 15px; font-weight: 600; color: #555; margin-bottom: 10px;
+    }
+    .search-row {
+      display: flex; gap: 10px;
+    }
+    .search-row input {
+      flex: 1; padding: 14px 18px;
+      border: 2px solid #e8e0f0; border-radius: 14px;
+      font-size: 17px; outline: none; transition: border-color 0.2s;
+      background: #faf8ff;
+    }
+    .search-row input:focus {
+      border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+    }
+    .search-row button {
+      padding: 14px 28px; background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      color: white; border: none; border-radius: 14px;
+      font-size: 16px; font-weight: 600; cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+    }
+    .search-row button:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.4); }
+    .search-row button:active { transform: translateY(0); }
+
+    .error-msg {
+      color: #ef4444; font-size: 13px; margin-top: 10px; display: none;
+    }
+    .hint {
+      color: #999; font-size: 12px; margin-top: 12px; text-align: center;
+    }
+
+    /* 结果卡片 */
+    .result-card {
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
+      border-radius: 20px; padding: 28px 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      display: none; overflow: hidden;
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .result-header {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 24px;
+    }
+    .result-avatar {
+      width: 80px; height: 80px; border-radius: 20px;
+      background: linear-gradient(135deg, #f0e6ff, #e0d4ff);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px; box-shadow: 0 8px 25px rgba(139,92,246,0.15);
+    }
+    .result-avatar img {
+      width: 100%; height: 100%; object-fit: contain; border-radius: 20px;
+    }
+    .result-info h3 {
+      font-size: 22px; font-weight: 700; color: #333;
+    }
+    .result-info .pet-name {
+      font-size: 14px; color: #8b5cf6; font-weight: 600; margin-top: 2px;
+    }
+    .result-info .stage-badge {
+      display: inline-block; margin-top: 6px; padding: 3px 12px;
+      border-radius: 20px; font-size: 13px; font-weight: 600;
+    }
+    .stage-egg { background: #fef3c7; color: #d97706; }
+    .stage-baby { background: #d1fae5; color: #059669; }
+    .stage-teen { background: #dbeafe; color: #2563eb; }
+    .stage-adult { background: #ede9fe; color: #7c3aed; }
+
+    /* 经验条 */
+    .exp-section { margin-bottom: 20px; }
+    .exp-label {
+      display: flex; justify-content: space-between; font-size: 13px;
+      color: #666; margin-bottom: 6px;
+    }
+    .exp-label span:last-child { font-weight: 600; color: #8b5cf6; }
+    .exp-bar-wrap {
+      height: 14px; background: #f0e8f8; border-radius: 10px; overflow: hidden;
+    }
+    .exp-bar-fill {
+      height: 100%; border-radius: 10px;
+      background: linear-gradient(90deg, #a78bfa, #8b5cf6, #7c3aed);
+      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    .exp-bar-fill::after {
+      content: ''; position: absolute; right: 0; top: 0; bottom: 0;
+      width: 30px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+    }
+
+    /* 成长信息 */
+    .growth-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;
+    }
+    .growth-item {
+      background: #faf8ff; border-radius: 14px; padding: 14px; text-align: center;
+    }
+    .growth-item .label { font-size: 12px; color: #999; margin-bottom: 4px; }
+    .growth-item .value { font-size: 24px; font-weight: 700; color: #8b5cf6; }
+    .growth-item .sub { font-size: 12px; color: #aaa; margin-top: 2px; }
+
+    /* 宠物类型 */
+    .type-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; margin-top: 4px;
+    }
+    .type-grass { background: #d1fae5; color: #059669; }
+    .type-fire { background: #fee2e2; color: #dc2626; }
+    .type-water { background: #dbeafe; color: #2563eb; }
+    .type-bug { background: #ecfccb; color: #65a30d; }
+    .type-flying { background: #ede9fe; color: #7c3aed; }
+    .type-normal { background: #f5f5f4; color: #78716c; }
+    .type-electric { background: #fef9c3; color: #ca8a04; }
+    .type-ice { background: #e0f2fe; color: #0284c7; }
+    .type-fighting { background: #fee2e2; color: #991b1b; }
+    .type-ghost { background: #ede9fe; color: #6d28d9; }
+    .type-rock { background: #fef3c7; color: #92400e; }
+    .type-dragon { background: #fce7f3; color: #be185d; }
+
+    .pet-pokemon-type {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 10px; border-radius: 10px;
+      font-size: 12px; font-weight: 600;
+    }
+
+    /* 点赞区域 */
+    .like-section {
+      text-align: center; padding-top: 16px; border-top: 1px solid #f0e8f8;
+    }
+    .like-btn {
+      display: inline-flex; flex-direction: column; align-items: center;
+      gap: 6px; cursor: pointer; user-select: none;
+      transition: transform 0.15s;
+    }
+    .like-btn:hover { transform: scale(1.05); }
+    .like-btn:active { transform: scale(0.95); }
+    .like-btn .heart-icon {
+      font-size: 48px; transition: transform 0.3s;
+    }
+    .like-btn.pulse .heart-icon {
+      animation: heartPulse 0.4s ease-out;
+    }
+    @keyframes heartPulse {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+    .like-count {
+      font-size: 15px; font-weight: 700; color: #8b5cf6;
+    }
+    .like-label { font-size: 12px; color: #aaa; }
+
+    /* 浮动emoji */
+    .floating-emoji {
+      position: fixed; font-size: 28px; pointer-events: none;
+      animation: emojiRise 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      z-index: 100;
+    }
+    @keyframes emojiRise {
+      0% { transform: translateY(0) translateX(0) scale(0.3) rotate(0deg); opacity: 1; }
+      30% { transform: translateY(-40px) translateX(var(--dx)) scale(1.1) rotate(10deg); opacity: 1; }
+      100% { transform: translateY(-300px) translateX(var(--dx2)) scale(0.2) rotate(var(--rot)); opacity: 0; }
+    }
+
+    /* 多结果列表 */
+    .multi-results { margin-top: 12px; }
+    .multi-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px;
+      border-radius: 12px; background: #faf8ff; margin-bottom: 8px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .multi-item:hover { background: #f0e8ff; }
+    .multi-item .mini-avatar {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: #f0e6ff; display: flex; align-items: center;
+      justify-content: center; font-size: 24px; flex-shrink: 0;
+    }
+    .multi-item .mini-avatar img {
+      width: 100%; height: 100%; object-fit: contain; border-radius: 12px;
+    }
+    .multi-item .mini-info h4 { font-size: 15px; font-weight: 600; }
+    .multi-item .mini-info span { font-size: 12px; color: #999; }
+
+    /* 响应式 */
+    @media (max-width: 400px) {
+      .container { padding: 24px 14px; }
+      .result-card, .search-card { padding: 20px 16px; }
+      .result-avatar { width: 60px; height: 60px; font-size: 32px; }
+      .growth-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-decoration" id="bgDeco"></div>
+
+<div class="container">
+  <!-- 头部 -->
+  <div class="header">
+    <div class="logo">🐾</div>
+    <h1>我的宠物</h1>
+    <p>输入你的名字，看看宠物成长得怎么样了~</p>
+  </div>
+
+  <!-- 搜索卡片 -->
+  <div class="search-card">
+    <div class="search-label">🔍 输入姓名</div>
+    <div class="search-row">
+      <input type="text" id="nameInput" placeholder="请输入你的姓名..." autocomplete="off" />
+      <button id="searchBtn">查询</button>
+    </div>
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="hint">💡 提示：使用全名准确查找，支持模糊匹配</div>
+  </div>
+
+  <!-- 结果卡片 -->
+  <div class="result-card" id="resultCard">
+    <div class="result-header" id="resultHeader"></div>
+    <div class="exp-section" id="expSection"></div>
+    <div class="growth-grid" id="growthGrid"></div>
+    <div class="like-section" id="likeSection"></div>
+  </div>
+</div>
+
+<script>
+// ============ 内嵌数据与工具函数 ============
+var PET_TYPES = [
+  {id:'bulbasaur',name:'妙蛙种子',color:'#4CAF50',emoji:'🌱',pokemonType:'grass',stages:{egg:'草属性蛋',baby:'妙蛙种子',teen:'妙蛙草',adult:'妙蛙花'}},
+  {id:'charmander',name:'小火龙',color:'#FF5722',emoji:'🔥',pokemonType:'fire',stages:{egg:'火属性蛋',baby:'小火龙',teen:'火恐龙',adult:'喷火龙'}},
+  {id:'squirtle',name:'杰尼龟',color:'#2196F3',emoji:'💧',pokemonType:'water',stages:{egg:'水属性蛋',baby:'杰尼龟',teen:'卡咪龟',adult:'水箭龟'}},
+  {id:'caterpie',name:'绿毛虫',color:'#8BC34A',emoji:'🐛',pokemonType:'bug',stages:{egg:'虫属性蛋',baby:'绿毛虫',teen:'铁甲蛹',adult:'巴大蝶'}},
+  {id:'pidgey',name:'波波',color:'#9C27B0',emoji:'🐦',pokemonType:'flying',stages:{egg:'飞行属性蛋',baby:'波波',teen:'比比鸟',adult:'大比鸟'}},
+  {id:'chikorita',name:'菊草叶',color:'#66BB6A',emoji:'🌿',pokemonType:'grass',stages:{egg:'草属性蛋',baby:'菊草叶',teen:'月桂叶',adult:'大竺葵'}},
+  {id:'cyndaquil',name:'火球鼠',color:'#FF7043',emoji:'🔥',pokemonType:'fire',stages:{egg:'火属性蛋',baby:'火球鼠',teen:'火岩鼠',adult:'火暴兽'}},
+  {id:'torchic',name:'火稚鸡',color:'#FF9800',emoji:'🐔',pokemonType:'fire',stages:{egg:'火属性蛋',baby:'火稚鸡',teen:'力壮鸡',adult:'火焰鸡'}},
+  {id:'mudkip',name:'水跃鱼',color:'#039BE5',emoji:'🐟',pokemonType:'water',stages:{egg:'水属性蛋',baby:'水跃鱼',teen:'沼跃鱼',adult:'巨沼怪'}},
+  {id:'sprigatito',name:'新叶喵',color:'#FF9800',emoji:'🐱',pokemonType:'grass',stages:{egg:'草属性蛋',baby:'新叶喵',teen:'魔幻假面喵',adult:'炽焰咆哮虎'}}
+];
+
+var STAGE_CONFIG = {
+  egg:   { name:'蛋',   minExp:0,   label:'🥚 蛋',   nextExp:100 },
+  baby:  { name:'幼年体', minExp:100, label:'🐣 幼年体', nextExp:300 },
+  teen:  { name:'成长体', minExp:300, label:'⭐ 成长体', nextExp:600 },
+  adult: { name:'完全体', minExp:600, label:'👑 完全体', nextExp:null }
+};
+
+function getStageByExperience(exp) {
+  if (exp >= 600) return 'adult';
+  if (exp >= 300) return 'teen';
+  if (exp >= 100) return 'baby';
+  return 'egg';
+}
+
+function getNextStageExp(exp) {
+  if (exp < 100) return 100;
+  if (exp < 300) return 300;
+  if (exp < 600) return 600;
+  return null;
+}
+
+function findPetType(petTypeId, customPets) {
+  var builtin = PET_TYPES.find(function(p) { return p.id === petTypeId; });
+  if (builtin) return builtin;
+  if (customPets) return customPets.find(function(p) { return p.id === petTypeId; }) || null;
+  return null;
+}
+
+function getPetImage(petType, stage) {
+  if (!petType) return '🐾';
+  if (stage === 'egg') {
+    return '<img src="./pokemon/egg_' + petType.pokemonType + '.svg" alt="蛋" onerror="this.style.display=\'none\';this.parentElement.textContent=\'🥚\'" />';
+  }
+  if (petType.isCustom && petType.customImages && petType.customImages[stage]) {
+    return '<img src="' + petType.customImages[stage] + '" alt="' + stage + '" onerror="this.style.display=\'none\';this.parentElement.textContent=\'' + petType.emoji + '\'" />';
+  }
+  return '<img src="./pokemon/' + petType.id + '_' + stage + '.png" alt="' + stage + '" onerror="this.style.display=\'none\';this.parentElement.textContent=\'' + petType.emoji + '\'" />';
+}
+
+// ============ DOM ============
+var nameInput = document.getElementById('nameInput');
+var searchBtn = document.getElementById('searchBtn');
+var errorMsg = document.getElementById('errorMsg');
+var resultCard = document.getElementById('resultCard');
+var resultHeader = document.getElementById('resultHeader');
+var expSection = document.getElementById('expSection');
+var growthGrid = document.getElementById('growthGrid');
+var likeSection = document.getElementById('likeSection');
+
+// ============ 读取数据 ============
+var allStudents = [];
+var customPets = [];
+
+function loadData() {
+  try {
+    var data = localStorage.getItem('pet-learning-system-data');
+    allStudents = data ? JSON.parse(data) : [];
+  } catch(e) { allStudents = []; }
+  try {
+    var cp = localStorage.getItem('pet-learning-system-custom-pets');
+    customPets = cp ? JSON.parse(cp) : [];
+  } catch(e) { customPets = []; }
+}
+
+// ============ 点赞相关 ============
+var LIKE_KEY_PREFIX = 'pet-query-likes-';
+var EMOJIS = ['❤️','💖','💕','💝','🎁','🎈','🎀','🌟','✨','💫','🧸','🎮','🎯','🏆','💎','🌸','🌺','🍀','🎪','🦋','🐣','🌈','💐','🍬','🎨'];
+
+function getLikeCount(studentId) {
+  return parseInt(localStorage.getItem(LIKE_KEY_PREFIX + studentId) || '0');
+}
+
+function addLike(studentId) {
+  var count = getLikeCount(studentId) + 1;
+  localStorage.setItem(LIKE_KEY_PREFIX + studentId, count.toString());
+  return count;
+}
+
+function spawnFloatingEmojis(btnRect) {
+  var centerX = btnRect.left + btnRect.width / 2;
+  var centerY = btnRect.top;
+  var count = 5 + Math.floor(Math.random() * 6);
+  for (var i = 0; i < count; i++) {
+    (function(index) {
+      setTimeout(function() {
+        var emoji = document.createElement('span');
+        emoji.className = 'floating-emoji';
+        emoji.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+        emoji.style.left = (centerX + (Math.random() - 0.5) * 200) + 'px';
+        emoji.style.top = centerY + 'px';
+        emoji.style.setProperty('--dx', ((Math.random() - 0.5) * 120) + 'px');
+        emoji.style.setProperty('--dx2', ((Math.random() - 0.5) * 160) + 'px');
+        emoji.style.setProperty('--rot', ((Math.random() - 0.5) * 60) + 'deg');
+        emoji.style.animationDuration = (2 + Math.random() * 2) + 's';
+        emoji.style.fontSize = (20 + Math.random() * 20) + 'px';
+        document.body.appendChild(emoji);
+        setTimeout(function() { emoji.remove(); }, 3000);
+      }, index * 50);
+    })(i);
+  }
+}
+
+// ============ 显示结果 ============
+function showResult(student) {
+  var pet = student.pet;
+  var petType = findPetType(pet.petTypeId, customPets);
+  var stage = getStageByExperience(pet.experience);
+  var nextExp = getNextStageExp(pet.experience);
+
+  var stageConfig = STAGE_CONFIG[stage];
+  var currentStageExp = pet.experience - stageConfig.minExp;
+  var stageRange = nextExp ? nextExp - stageConfig.minExp : 600 - stageConfig.minExp;
+  var progress = Math.min(100, (currentStageExp / stageRange) * 100);
+
+  // Header
+  var avatarHtml = getPetImage(petType, stage);
+  resultHeader.innerHTML =
+    '<div class="result-avatar">' + avatarHtml + '</div>' +
+    '<div class="result-info">' +
+      '<h3>' + escapeHtml(student.name) + '</h3>' +
+      '<div class="pet-name">' + (petType ? petType.emoji + ' ' + petType.name : '未知宠物') + '</div>' +
+      '<div class="stage-badge stage-' + stage + '">' + stageConfig.label + '</div>' +
+      (petType ? '<div class="pet-pokemon-type type-' + petType.pokemonType + '">' + petType.pokemonType + '</div>' : '') +
+    '</div>';
+
+  // 经验条
+  var stageName = petType ? (petType.stages[stage] || stageConfig.name) : stageConfig.name;
+  expSection.innerHTML =
+    '<div class="exp-label"><span>经验值</span><span>' + pet.experience + ' / ' + (nextExp || 600) + '</span></div>' +
+    '<div class="exp-bar-wrap"><div class="exp-bar-fill" style="width: ' + progress + '%"></div></div>' +
+    '<div class="exp-label" style="margin-top:6px;"><span>当前阶段：' + stageName + '</span><span>' + (nextExp ? '距离下一阶段还需 ' + (nextExp - pet.experience) + ' 经验' : '🎉 已达满级！') + '</span></div>';
+
+  // 成长信息
+  growthGrid.innerHTML =
+    '<div class="growth-item"><div class="label">🐾 宠物类型</div><div class="value" style="font-size:16px;">' + (petType ? petType.emoji + ' ' + petType.name : '❓') + '</div></div>' +
+    '<div class="growth-item"><div class="label">📊 成长阶段</div><div class="value">' + (stageConfig.emoji || '') + '</div><div class="sub">' + stageName + '</div></div>' +
+    '<div class="growth-item"><div class="label">⭐ 当前经验</div><div class="value">' + pet.experience + '</div></div>' +
+    '<div class="growth-item"><div class="label">🏆 排名</div><div class="value">' + getRank(student.id) + '</div><div class="sub">共 ' + allStudents.length + ' 名学生</div></div>';
+
+  // 点赞区域
+  var likeCount = getLikeCount(student.id);
+  likeSection.innerHTML =
+    '<div class="like-btn" id="likeBtn" data-student-id="' + student.id + '">' +
+      '<span class="heart-icon">' + (likeCount > 0 ? '💜' : '🤍') + '</span>' +
+      '<span class="like-count">' + likeCount + ' 次点赞</span>' +
+      '<span class="like-label">点击送爱心 ❤️</span>' +
+    '</div>';
+
+  // 绑定点赞事件
+  document.getElementById('likeBtn').addEventListener('click', function() {
+    var btn = this;
+    var newCount = addLike(student.id);
+    btn.classList.add('pulse');
+    setTimeout(function() { btn.classList.remove('pulse'); }, 400);
+    btn.querySelector('.heart-icon').textContent = '💜';
+    btn.querySelector('.like-count').textContent = newCount + ' 次点赞';
+    spawnFloatingEmojis(btn.getBoundingClientRect());
+  });
+
+  resultCard.style.display = 'block';
+  resultCard.style.animation = 'none';
+  resultCard.offsetHeight;
+  resultCard.style.animation = 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+}
+
+function getRank(studentId) {
+  var sorted = allStudents.slice().sort(function(a, b) { return b.pet.experience - a.pet.experience; });
+  for (var i = 0; i < sorted.length; i++) {
+    if (sorted[i].id === studentId) {
+      if (i === 0) return '🥇 第1名';
+      if (i === 1) return '🥈 第2名';
+      if (i === 2) return '🥉 第3名';
+      return '第' + (i + 1) + '名';
+    }
+  }
+  return 'N/A';
+}
+
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ============ 搜索逻辑 ============
+function doSearch() {
+  var query = nameInput.value.trim();
+  errorMsg.style.display = 'none';
+  resultCard.style.display = 'none';
+
+  if (!query) {
+    errorMsg.textContent = '请输入姓名';
+    errorMsg.style.display = 'block';
+    return;
+  }
+
+  // 精确匹配优先
+  for (var i = 0; i < allStudents.length; i++) {
+    if (allStudents[i].name === query) {
+      showResult(allStudents[i]);
+      return;
+    }
+  }
+
+  // 模糊匹配
+  var fuzzyMatches = [];
+  for (var j = 0; j < allStudents.length; j++) {
+    if (allStudents[j].name.indexOf(query) !== -1 || query.indexOf(allStudents[j].name) !== -1) {
+      fuzzyMatches.push(allStudents[j]);
+    }
+  }
+
+  if (fuzzyMatches.length === 0) {
+    errorMsg.textContent = '未找到名为「' + query + '」的学生，请检查姓名是否正确';
+    errorMsg.style.display = 'block';
+    return;
+  }
+
+  if (fuzzyMatches.length === 1) {
+    showResult(fuzzyMatches[0]);
+    return;
+  }
+
+  showMultiResults(fuzzyMatches);
+}
+
+function showMultiResults(matches) {
+  resultHeader.innerHTML = '<div style="font-size:15px;font-weight:600;color:#666;">找到 ' + matches.length + ' 个匹配的学生：</div>';
+  expSection.innerHTML = '';
+  growthGrid.innerHTML = '';
+  likeSection.innerHTML = '';
+
+  var listHtml = '<div class="multi-results">';
+  for (var i = 0; i < matches.length; i++) {
+    var s = matches[i];
+    var petType = findPetType(s.pet.petTypeId, customPets);
+    var stage = getStageByExperience(s.pet.experience);
+    var avatarHtml = getPetImage(petType, stage);
+    listHtml +=
+      '<div class="multi-item" data-student-id="' + s.id + '" onclick="selectStudent(\'' + s.id + '\')">' +
+        '<div class="mini-avatar">' + avatarHtml + '</div>' +
+        '<div class="mini-info">' +
+          '<h4>' + escapeHtml(s.name) + '</h4>' +
+          '<span>' + (petType ? petType.emoji + ' ' + petType.name : '未知') + ' · ' + STAGE_CONFIG[stage].label + ' · ' + s.pet.experience + '经验</span>' +
+        '</div>' +
+      '</div>';
+  }
+  listHtml += '</div>';
+  expSection.innerHTML = listHtml;
+
+  resultCard.style.display = 'block';
+  resultCard.style.animation = 'none';
+  resultCard.offsetHeight;
+  resultCard.style.animation = 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+}
+
+window.selectStudent = function(studentId) {
+  for (var i = 0; i < allStudents.length; i++) {
+    if (allStudents[i].id === studentId) {
+      showResult(allStudents[i]);
+      return;
+    }
+  }
+};
+
+// ============ 事件绑定 ============
+searchBtn.addEventListener('click', doSearch);
+nameInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doSearch();
+});
+
+// ============ 背景装饰 ============
+function initBgDecoration() {
+  var bg = document.getElementById('bgDeco');
+  var colors = ['#fff', '#f0d5ff', '#d5e8ff', '#ffe0d5', '#d5ffe0'];
+  for (var i = 0; i < 12; i++) {
+    var bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    var size = 30 + Math.random() * 120;
+    bubble.style.width = size + 'px';
+    bubble.style.height = size + 'px';
+    bubble.style.left = (Math.random() * 100) + '%';
+    bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    bubble.style.animationDuration = (12 + Math.random() * 20) + 's';
+    bubble.style.animationDelay = (Math.random() * 15) + 's';
+    bg.appendChild(bubble);
+  }
+}
+
+// ============ 初始化 ============
+loadData();
+initBgDecoration();
+
+// 如果 URL 带 name 参数，自动查询
+var urlParams = new URLSearchParams(window.location.search);
+var nameParam = urlParams.get('name');
+if (nameParam) {
+  nameInput.value = nameParam;
+  doSearch();
+}
+</script>
+</body>
+</html>
