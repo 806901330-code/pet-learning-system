@@ -8,8 +8,10 @@ import { BatchPetAssignment } from '@/sections/BatchPetAssignment';
 import { Leaderboard } from '@/sections/Leaderboard';
 import { StudentStatusView } from '@/sections/StudentStatusView';
 import { PetCreator } from '@/sections/PetCreator';
+import { ClassManagement } from '@/sections/ClassManagement';
 import { useStudents } from '@/hooks/useStudents';
 import { useCustomPets } from '@/hooks/useCustomPets';
+import { useClasses } from '@/hooks/useClasses';
 import { PET_TYPES } from '@/types/pet';
 import {
   AlertDialog,
@@ -39,6 +41,17 @@ function App() {
 
   const { customPets, loaded: customPetsLoaded } = useCustomPets();
 
+  const {
+    classes,
+    loaded: classesLoaded,
+    createClass,
+    renameClass,
+    updateClassColor,
+    importStudentsToClass,
+    removeStudentFromClass,
+    deleteClass,
+  } = useClasses();
+
   // 合并系统宠物和自定义宠物
   const allPetTypes = [...PET_TYPES, ...customPets];
 
@@ -48,7 +61,7 @@ function App() {
     toast.success('已清空所有数据');
   };
 
-  if (!loaded || !customPetsLoaded) {
+  if (!loaded || !customPetsLoaded || !classesLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -105,9 +118,12 @@ function App() {
       {/* 主内容区 */}
       <main className="max-w-6xl mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-6 mb-6">
+          <TabsList className="grid w-full grid-cols-7 mb-6">
             <TabsTrigger value="students" className="gap-1.5">
               👥 学生管理
+            </TabsTrigger>
+            <TabsTrigger value="classes" className="gap-1.5">
+              🏫 分班管理
             </TabsTrigger>
             <TabsTrigger value="points" className="gap-1.5">
               ➕ 批量加分
@@ -136,11 +152,23 @@ function App() {
             />
           </TabsContent>
 
+          <TabsContent value="classes">
+            <ClassManagement
+              classes={classes}
+              students={students}
+              onCreateClass={createClass}
+              onRenameClass={renameClass}
+              onUpdateClassColor={updateClassColor}
+              onImportStudentsToClass={importStudentsToClass}
+              onRemoveStudentFromClass={removeStudentFromClass}
+              onDeleteClass={deleteClass}
+            />
+          </TabsContent>
+
           <TabsContent value="points">
             <BatchPoints
               students={students}
               onBatchAddPoints={batchAddPoints}
-              petTypes={allPetTypes}
             />
           </TabsContent>
 
@@ -153,7 +181,7 @@ function App() {
           </TabsContent>
 
           <TabsContent value="status">
-            <StudentStatusView students={students} petTypes={allPetTypes} />
+            <StudentStatusView students={students} petTypes={allPetTypes} classes={classes} />
           </TabsContent>
 
           <TabsContent value="leaderboard">
@@ -161,7 +189,7 @@ function App() {
           </TabsContent>
 
           <TabsContent value="creator">
-            <PetCreator allPetTypes={allPetTypes} students={students} onBatchAssignPet={batchAssignPet} />
+            <PetCreator students={students} onBatchAssignPet={batchAssignPet} />
           </TabsContent>
         </Tabs>
       </main>

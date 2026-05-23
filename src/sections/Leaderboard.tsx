@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { Student, PetType } from '@/types/pet';
-import { PET_TYPES, getStageByExperience, getPetImagePath } from '@/types/pet';
+import { getStageByExperience, getPetImagePath } from '@/types/pet';
 import { Pet } from '@/components/Pet';
 
 interface LeaderboardProps {

@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { useCustomPets, EGG_LABELS } from '@/hooks/useCustomPets';
+import { useCustomPets } from '@/hooks/useCustomPets';
 import type { PetType, PokemonType, Student } from '@/types/pet';
 import { PET_TYPES, getPetImagePath } from '@/types/pet';
 import {
@@ -20,7 +20,6 @@ import {
 import { toast } from 'sonner';
 
 interface PetCreatorProps {
-  allPetTypes: PetType[];
   students: Student[];
   onBatchAssignPet: (studentIds: string[], petTypeId: string) => void;
 }
@@ -105,7 +104,7 @@ function ImageUploader({
   );
 }
 
-export function PetCreator({ allPetTypes, students, onBatchAssignPet }: PetCreatorProps) {
+export function PetCreator({ students, onBatchAssignPet }: PetCreatorProps) {
   const { customPets, createCustomPet, deleteCustomPet } = useCustomPets();
   const [name, setName] = useState('');
   const [babyImage, setBabyImage] = useState<string | null>(null);
