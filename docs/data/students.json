@@ -1214,7 +1214,7 @@
       "id": "mph0ekqz04v8k9mbag8u",
       "name": "邹心晨",
       "pet": {
-        "petTypeId": "bulbasaur",
+        "petTypeId": "charmander",
         "experience": 200,
         "stage": "baby"
       },
@@ -1534,7 +1534,7 @@
       "id": "mph0ekqzgn7b99tjdzp",
       "name": "陈栩星",
       "pet": {
-        "petTypeId": "bulbasaur",
+        "petTypeId": "charmander",
         "experience": 200,
         "stage": "baby"
       },
@@ -1704,7 +1704,7 @@
       "id": "mph0ekqzld01cfatrg",
       "name": "冯芷灵",
       "pet": {
-        "petTypeId": "bulbasaur",
+        "petTypeId": "sprigatito",
         "experience": 80,
         "stage": "egg"
       },
@@ -2222,5 +2222,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-05-24T05:37:06.694Z"
+  "exportedAt": "2026-05-24T07:06:30.156Z"
 }
