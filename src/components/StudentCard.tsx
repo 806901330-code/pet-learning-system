@@ -118,10 +118,11 @@ export function StudentCard({
               </div>
               
               {/* 操作按钮 */}
-              <div className="flex gap-2 mt-3">
+              <div className="flex flex-wrap gap-1.5 mt-3">
                 <Button 
                   size="sm" 
                   variant="outline"
+                  className="text-xs px-2.5 h-7"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowAddPoints(true);
@@ -133,6 +134,7 @@ export function StudentCard({
                   <Button 
                     size="sm" 
                     variant="outline"
+                    className="text-xs px-2.5 h-7"
                     onClick={(e) => {
                       e.stopPropagation();
                       setNewName(student.name);
@@ -146,6 +148,7 @@ export function StudentCard({
                 <Button 
                   size="sm" 
                   variant="destructive"
+                  className="text-xs px-2.5 h-7"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowDelete(true);

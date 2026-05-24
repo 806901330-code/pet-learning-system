@@ -4,14 +4,54 @@ import { execSync } from "child_process"
 import react from "@vitejs/plugin-react"
 import { defineConfig, type Plugin } from "vite"
 
-// 自定义插件：数据导出 + 一键构建推送
+// 插件1：构建时保护 docs/data/students.json 不被 public/ 的陈旧数据覆盖
+function preserveDataPlugin(): Plugin {
+  const projectDir = path.resolve(__dirname)
+
+  return {
+    name: 'preserve-data',
+    buildStart() {
+      // 确保 public/data 目录存在
+      const publicDataDir = path.resolve(projectDir, 'public/data')
+      if (!fs.existsSync(publicDataDir)) {
+        fs.mkdirSync(publicDataDir, { recursive: true })
+      }
+    },
+    writeBundle() {
+      const publicPath = path.resolve(projectDir, 'public/data/students.json')
+      const docsPath = path.resolve(projectDir, 'docs/data/students.json')
+
+      // 构建完成后，用 docs/ 中更完整的数据回写到 public/（作为下次的种子）
+      try {
+        if (fs.existsSync(docsPath) && fs.existsSync(publicPath)) {
+          const docsData = JSON.parse(fs.readFileSync(docsPath, 'utf-8'))
+          const publicData = JSON.parse(fs.readFileSync(publicPath, 'utf-8'))
+          const docsCount = docsData.students?.length || 0
+          const publicCount = publicData.students?.length || 0
+
+          if (docsCount > publicCount) {
+            fs.writeFileSync(publicPath, fs.readFileSync(docsPath, 'utf-8'), 'utf-8')
+            console.log(`📦 已用 docs/ 的 ${docsCount} 条数据更新 public/ 种子文件`)
+          }
+        }
+      } catch {
+        // 解析失败时，直接用 docs 覆盖 public
+        if (fs.existsSync(docsPath)) {
+          fs.copyFileSync(docsPath, publicPath)
+        }
+      }
+    },
+  }
+}
+
+// 插件2：数据导出 + 一键构建推送
 function exportQueryDataPlugin(): Plugin {
   const projectDir = path.resolve(__dirname)
 
   return {
     name: 'export-query-data',
     configureServer(server) {
-      // 端点1：导出学生数据到 public/data/students.json
+      // 端点1：导出学生数据 -> 同时写入 public/（dev server 用）和 docs/（部署用）
       server.middlewares.use('/api/export-query-data', (req, res) => {
         if (req.method !== 'POST') {
           res.statusCode = 405
@@ -24,15 +64,22 @@ function exportQueryDataPlugin(): Plugin {
         req.on('end', () => {
           try {
             const data = JSON.parse(body)
-            const dir = path.resolve(projectDir, 'public/data')
-            if (!fs.existsSync(dir)) {
-              fs.mkdirSync(dir, { recursive: true })
+            const content = JSON.stringify(data, null, 2)
+
+            // 写入 public/data/（dev server 热加载用）
+            const publicDir = path.resolve(projectDir, 'public/data')
+            if (!fs.existsSync(publicDir)) {
+              fs.mkdirSync(publicDir, { recursive: true })
             }
-            fs.writeFileSync(
-              path.resolve(dir, 'students.json'),
-              JSON.stringify(data, null, 2),
-              'utf-8'
-            )
+            fs.writeFileSync(path.resolve(publicDir, 'students.json'), content, 'utf-8')
+
+            // 同时写入 docs/data/（GitHub Pages 部署用）
+            const docsDir = path.resolve(projectDir, 'docs/data')
+            if (!fs.existsSync(docsDir)) {
+              fs.mkdirSync(docsDir, { recursive: true })
+            }
+            fs.writeFileSync(path.resolve(docsDir, 'students.json'), content, 'utf-8')
+
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify({ ok: true, count: data.students?.length || 0 }))
@@ -98,7 +145,7 @@ export default defineConfig({
   build: {
     outDir: 'docs',
   },
-  plugins: [react(), exportQueryDataPlugin()],
+  plugins: [react(), preserveDataPlugin(), exportQueryDataPlugin()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
