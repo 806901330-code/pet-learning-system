@@ -5,8 +5,10 @@ import react from "@vitejs/plugin-react"
 import { defineConfig, type Plugin } from "vite"
 
 // 插件1：构建时保护 docs/data/students.json 不被 public/ 的陈旧数据覆盖
+// 策略：构建前备份 docs/ 数据，构建后按备份恢复（因为 Vite 复制 public→docs 发生在 writeBundle 之前）
 function preserveDataPlugin(): Plugin {
   const projectDir = path.resolve(__dirname)
+  let docsBackup: string | null = null
 
   return {
     name: 'preserve-data',
@@ -16,28 +18,51 @@ function preserveDataPlugin(): Plugin {
       if (!fs.existsSync(publicDataDir)) {
         fs.mkdirSync(publicDataDir, { recursive: true })
       }
-    },
-    writeBundle() {
-      const publicPath = path.resolve(projectDir, 'public/data/students.json')
+
+      // 构建前备份 docs/data/students.json —— 这是部署在 GitHub Pages 上的真实数据
       const docsPath = path.resolve(projectDir, 'docs/data/students.json')
+      if (fs.existsSync(docsPath)) {
+        docsBackup = fs.readFileSync(docsPath, 'utf-8')
+      }
+    },
+    writeBundle(options: any) {
+      const outDir = options?.dir || ''
 
-      // 构建完成后，用 docs/ 中更完整的数据回写到 public/（作为下次的种子）
-      try {
-        if (fs.existsSync(docsPath) && fs.existsSync(publicPath)) {
-          const docsData = JSON.parse(fs.readFileSync(docsPath, 'utf-8'))
-          const publicData = JSON.parse(fs.readFileSync(publicPath, 'utf-8'))
-          const docsCount = docsData.students?.length || 0
-          const publicCount = publicData.students?.length || 0
-
-          if (docsCount > publicCount) {
-            fs.writeFileSync(publicPath, fs.readFileSync(docsPath, 'utf-8'), 'utf-8')
-            console.log(`📦 已用 docs/ 的 ${docsCount} 条数据更新 public/ 种子文件`)
-          }
+      // Electron 构建（outDir = dist）：清空学生数据，安装包不带用户数据
+      if (typeof outDir === 'string' && (outDir.endsWith('/dist') || outDir === 'dist')) {
+        const distDataPath = path.resolve(projectDir, outDir, 'data/students.json')
+        if (fs.existsSync(distDataPath)) {
+          fs.writeFileSync(distDataPath, JSON.stringify({ students: [] }, null, 2), 'utf-8')
+          console.log('🧹 Electron 安装包已清空学生数据')
         }
-      } catch {
-        // 解析失败时，直接用 docs 覆盖 public
-        if (fs.existsSync(docsPath)) {
-          fs.copyFileSync(docsPath, publicPath)
+        return
+      }
+
+      // GitHub Pages 构建（outDir = docs）：用备份恢复，防止 public/ 的陈旧数据污染
+      if (docsBackup) {
+        const docsPath = path.resolve(projectDir, 'docs/data/students.json')
+        const publicPath = path.resolve(projectDir, 'public/data/students.json')
+
+        try {
+          const backupData = JSON.parse(docsBackup)
+          const docsData = fs.existsSync(docsPath)
+            ? JSON.parse(fs.readFileSync(docsPath, 'utf-8'))
+            : null
+          const backupCount = backupData.students?.length || 0
+          const docsCount = docsData?.students?.length || 0
+
+          if (backupCount > docsCount) {
+            // 备份比构建后更多 → 被 Vite 覆盖了，恢复
+            fs.writeFileSync(docsPath, docsBackup, 'utf-8')
+            fs.writeFileSync(publicPath, docsBackup, 'utf-8')
+            console.log(`📦 已用备份恢复 ${backupCount} 条学生数据（构建前 docs 有 ${backupCount} 条，构建后仅 ${docsCount} 条）`)
+          } else if (backupCount > 0) {
+            // 数据正常，把 docs 回写 public（保持种子新鲜）
+            fs.writeFileSync(publicPath, docsBackup, 'utf-8')
+            console.log(`📦 数据完好，已同步 ${backupCount} 条到 public/ 种子`)
+          }
+        } catch (e) {
+          console.warn('⚠️ 数据恢复失败:', e)
         }
       }
     },
