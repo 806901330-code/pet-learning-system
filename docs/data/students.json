@@ -535,7 +535,7 @@
       "name": "黄彦清",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 30,
+        "experience": 40,
         "stage": "egg"
       },
       "createdAt": 1779459773579
@@ -595,7 +595,7 @@
       "name": "优优",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -675,7 +675,7 @@
       "name": "赵若彤",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 60,
+        "experience": 70,
         "stage": "egg"
       },
       "createdAt": 1779459773579
@@ -775,7 +775,7 @@
       "name": "陈优优",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -815,7 +815,7 @@
       "name": "魏麟润",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -865,7 +865,7 @@
       "name": "蒋陈",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -875,7 +875,7 @@
       "name": "刘谨锋",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 60,
+        "experience": 70,
         "stage": "egg"
       },
       "createdAt": 1779459773579
@@ -1135,7 +1135,7 @@
       "name": "刘景浩",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -1165,7 +1165,7 @@
       "name": "陶梓研/锦城",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -1175,7 +1175,7 @@
       "name": "房心毅",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -1185,7 +1185,7 @@
       "name": "时若涵",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -1315,7 +1315,7 @@
       "name": "振宇",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -1445,7 +1445,7 @@
       "name": "林少涵",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 30,
+        "experience": 40,
         "stage": "egg"
       },
       "createdAt": 1779459773579
@@ -1455,7 +1455,7 @@
       "name": "向日葵",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 30,
+        "experience": 40,
         "stage": "egg"
       },
       "createdAt": 1779459773579
@@ -1475,7 +1475,7 @@
       "name": "高堃贤",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 180,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -1495,7 +1495,7 @@
       "name": "吕灏霖",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 60,
+        "experience": 70,
         "stage": "egg"
       },
       "createdAt": 1779459773579
@@ -1615,7 +1615,7 @@
       "name": "段天阳",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -1685,7 +1685,7 @@
       "name": "曾幸",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -1965,7 +1965,7 @@
       "name": "孙灏权",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -1985,7 +1985,7 @@
       "name": "刘紫萱",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -2025,7 +2025,7 @@
       "name": "李安然",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -2045,7 +2045,7 @@
       "name": "龚一喆",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 60,
+        "experience": 80,
         "stage": "egg"
       },
       "createdAt": 1779459773579
@@ -2055,7 +2055,7 @@
       "name": "何嘉木",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -2175,7 +2175,7 @@
       "name": "朱珺涵",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779459773579
@@ -2215,12 +2215,12 @@
       "name": "许岚萱",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 150,
+        "experience": 160,
         "stage": "baby"
       },
       "createdAt": 1779460576555
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-05-24T04:59:39.995Z"
+  "exportedAt": "2026-05-24T05:00:53.855Z"
 }
