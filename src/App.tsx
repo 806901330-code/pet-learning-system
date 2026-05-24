@@ -45,6 +45,7 @@ function App() {
     batchAddPoints,
     batchAssignPet,
     deleteStudent,
+    renameStudent,
     clearAll,
   } = useStudents();
 
@@ -380,6 +381,7 @@ function App() {
               onAddStudents={addStudents}
               onAddPoints={addPoints}
               onDeleteStudent={deleteStudent}
+              onRenameStudent={renameStudent}
               petTypes={allPetTypes}
             />
           </TabsContent>

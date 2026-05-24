@@ -137,6 +137,21 @@ export function useStudents() {
     }));
   }, []);
 
+  // 修改学生姓名
+  const renameStudent = useCallback((studentId: string, newName: string) => {
+    const trimmedName = newName.trim();
+    if (!trimmedName) return false;
+    setStudents(prev => {
+      // 检查姓名是否与其他学生重复
+      const duplicate = prev.some(s => s.id !== studentId && s.name === trimmedName);
+      if (duplicate) return prev;
+      return prev.map(student =>
+        student.id === studentId ? { ...student, name: trimmedName } : student
+      );
+    });
+    return true;
+  }, []);
+
   // 清空所有数据
   const clearAll = useCallback(() => {
     setStudents([]);
@@ -151,6 +166,7 @@ export function useStudents() {
     batchAddPoints,
     batchAssignPet,
     deleteStudent,
+    renameStudent,
     findStudentsByName,
     findStudentIdsByName,
     changePetType,

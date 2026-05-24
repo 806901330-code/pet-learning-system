@@ -22,6 +22,7 @@ interface StudentCardProps {
   petTypes: PetType[];
   onAddPoints: (studentId: string, points: number) => void;
   onDelete: (studentId: string) => void;
+  onRename?: (studentId: string, newName: string) => boolean;
   isSelected?: boolean;
   onToggleSelect?: () => void;
 }
@@ -31,12 +32,16 @@ export function StudentCard({
   petTypes,
   onAddPoints, 
   onDelete, 
+  onRename,
   isSelected, 
   onToggleSelect 
 }: StudentCardProps) {
   const [showAddPoints, setShowAddPoints] = useState(false);
   const [points, setPoints] = useState(10);
   const [showDelete, setShowDelete] = useState(false);
+  const [showRename, setShowRename] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [renameError, setRenameError] = useState('');
   
   const petType = petTypes.find(p => p.id === student.pet.petTypeId) || petTypes[0];
   const currentStage = getStageByExperience(student.pet.experience);
@@ -47,6 +52,25 @@ export function StudentCard({
       setShowAddPoints(false);
       setPoints(10);
     }
+  };
+
+  const handleRename = () => {
+    const trimmed = newName.trim();
+    if (!trimmed) {
+      setRenameError('姓名不能为空');
+      return;
+    }
+    if (trimmed === student.name) {
+      setShowRename(false);
+      return;
+    }
+    const success = onRename?.(student.id, trimmed);
+    if (success === false) {
+      setRenameError('该姓名已存在，请换一个');
+      return;
+    }
+    setShowRename(false);
+    setRenameError('');
   };
 
   return (
@@ -105,6 +129,20 @@ export function StudentCard({
                 >
                   ➕ 加分
                 </Button>
+                {onRename && (
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setNewName(student.name);
+                      setRenameError('');
+                      setShowRename(true);
+                    }}
+                  >
+                    ✏️ 改名
+                  </Button>
+                )}
                 <Button 
                   size="sm" 
                   variant="destructive"
@@ -173,6 +211,35 @@ export function StudentCard({
             >
               确认删除
             </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* 改名对话框 */}
+      <AlertDialog open={showRename} onOpenChange={(open) => { setShowRename(open); setRenameError(''); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>修改学生姓名</AlertDialogTitle>
+            <AlertDialogDescription>
+              当前姓名：{student.name}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4 space-y-2">
+            <label className="text-sm font-medium">新姓名</label>
+            <Input
+              value={newName}
+              onChange={(e) => { setNewName(e.target.value); setRenameError(''); }}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleRename(); }}
+              placeholder="请输入新姓名..."
+              autoFocus
+            />
+            {renameError && (
+              <p className="text-sm text-destructive">{renameError}</p>
+            )}
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setRenameError('')}>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={handleRename}>确认改名</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

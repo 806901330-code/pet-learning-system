@@ -20,6 +20,7 @@ interface StudentManagementProps {
   onAddStudents: (names: string[], petTypeId: string) => number;
   onAddPoints: (studentId: string, points: number) => void;
   onDeleteStudent: (studentId: string) => void;
+  onRenameStudent: (studentId: string, newName: string) => boolean;
 }
 
 export function StudentManagement({
@@ -28,6 +29,7 @@ export function StudentManagement({
   onAddStudents,
   onAddPoints,
   onDeleteStudent,
+  onRenameStudent,
 }: StudentManagementProps) {
   const [showImport, setShowImport] = useState(false);
   const [selectedPet, setSelectedPet] = useState(PET_TYPES[0].id);
@@ -146,6 +148,7 @@ export function StudentManagement({
                   petTypes={petTypes}
                   onAddPoints={onAddPoints}
                   onDelete={onDeleteStudent}
+                  onRename={onRenameStudent}
                 />
               ))}
             </div>
