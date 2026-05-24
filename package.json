@@ -11,8 +11,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
-    "electron:build": "vite build && electron-builder --mac",
-    "electron:preview": "vite build && electron ."
+    "electron:build:mac": "vite build --outDir dist && electron-builder --mac",
+    "electron:build:win": "vite build --outDir dist && electron-builder --win",
+    "electron:build:all": "vite build --outDir dist && electron-builder --mac --win",
+    "electron:preview": "vite build --outDir dist && electron ."
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -112,7 +114,7 @@
         }
       ],
       "category": "public.app-category.education",
-      "icon": null,
+      "icon": "public/icon.png",
       "hardenedRuntime": false,
       "gatekeeperAssess": false,
       "entitlements": null,
@@ -133,6 +135,33 @@
           "type": "file"
         }
       ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "public/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "宠物养成学习系统",
+      "installerIcon": "public/icon.ico",
+      "uninstallerIcon": "public/icon.ico",
+      "installerHeaderIcon": "public/icon.ico"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
     }
   }
 }
