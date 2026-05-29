@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <ellipse cx="32" cy="34" rx="18" ry="22" fill="#FFC107" opacity="0.25"/>
-  <ellipse cx="32" cy="34" rx="16" ry="20" fill="#FFC107" opacity="0.15" stroke="#FFC107" stroke-width="2"/>
-  <polygon points="32,8 26,24 34,22 28,40 40,20 32,24" fill="#FF8F00" opacity="0.8"/>
-</svg>
