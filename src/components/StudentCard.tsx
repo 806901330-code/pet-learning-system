@@ -23,6 +23,7 @@ interface StudentCardProps {
   onAddPoints: (studentId: string, points: number) => void;
   onDelete: (studentId: string) => void;
   onRename?: (studentId: string, newName: string) => boolean;
+  onSetNickname?: (studentId: string, nickname: string) => void;
   isSelected?: boolean;
   onToggleSelect?: () => void;
 }
@@ -33,6 +34,7 @@ export function StudentCard({
   onAddPoints, 
   onDelete, 
   onRename,
+  onSetNickname,
   isSelected, 
   onToggleSelect 
 }: StudentCardProps) {
@@ -42,6 +44,8 @@ export function StudentCard({
   const [showRename, setShowRename] = useState(false);
   const [newName, setNewName] = useState('');
   const [renameError, setRenameError] = useState('');
+  const [showNickname, setShowNickname] = useState(false);
+  const [nicknameInput, setNicknameInput] = useState('');
   
   const petType = petTypes.find(p => p.id === student.pet.petTypeId) || petTypes[0];
   const currentStage = getStageByExperience(student.pet.experience);
@@ -71,6 +75,11 @@ export function StudentCard({
     }
     setShowRename(false);
     setRenameError('');
+  };
+
+  const handleSetNickname = () => {
+    onSetNickname?.(student.id, nicknameInput.trim());
+    setShowNickname(false);
   };
 
   return (
@@ -143,6 +152,20 @@ export function StudentCard({
                     }}
                   >
                     ✏️ 改名
+                  </Button>
+                )}
+                {onSetNickname && (
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="text-xs px-2.5 h-7 text-purple-600 border-purple-300 hover:bg-purple-50"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setNicknameInput(student.nickname || '');
+                      setShowNickname(true);
+                    }}
+                  >
+                    🏷️ 昵称
                   </Button>
                 )}
                 <Button 
@@ -243,6 +266,39 @@ export function StudentCard({
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setRenameError('')}>取消</AlertDialogCancel>
             <AlertDialogAction onClick={handleRename}>确认改名</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* 昵称设置对话框 */}
+      <AlertDialog open={showNickname} onOpenChange={setShowNickname}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>设置学员昵称</AlertDialogTitle>
+            <AlertDialogDescription>
+              昵称仅用于加分时快速查找学员，不会在页面上显示。<br/>
+              当前学员：{student.name}
+              {student.nickname && <>｜当前昵称：{student.nickname}</>}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4 space-y-2">
+            <label className="text-sm font-medium">昵称</label>
+            <Input
+              value={nicknameInput}
+              onChange={(e) => setNicknameInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleSetNickname(); }}
+              placeholder="例如：小张、班长、英语课代表..."
+              autoFocus
+            />
+            <p className="text-xs text-muted-foreground">
+              留空则清除昵称。设置后在加分名单中输入昵称也能匹配到该学员。
+            </p>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={handleSetNickname}>
+              {nicknameInput.trim() ? '确认设置' : '清除昵称'}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

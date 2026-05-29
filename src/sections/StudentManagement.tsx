@@ -21,6 +21,7 @@ interface StudentManagementProps {
   onAddPoints: (studentId: string, points: number) => void;
   onDeleteStudent: (studentId: string) => void;
   onRenameStudent: (studentId: string, newName: string) => boolean;
+  onSetNickname?: (studentId: string, nickname: string) => void;
 }
 
 export function StudentManagement({
@@ -30,6 +31,7 @@ export function StudentManagement({
   onAddPoints,
   onDeleteStudent,
   onRenameStudent,
+  onSetNickname,
 }: StudentManagementProps) {
   const [showImport, setShowImport] = useState(false);
   const [selectedPet, setSelectedPet] = useState(PET_TYPES[0].id);
@@ -40,10 +42,13 @@ export function StudentManagement({
     console.log(`成功添加 ${added} 名学生`);
   };
 
-  // 过滤学生
-  const filteredStudents = students.filter(s => 
-    s.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // 过滤学生（姓名或昵称匹配）
+  const filteredStudents = students.filter(s => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return true;
+    return s.name.toLowerCase().includes(q)
+      || (s.nickname && s.nickname.toLowerCase().includes(q));
+  });
 
   // 统计各阶段人数
   const stageCount = {
@@ -82,7 +87,7 @@ export function StudentManagement({
         {/* 搜索 */}
         <input
           type="text"
-          placeholder="🔍 搜索学生..."
+          placeholder="🔍 搜索姓名或昵称..."
           className="px-4 py-2 rounded-lg border border-input bg-background"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -149,6 +154,7 @@ export function StudentManagement({
                   onAddPoints={onAddPoints}
                   onDelete={onDeleteStudent}
                   onRename={onRenameStudent}
+                  onSetNickname={onSetNickname}
                 />
               ))}
             </div>

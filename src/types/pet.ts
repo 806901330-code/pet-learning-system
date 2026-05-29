@@ -37,6 +37,7 @@ export interface StudentPet {
 export interface Student {
   id: string;
   name: string;
+  nickname?: string; // 昵称（不显示，仅用于加分时搜索）
   pet: StudentPet;
   createdAt: number;
 }
@@ -213,5 +214,5 @@ export function getPetImagePath(petId: string, stage: PetStage, pokemonType: Pok
   if (petType?.isCustom && petType.customImages?.[stage as 'baby' | 'teen' | 'adult']) {
     return petType.customImages[stage as 'baby' | 'teen' | 'adult']!;
   }
-  return `./pokemon/${petId}_${stage}.png`;
+  return `./pokemon/${petId}_${stage}.svg`;
 }

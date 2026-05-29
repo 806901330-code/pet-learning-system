@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs><radialGradient id="ga-mudkip" cx="50%" cy="40%"><stop offset="0%" stop-color="white" stop-opacity="0.4"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient></defs>
+  <!-- 光环 -->
+  <circle cx="32" cy="30" r="38" fill="#039BE5" opacity="0.08"/>
+  <!-- 身体 -->
+  <ellipse cx="32" cy="30" rx="30" ry="34" fill="#29B6F6"/>
+  <ellipse cx="32" cy="30" rx="30" ry="34" fill="url(#ga-mudkip)"/>
+  <!-- 眼睛 -->
+  <ellipse cx="24" cy="26" rx="3.5" ry="4.5" fill="#333"/>
+  <ellipse cx="40" cy="26" rx="3.5" ry="4.5" fill="#333"/>
+  <ellipse cx="24.5" cy="25" rx="1.5" ry="2" fill="white"/>
+  <ellipse cx="40.5" cy="25" rx="1.5" ry="2" fill="white"/>
+  <!-- 嘴 -->
+  <path d="M26 34 Q32 40 38 34" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 腮红 -->
+  <circle cx="18" cy="32" r="5" fill="#FF5252" opacity="0.25"/>
+  <circle cx="46" cy="32" r="5" fill="#FF5252" opacity="0.25"/>
+  <path d="M20 6 Q32 -2 44 6" fill="none" stroke="#0288D1" stroke-width="3"/><ellipse cx="50" cy="20" rx="10" ry="5" fill="#03A9F4" opacity="0.4"/><circle cx="24" cy="30" r="4" fill="#FF5252"/>
+  <!-- 星星 -->
+  <circle cx="10" cy="10" r="2" fill="#039BE5" opacity="0.4"/>
+  <circle cx="54" cy="14" r="2.5" fill="#039BE5" opacity="0.3"/>
+  <circle cx="50" cy="8" r="1.5" fill="#039BE5" opacity="0.3"/>
+</svg>

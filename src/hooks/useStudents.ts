@@ -137,6 +137,29 @@ export function useStudents() {
     }));
   }, []);
 
+  // 设置学生昵称
+  const setNickname = useCallback((studentId: string, nickname: string) => {
+    const trimmed = nickname.trim();
+    setStudents(prev => prev.map(student =>
+      student.id === studentId
+        ? { ...student, nickname: trimmed || undefined }
+        : student
+    ));
+  }, []);
+
+  // 按姓名或昵称查找学生
+  const findStudentsByNameOrNickname = useCallback((queries: string[]): Student[] => {
+    const querySet = new Set(queries.map(q => q.trim()));
+    return students.filter(s =>
+      querySet.has(s.name) || (s.nickname && querySet.has(s.nickname))
+    );
+  }, [students]);
+
+  // 按姓名或昵称查找学生ID
+  const findStudentIdsByNameOrNickname = useCallback((queries: string[]): string[] => {
+    return findStudentsByNameOrNickname(queries).map(s => s.id);
+  }, [findStudentsByNameOrNickname]);
+
   // 修改学生姓名
   const renameStudent = useCallback((studentId: string, newName: string) => {
     const trimmedName = newName.trim();
@@ -167,8 +190,11 @@ export function useStudents() {
     batchAssignPet,
     deleteStudent,
     renameStudent,
+    setNickname,
     findStudentsByName,
     findStudentIdsByName,
+    findStudentsByNameOrNickname,
+    findStudentIdsByNameOrNickname,
     changePetType,
     clearAll,
   };

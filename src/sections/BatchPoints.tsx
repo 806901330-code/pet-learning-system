@@ -22,8 +22,14 @@ export function BatchPoints({ students, onBatchAddPoints }: BatchPointsProps) {
 
   // 确认批量加分
   const handleConfirmPoints = (names: string[]) => {
-    const matched = students.filter(s => names.includes(s.name));
-    const unmatched = names.filter(n => !students.some(s => s.name === n));
+    const nameSet = new Set(names.map(n => n.trim()));
+    const matched = students.filter(s =>
+      nameSet.has(s.name) || (s.nickname && nameSet.has(s.nickname))
+    );
+    const unmatched = names.filter(n => {
+      const trimmed = n.trim();
+      return !students.some(s => s.name === trimmed || s.nickname === trimmed);
+    });
 
     if (matched.length > 0) {
       onBatchAddPoints(matched.map(s => s.id), points);
@@ -92,7 +98,7 @@ export function BatchPoints({ students, onBatchAddPoints }: BatchPointsProps) {
           <div className="space-y-3">
             <label className="text-sm font-medium">输入学生名单</label>
             <Textarea
-              placeholder={"张三\n李四\n王五\n赵六\n或：张三,李四,王五,赵六"}
+              placeholder={"张三\n李四\n王五\n赵六\n或：张三,李四,王五,赵六\n💡 输入姓名或昵称均可匹配"}
               className="min-h-[120px]"
               id="batch-points-textarea"
             />
@@ -166,7 +172,7 @@ export function BatchPoints({ students, onBatchAddPoints }: BatchPointsProps) {
         open={showImport}
         onOpenChange={setShowImport}
         title="批量加分 - 导入学生名单"
-        description={`将为导入的学生每人加 ${points} 分经验值`}
+        description={`将为导入的学生每人加 ${points} 分经验值，支持姓名或昵称匹配`}
         placeholder={"张三\n李四\n王五\n赵六"}
         onConfirm={handleConfirmPoints}
       />

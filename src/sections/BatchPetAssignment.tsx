@@ -27,8 +27,14 @@ export function BatchPetAssignment({ students, petTypes, onBatchAssignPet }: Bat
       return;
     }
 
-    const matched = students.filter(s => names.includes(s.name));
-    const unmatched = names.filter(n => !students.some(s => s.name === n));
+    const nameSet = new Set(names.map(n => n.trim()));
+    const matched = students.filter(s =>
+      nameSet.has(s.name) || (s.nickname && nameSet.has(s.nickname))
+    );
+    const unmatched = names.filter(n => {
+      const trimmed = n.trim();
+      return !students.some(s => s.name === trimmed || s.nickname === trimmed);
+    });
 
     if (matched.length > 0) {
       onBatchAssignPet(
@@ -139,7 +145,7 @@ export function BatchPetAssignment({ students, petTypes, onBatchAssignPet }: Bat
               </Button>
             </div>
             <Textarea
-              placeholder={"张三\n李四\n王五\n赵六\n或：张三,李四,王五,赵六"}
+              placeholder={"张三\n李四\n王五\n赵六\n或：张三,李四,王五,赵六\n💡 输入姓名或昵称均可匹配"}
               className="min-h-[150px]"
               value={namesText}
               onChange={(e) => setNamesText(e.target.value)}
