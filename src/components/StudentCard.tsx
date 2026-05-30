@@ -103,7 +103,7 @@ export function StudentCard({
               petType={petType}
               stage={currentStage}
               experience={student.pet.experience}
-              size="sm"
+              size="md"
             />
             
             {/* 信息 */}
@@ -127,11 +127,11 @@ export function StudentCard({
               </div>
               
               {/* 操作按钮 */}
-              <div className="flex flex-wrap gap-1.5 mt-3">
+              <div className="grid grid-cols-4 gap-1.5 mt-3">
                 <Button 
                   size="sm" 
                   variant="outline"
-                  className="text-xs px-2.5 h-7"
+                  className="text-xs h-7 w-full"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowAddPoints(true);
@@ -139,39 +139,35 @@ export function StudentCard({
                 >
                   ➕ 加分
                 </Button>
-                {onRename && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    className="text-xs px-2.5 h-7"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setNewName(student.name);
-                      setRenameError('');
-                      setShowRename(true);
-                    }}
-                  >
-                    ✏️ 改名
-                  </Button>
-                )}
-                {onSetNickname && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    className="text-xs px-2.5 h-7 text-purple-600 border-purple-300 hover:bg-purple-50"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setNicknameInput(student.nickname || '');
-                      setShowNickname(true);
-                    }}
-                  >
-                    🏷️ 昵称
-                  </Button>
-                )}
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="text-xs h-7 w-full"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setNewName(student.name);
+                    setRenameError('');
+                    setShowRename(true);
+                  }}
+                >
+                  ✏️ 改名
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="text-xs h-7 w-full text-purple-600 border-purple-300 hover:bg-purple-50"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setNicknameInput(student.nickname || '');
+                    setShowNickname(true);
+                  }}
+                >
+                  🏷️ 昵称
+                </Button>
                 <Button 
                   size="sm" 
                   variant="destructive"
-                  className="text-xs px-2.5 h-7"
+                  className="text-xs h-7 w-full"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowDelete(true);
