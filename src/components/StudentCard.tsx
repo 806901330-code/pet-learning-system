@@ -103,7 +103,7 @@ export function StudentCard({
               petType={petType}
               stage={currentStage}
               experience={student.pet.experience}
-              size="md"
+              size="lg"
             />
             
             {/* 信息 */}
@@ -127,7 +127,7 @@ export function StudentCard({
               </div>
               
               {/* 操作按钮 */}
-              <div className="grid grid-cols-4 gap-1.5 mt-3">
+              <div className="grid grid-cols-2 gap-1.5 mt-3">
                 <Button 
                   size="sm" 
                   variant="outline"

@@ -16,6 +16,18 @@ export function Pet({ petType, stage, experience, size = 'md', showExp = true }:
     lg: 'w-32 h-32',
   };
 
+  const textSizes = {
+    sm: 'text-xs',
+    md: 'text-sm',
+    lg: 'text-base',
+  };
+
+  const stageTextSizes = {
+    sm: 'text-xs',
+    md: 'text-xs',
+    lg: 'text-sm',
+  };
+
   const nextExp = getNextStageExp(experience);
   const progress = nextExp 
     ? ((experience - STAGE_CONFIG[stage].minExp) / (nextExp - STAGE_CONFIG[stage].minExp)) * 100
@@ -42,7 +54,7 @@ export function Pet({ petType, stage, experience, size = 'md', showExp = true }:
       
       {showExp && (
         <div className="text-center">
-          <div className="text-xs text-muted-foreground">
+          <div className={`${stageTextSizes[size]} text-muted-foreground`}>
             {petType.stages[stage]}
           </div>
           <div className="w-full bg-secondary rounded-full h-1.5 mt-1">
@@ -54,7 +66,7 @@ export function Pet({ petType, stage, experience, size = 'md', showExp = true }:
               }}
             />
           </div>
-          <div className="text-xs text-muted-foreground mt-1">
+          <div className={`${textSizes[size]} text-muted-foreground mt-1 font-medium`}>
             经验: {experience}
             {nextExp && ` / ${nextExp}`}
             {!nextExp && ' (满级)'}
