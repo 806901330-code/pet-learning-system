@@ -11,6 +11,7 @@ import { Leaderboard } from '@/sections/Leaderboard';
 import { StudentStatusView } from '@/sections/StudentStatusView';
 import { PetCreator } from '@/sections/PetCreator';
 import { ClassManagement } from '@/sections/ClassManagement';
+import { PkBattle } from '@/sections/PkBattle';
 import { useStudents } from '@/hooks/useStudents';
 import { useCustomPets } from '@/hooks/useCustomPets';
 import { useClasses } from '@/hooks/useClasses';
@@ -352,7 +353,7 @@ function App() {
       {/* 主内容区 */}
       <main className="max-w-6xl mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-7 mb-6">
+          <TabsList className="grid w-full grid-cols-8 mb-6">
             <TabsTrigger value="students" className="gap-1.5">
               👥 学生管理
             </TabsTrigger>
@@ -373,6 +374,9 @@ function App() {
             </TabsTrigger>
             <TabsTrigger value="creator" className="gap-1.5">
               🎨 创作栏
+            </TabsTrigger>
+            <TabsTrigger value="pk" className="gap-1.5">
+              ⚔️ PK对战
             </TabsTrigger>
           </TabsList>
 
@@ -426,6 +430,10 @@ function App() {
 
           <TabsContent value="creator">
             <PetCreator students={students} onBatchAssignPet={batchAssignPet} />
+          </TabsContent>
+
+          <TabsContent value="pk">
+            <PkBattle students={students} petTypes={allPetTypes} onAddPoints={addPoints} />
           </TabsContent>
         </Tabs>
       </main>
