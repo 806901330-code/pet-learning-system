@@ -2243,7 +2243,7 @@
       "name": "测试 1",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 110,
+        "experience": 120,
         "stage": "baby"
       },
       "createdAt": 1780212423989
@@ -2253,12 +2253,12 @@
       "name": "测试 2",
       "pet": {
         "petTypeId": "torchic",
-        "experience": 310,
+        "experience": 320,
         "stage": "teen"
       },
       "createdAt": 1780212423989
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-05-31T07:29:28.215Z"
+  "exportedAt": "2026-05-31T08:03:56.804Z"
 }
