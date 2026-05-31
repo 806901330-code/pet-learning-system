@@ -2250,16 +2250,16 @@
       "createdAt": 1780212423989
     },
     {
-      "id": "mptgihit9hxpxpylpx7",
+      "id": "mptjd6n5d2ybv7xgecm",
       "name": "测试 2",
       "pet": {
-        "petTypeId": "torchic",
-        "experience": 320,
-        "stage": "teen"
+        "petTypeId": "mudkip",
+        "experience": 150,
+        "stage": "baby"
       },
-      "createdAt": 1780212423989
+      "createdAt": 1780217215457
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-05-31T08:35:33.166Z"
+  "exportedAt": "2026-05-31T08:48:16.353Z"
 }
