@@ -57,66 +57,84 @@ function extractImageFromClipboard(e: React.ClipboardEvent): Promise<string | nu
   });
 }
 
-// ─────────────── 图片上传组件 ───────────────
+// ─────────────── 多图片上传组件 ───────────────
 function ImageUploader({
-  value,
+  values = [],
   onChange,
   label = '添加图片',
+  maxImages = 5,
 }: {
-  value?: string;
-  onChange: (url: string | undefined) => void;
+  values?: string[];
+  onChange: (urls: string[]) => void;
   label?: string;
+  maxImages?: number;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleFile = async (file: File) => {
-    const b64 = await imageFileToBase64(file);
-    onChange(b64);
+  const handleFiles = async (files: FileList) => {
+    const newUrls: string[] = [];
+    for (let i = 0; i < files.length; i++) {
+      if (values.length + newUrls.length >= maxImages) break;
+      const b64 = await imageFileToBase64(files[i]);
+      newUrls.push(b64);
+    }
+    if (newUrls.length) onChange([...values, ...newUrls]);
   };
 
   const handlePaste = async (e: React.ClipboardEvent) => {
     const url = await extractImageFromClipboard(e);
-    if (url) onChange(url);
+    if (url && values.length < maxImages) onChange([...values, url]);
+  };
+
+  const removeImage = (idx: number) => {
+    onChange(values.filter((_, i) => i !== idx));
   };
 
   return (
     <div className="space-y-2">
-      {value ? (
-        <div className="relative inline-block">
-          <img
-            src={value}
-            alt="题目图片"
-            className="max-w-full max-h-48 rounded-lg border object-contain"
-          />
-          <button
-            type="button"
-            className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-destructive text-white text-xs flex items-center justify-center shadow"
-            onClick={() => onChange(undefined)}
-          >
-            ×
-          </button>
+      {/* 已添加的图片网格 */}
+      {values.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {values.map((url, i) => (
+            <div key={i} className="relative inline-block group">
+              <img
+                src={url}
+                alt={`图片 ${i + 1}`}
+                className="w-20 h-20 rounded-lg border object-cover"
+              />
+              <button
+                type="button"
+                className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-destructive text-white text-[10px] flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => removeImage(i)}
+              >
+                ×
+              </button>
+            </div>
+          ))}
         </div>
-      ) : (
+      )}
+      {/* 添加按钮 */}
+      {values.length < maxImages && (
         <div
-          className="border-2 border-dashed border-muted-foreground/30 rounded-lg p-4 text-center text-sm text-muted-foreground cursor-pointer hover:border-primary/40 hover:bg-muted/20 transition-all"
+          className="border-2 border-dashed border-muted-foreground/30 rounded-lg p-3 text-center text-xs text-muted-foreground cursor-pointer hover:border-primary/40 hover:bg-muted/20 transition-all"
           onClick={() => inputRef.current?.click()}
           onPaste={handlePaste}
           tabIndex={0}
           onKeyDown={e => e.key === 'Enter' && inputRef.current?.click()}
         >
-          <div className="text-2xl mb-1">🖼️</div>
-          <p>{label}</p>
-          <p className="text-xs mt-0.5 text-muted-foreground/70">点击上传 或 Ctrl+V 粘贴</p>
+          <div className="text-lg mb-0.5">🖼️</div>
+          <p>{values.length > 0 ? `+ 添加更多 (${values.length}/${maxImages})` : label}</p>
+          {values.length === 0 && <p className="text-[10px] mt-0.5 opacity-70">点击上传 或 Ctrl+V 粘贴</p>}
         </div>
       )}
       <input
         ref={inputRef}
         type="file"
         accept="image/*"
+        multiple
         className="hidden"
         onChange={e => {
-          const f = e.target.files?.[0];
-          if (f) handleFile(f);
+          if (e.target.files?.length) handleFiles(e.target.files);
           e.target.value = '';
         }}
       />
@@ -142,8 +160,8 @@ function QuestionEditor({
     initial?.options ?? ['A. ', 'B. ', 'C. ', 'D. ']
   );
   const [answer, setAnswer] = useState(initial?.answer ?? '');
-  const [imageUrl, setImageUrl] = useState<string | undefined>(initial?.imageUrl);
-  const [optionImages, setOptionImages] = useState<(string | undefined)[]>(
+  const [imageUrls, setImageUrls] = useState<string[]>(initial?.imageUrls ?? []);
+  const [optionImages, setOptionImages] = useState<(string[] | undefined)[]>(
     initial?.optionImages ?? [undefined, undefined, undefined, undefined]
   );
 
@@ -154,7 +172,7 @@ function QuestionEditor({
       setContent(initial?.content ?? '');
       setOptions(initial?.options ?? ['A. ', 'B. ', 'C. ', 'D. ']);
       setAnswer(initial?.answer ?? '');
-      setImageUrl(initial?.imageUrl);
+      setImageUrls(initial?.imageUrls ?? []);
       setOptionImages(initial?.optionImages ?? [undefined, undefined, undefined, undefined]);
     }
   }, [open, initial]);
@@ -165,13 +183,13 @@ function QuestionEditor({
       type,
       content: content.trim(),
       answer: answer.trim() || undefined,
-      imageUrl: imageUrl || undefined,
+      imageUrls: imageUrls.length ? imageUrls : undefined,
     };
     if (type === 'choice') {
       const validOptions = options.filter(o => o.trim().length > 2);
       q.options = validOptions.length >= 2 ? validOptions : undefined;
       const validOptionImages = optionImages.slice(0, options.length);
-      if (validOptionImages.some(img => img)) q.optionImages = validOptionImages;
+      if (validOptionImages.some(img => img && img.length > 0)) q.optionImages = validOptionImages;
     }
     onSave(q);
     onClose();
@@ -223,10 +241,10 @@ function QuestionEditor({
 
           {/* 题目图片 */}
           <div className="space-y-1.5">
-            <Label className="text-sm font-medium">题目图片（可选）</Label>
+            <Label className="text-sm font-medium">题目图片（可选，最多5张）</Label>
             <ImageUploader
-              value={imageUrl}
-              onChange={setImageUrl}
+              values={imageUrls}
+              onChange={setImageUrls}
               label="为题目添加图片"
             />
           </div>
@@ -234,9 +252,9 @@ function QuestionEditor({
           {/* 选择题选项 */}
           {type === 'choice' && (
             <div className="space-y-2">
-              <Label className="text-sm font-medium">选项</Label>
+              <Label className="text-sm font-medium">选项（至少保留2个）</Label>
               {options.map((opt, i) => (
-                <div key={i} className="space-y-1.5">
+                <div key={i} className="space-y-1.5 p-2 rounded-lg border border-border/40 bg-background/50">
                   <div className="flex gap-2 items-center">
                     <span className="w-6 text-sm text-muted-foreground font-mono shrink-0">
                       {String.fromCharCode(65 + i)}.
@@ -251,27 +269,31 @@ function QuestionEditor({
                         setOptions(newOpts);
                       }}
                     />
-                    <div className="shrink-0">
-                      <ImageUploader
-                        value={optionImages[i]}
-                        onChange={url => {
-                          const newImgs = [...optionImages];
-                          newImgs[i] = url;
-                          setOptionImages(newImgs);
+                    {options.length > 2 && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 w-7 p-0 text-destructive/60 hover:text-destructive shrink-0"
+                        onClick={() => {
+                          setOptions(prev => prev.filter((_, idx) => idx !== i));
+                          setOptionImages(prev => prev.filter((_, idx) => idx !== i));
                         }}
-                        label=""
-                      />
-                    </div>
+                      >×</Button>
+                    )}
                   </div>
-                  {optionImages[i] && (
-                    <div className="ml-8">
-                      <img
-                        src={optionImages[i]}
-                        alt={`选项${String.fromCharCode(65 + i)}图片`}
-                        className="max-h-24 rounded-lg border object-contain"
-                      />
-                    </div>
-                  )}
+                  {/* 选项图片 */}
+                  <div className="ml-8">
+                    <ImageUploader
+                      values={optionImages[i] ?? []}
+                      onChange={urls => {
+                        const newImgs = [...optionImages];
+                        newImgs[i] = urls.length ? urls : undefined;
+                        setOptionImages(newImgs);
+                      }}
+                      label={`选项${String.fromCharCode(65 + i)}图片`}
+                    />
+                  </div>
                 </div>
               ))}
               <Button
@@ -592,7 +614,7 @@ function QuestionBankPanel({
                             {q.type === 'choice' ? '选择' : q.type === 'truefalse' ? '判断' : '简答'}
                           </Badge>
                           <span className="line-clamp-2 flex-1">{q.content}</span>
-                          {q.imageUrl && <span className="text-xs text-primary shrink-0">🖼️</span>}
+                          {q.imageUrls && q.imageUrls.length > 0 && <span className="text-xs text-primary shrink-0">🖼️×{q.imageUrls.length}</span>}
                         </div>
                         {q.answer && (
                           <span className="text-xs text-amber-600 mt-0.5 block">
@@ -780,6 +802,151 @@ function FighterSelector({
   );
 }
 
+// ─────────────── 图片灯箱 ───────────────
+function ImageLightbox({
+  src,
+  onClose,
+}: {
+  src: string;
+  onClose: () => void;
+}) {
+  const [zoom, setZoom] = useState(1);
+  const imgRef = useRef<HTMLImageElement>(null);
+  // baseSize: 图片在 zoom=1 时的实际渲染尺寸
+  const [baseSize, setBaseSize] = useState<{ w: number; h: number } | null>(null);
+
+  // 图片加载完成后，记录基准尺寸（仅当尚未记录时）
+  const handleImgLoad = useCallback(() => {
+    if (imgRef.current && !baseSize) {
+      const rect = imgRef.current.getBoundingClientRect();
+      if (rect.width > 0) setBaseSize({ w: rect.width, h: rect.height });
+    }
+  }, [baseSize]);
+
+  // src 变化时重置基准尺寸
+  useEffect(() => { setBaseSize(null); }, [src]);
+
+  // 如果图片已缓存，useEffect 中补测一次
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete && !baseSize) {
+      const rect = imgRef.current.getBoundingClientRect();
+      if (rect.width > 0) setBaseSize({ w: rect.width, h: rect.height });
+    }
+  }, [src, baseSize]);
+
+  // 键盘快捷键
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === '+' || e.key === '=') {
+        e.preventDefault();
+        setZoom(z => Math.min(3, +(z + 0.25).toFixed(2)));
+      }
+      if (e.key === '-') {
+        e.preventDefault();
+        setZoom(z => Math.max(0.25, +(z - 0.25).toFixed(2)));
+      }
+      if (e.key === '0') setZoom(1);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  // 计算放大后的显示尺寸
+  const displayW = baseSize ? Math.round(baseSize.w * zoom) : undefined;
+  const displayH = baseSize ? Math.round(baseSize.h * zoom) : undefined;
+
+  const zoomIn  = () => setZoom(z => Math.min(3, +(z + 0.25).toFixed(2)));
+  const zoomOut = () => setZoom(z => Math.max(0.25, +(z - 0.25).toFixed(2)));
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      {/* 缩放控制栏 - 底部中央 */}
+      <div
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-1
+                   bg-black/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
+        <button
+          className="w-9 h-9 rounded-full flex items-center justify-center text-white text-lg
+                     hover:bg-white/20 transition-colors disabled:opacity-40"
+          disabled={zoom <= 0.25}
+          onClick={zoomOut}
+        >−</button>
+        <span className="text-white text-sm font-medium w-14 text-center tabular-nums select-none">
+          {Math.round(zoom * 100)}%
+        </span>
+        <button
+          className="w-9 h-9 rounded-full flex items-center justify-center text-white text-lg
+                     hover:bg-white/20 transition-colors disabled:opacity-40"
+          disabled={zoom >= 3}
+          onClick={zoomIn}
+        >+</button>
+        <span className="w-px h-5 bg-white/30 mx-1" />
+        <button
+          className="text-xs text-white/70 hover:text-white px-2 py-1 rounded hover:bg-white/10 transition-colors"
+          onClick={() => setZoom(1)}
+        >重置</button>
+      </div>
+
+      {/* 关闭按钮 */}
+      <button
+        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40
+                   text-white text-xl flex items-center justify-center transition-colors z-[60]"
+        onClick={onClose}
+      >×</button>
+
+      {/* 图片容器 - 可滚动 */}
+      <div
+        className="overflow-auto rounded-xl"
+        style={{ maxWidth: '96vw', maxHeight: '96vh' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <img
+          ref={imgRef}
+          src={src}
+          alt="放大图片"
+          onLoad={handleImgLoad}
+          className={`rounded-xl shadow-2xl transition-[width,height] duration-100 ${
+            baseSize ? '' : 'max-w-[96vw] max-h-[96vh] object-contain'
+          }`}
+          style={
+            baseSize && displayW && displayH
+              ? { width: `${displayW}px`, height: `${displayH}px`, objectFit: 'contain' }
+              : undefined
+          }
+          onClick={e => e.stopPropagation()}
+        />
+        {/* 尺寸未测出前的占位 */}
+        {!baseSize && (
+          <div className="flex items-center justify-center" style={{ width: '96vw', height: '60vh' }}>
+            <span className="text-white/60 text-sm">加载中…</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────── 可点击放大图片 ───────────────
+function ZoomableImage({ src, className = '' }: { src: string; className?: string }) {
+  const [zoomed, setZoomed] = useState(false);
+  return (
+    <>
+      <img
+        src={src}
+        alt="题目图片"
+        className={`cursor-zoom-in rounded-lg border object-contain hover:shadow-md transition-shadow ${className}`}
+        onClick={e => { e.stopPropagation(); setZoomed(true); }}
+      />
+      {zoomed && <ImageLightbox src={src} onClose={() => setZoomed(false)} />}
+    </>
+  );
+}
+
 // ─────────────── 题目展示区 ───────────────
 function QuestionDisplay({ question }: { question: Question | null }) {
   const [showAnswer, setShowAnswer] = useState(false);
@@ -806,38 +973,42 @@ function QuestionDisplay({ question }: { question: Question | null }) {
   }[question.type];
 
   return (
-    <div className="flex-1 flex flex-col justify-center gap-3">
-      <div className="flex justify-center">
-        <Badge variant="secondary" className="text-xs px-3 py-1">{typeLabel}</Badge>
+    <div className="flex-1 flex flex-col gap-3 max-h-[60vh] overflow-y-auto pr-2">
+      <div className="flex justify-center sticky top-0 z-10 py-1">
+        <Badge variant="secondary" className="text-xs px-3 py-1 shadow-sm">{typeLabel}</Badge>
       </div>
 
       <div className="bg-white rounded-2xl shadow-md border p-5 text-center">
         <p className="text-lg font-medium leading-relaxed">{question.content}</p>
-        {question.imageUrl && (
-          <img
-            src={question.imageUrl}
-            alt="题目图片"
-            className="mt-3 max-w-full max-h-48 rounded-lg border object-contain mx-auto"
-          />
+
+        {/* 题目图片 */}
+        {question.imageUrls && question.imageUrls.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2 justify-center">
+            {question.imageUrls.map((url, i) => (
+              <ZoomableImage key={i} src={url} className="max-w-[200px] max-h-[200px]" />
+            ))}
+          </div>
         )}
 
+        {/* 选择题选项 */}
         {question.options && question.options.length > 0 && (
           <div className="mt-4 grid grid-cols-1 gap-2 text-left">
             {question.options.map((opt, i) => (
               <div key={i} className="px-4 py-2 rounded-lg bg-muted/40 border border-border/50 text-sm hover:bg-muted/70 transition-colors">
-                <div>{opt}</div>
-                {question.optionImages?.[i] && (
-                  <img
-                    src={question.optionImages[i]}
-                    alt={`选项${i}图片`}
-                    className="mt-1.5 max-h-20 rounded object-contain"
-                  />
+                <div className="font-medium">{opt}</div>
+                {question.optionImages?.[i] && question.optionImages[i]!.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    {question.optionImages[i]!.map((url, j) => (
+                      <ZoomableImage key={j} src={url} className="max-w-[120px] max-h-[120px]" />
+                    ))}
+                  </div>
                 )}
               </div>
             ))}
           </div>
         )}
 
+        {/* 判断题 */}
         {question.type === 'truefalse' && !question.options && (
           <div className="mt-4 flex justify-center gap-4">
             <span className="px-6 py-2 rounded-full bg-green-50 border border-green-200 text-green-700 text-sm font-medium">✓ 对</span>

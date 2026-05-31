@@ -9,8 +9,8 @@ export interface Question {
   content: string;           // 题目正文
   options?: string[];        // 选择题选项 A/B/C/D
   answer?: string;           // 答案（可选，供老师参考）
-  imageUrl?: string;         // 题目图片（base64 或 URL）
-  optionImages?: (string | undefined)[];  // 每个选项对应的图片
+  imageUrls?: string[];      // 题目图片（支持多张，base64 或 URL）
+  optionImages?: (string[] | undefined)[];  // 每个选项对应的多张图片
 }
 
 export interface QuestionBank {
@@ -30,11 +30,35 @@ export function useQuestionBank() {
   const [banks, setBanks] = useState<QuestionBank[]>([]);
   const [loaded, setLoaded] = useState(false);
 
-  // 初始加载
+  // 初始加载（含数据迁移）
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setBanks(JSON.parse(raw));
+      if (raw) {
+        const data = JSON.parse(raw);
+        // 迁移旧格式：imageUrl → imageUrls，optionImages string → string[]
+        let migrated = false;
+        const migratedData = data.map((bank: any) => ({
+          ...bank,
+          questions: bank.questions.map((q: any) => {
+            const migrated = { ...q };
+            // imageUrl → imageUrls
+            if (q.imageUrl && !q.imageUrls) {
+              migrated.imageUrls = [q.imageUrl];
+              delete migrated.imageUrl;
+            }
+            // optionImages 中的字符串 → 数组
+            if (q.optionImages) {
+              migrated.optionImages = q.optionImages.map((img: any) =>
+                img === undefined || img === null ? undefined :
+                Array.isArray(img) ? img : [img]
+              );
+            }
+            return migrated;
+          }),
+        }));
+        setBanks(migratedData);
+      }
     } catch {
       console.error('Failed to load question banks');
     }
