@@ -223,7 +223,7 @@ function App() {
               {/* Logo */}
               <div className="flex flex-col items-center gap-1.5 shrink-0">
                 <img
-                  src="/pokemon-logo.png"
+                  src={import.meta.env.BASE_URL + 'pokemon-logo.png'}
                   alt="Pokémon"
                   className="h-14 w-auto flex-shrink-0"
                   style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.6))' }}
