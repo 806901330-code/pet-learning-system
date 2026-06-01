@@ -43,8 +43,16 @@
       --dex-shell-bottom: #C23030;
       --dex-shell-dark: #8B1A1A;
       --dex-hinge: #2A2A2A;
-      --dex-screen-bg: #2D4A3A;
-      --dex-screen-border: #1A1A2E;
+      /* 浅色屏幕 */
+      --dex-screen-bg: #F6F3EC;
+      --dex-screen-border: #D5CDC0;
+      --dex-screen-text: #3D3025;
+      --dex-screen-muted: #8B7D6B;
+      --dex-screen-accent: #8B6914;
+      --dex-screen-divider: rgba(0,0,0,0.08);
+      --dex-screen-card-bg: rgba(0,0,0,0.03);
+      --dex-screen-card-border: rgba(0,0,0,0.06);
+      --dex-screen-glow: radial-gradient(ellipse at 50% 30%, rgba(184,76,76,0.06) 0%, transparent 70%);
       --dex-led-red: #FF3B3B;
       --dex-led-blue: #3B8BFF;
       --dex-led-yellow: #FFD700;
@@ -56,7 +64,7 @@
       --color-primary-dark: #285A99;
       --color-primary-light: #6BA3D9;
       --color-accent: #F0C050;
-      --color-accent-dark: #B89028;
+      --color-accent-dark: #8B7220;
       --header-bg: #1A3A6B;
       --header-text: #fff;
       --body-bg: #EDF0F5;
@@ -84,8 +92,16 @@
       --dex-shell-bottom: #2E6AB5;
       --dex-shell-dark: #1A3A6B;
       --dex-hinge: #1E293B;
-      --dex-screen-bg: #1B3A4A;
-      --dex-screen-border: #0F172A;
+      /* 浅色屏幕（蓝主题） */
+      --dex-screen-bg: #F2F4F8;
+      --dex-screen-border: #C5CDDC;
+      --dex-screen-text: #1E293B;
+      --dex-screen-muted: #64748B;
+      --dex-screen-accent: #8B7220;
+      --dex-screen-divider: rgba(0,0,0,0.07);
+      --dex-screen-card-bg: rgba(0,0,0,0.03);
+      --dex-screen-card-border: rgba(0,0,0,0.05);
+      --dex-screen-glow: radial-gradient(ellipse at 50% 30%, rgba(61,125,202,0.06) 0%, transparent 70%);
       --dex-led-red: #FF3B3B;
       --dex-led-blue: #60A5FA;
       --dex-led-yellow: #FBBF24;
@@ -250,7 +266,6 @@
        宝可梦图鉴设备 (Pokédex Device)
        ═══════════════════════════════════════════════ */
 
-    /* 图鉴外壳 */
     .pokedex {
       display: none;
       position: relative;
@@ -273,7 +288,6 @@
       border-bottom: none;
       box-shadow: inset 0 2px 6px rgba(255,255,255,0.2), inset 0 -4px 8px rgba(0,0,0,0.15);
     }
-    /* 铰链装饰条 */
     .dex-top::after {
       content: '';
       position: absolute; left: 10%; right: 10%; bottom: -4px;
@@ -282,7 +296,7 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.4);
     }
 
-    /* LED 指示灯区 */
+    /* LED 指示灯 */
     .dex-leds {
       display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
       padding: 0 4px;
@@ -311,9 +325,9 @@
       border-radius: 14px;
       padding: 10px;
       box-shadow: inset 0 2px 6px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.2);
-      position: relative;
     }
-    /* 屏幕面板 */
+
+    /* 浅色屏幕面板 */
     .dex-screen {
       background: var(--dex-screen-bg);
       border-radius: 8px;
@@ -321,110 +335,106 @@
       min-height: 240px;
       position: relative;
       overflow: hidden;
-      box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.2);
+      border: 2px solid var(--dex-screen-border);
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.08);
     }
-    /* 屏幕扫描线纹理 */
+    /* 屏幕轻微纹理 */
     .dex-screen::before {
       content: '';
       position: absolute; inset: 0;
       background: repeating-linear-gradient(
         0deg,
         transparent,
-        transparent 2px,
-        rgba(0,0,0,0.03) 2px,
-        rgba(0,0,0,0.03) 4px
+        transparent 3px,
+        rgba(0,0,0,0.015) 3px,
+        rgba(0,0,0,0.015) 6px
       );
       pointer-events: none; z-index: 1;
     }
-    /* 屏幕轻微发光 */
+    /* 屏幕柔光 */
     .dex-screen::after {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 30%, rgba(120,255,180,0.06) 0%, transparent 70%);
+      background: var(--dex-screen-glow);
       pointer-events: none; z-index: 2;
     }
-
-    /* 屏幕内的所有内容需要 z-index 高于伪元素 */
     .dex-screen > * { position: relative; z-index: 3; }
 
-    /* 屏幕内文字颜色 — 用亮色在暗底上显示 */
-    .screen-text { color: #C8F0D8; }
-    .screen-text-muted { color: #7EBF96; }
-    .screen-text-accent { color: #FFE066; }
-
-    /* 图鉴内结果头部 */
+    /* ── 图鉴内结果头部 ── */
     .dex-result-header {
       display: flex; align-items: center; gap: 14px; margin-bottom: 18px;
     }
     .dex-avatar {
-      width: 72px; height: 72px; border-radius: 12px;
-      background: rgba(255,255,255,0.1);
+      width: 72px; height: 72px; border-radius: 14px;
+      background: var(--dex-screen-card-bg);
       display: flex; align-items: center; justify-content: center;
       font-size: 40px; flex-shrink: 0;
-      border: 2px solid rgba(255,255,255,0.2);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      border: 2px solid var(--dex-screen-card-border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       overflow: hidden;
     }
-    .dex-avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
+    .dex-avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 14px; }
     .dex-info { flex: 1; min-width: 0; }
     .dex-info .name {
-      font-size: 20px; font-weight: 800; color: #E0F8E8; line-height: 1.2;
-      text-shadow: 0 0 8px rgba(150,255,180,0.3);
+      font-size: 20px; font-weight: 800; color: var(--dex-screen-text); line-height: 1.2;
     }
     .dex-info .pet-name {
-      font-size: 13px; font-weight: 600; color: #FFE066; margin-top: 2px;
+      font-size: 13px; font-weight: 600; color: var(--color-primary); margin-top: 2px;
     }
     .dex-info .details {
       display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; align-items: center;
     }
+
+    /* 阶段标签（浅色底） */
     .dex-stage-tag {
       display: inline-block; padding: 3px 12px; border-radius: 10px;
       font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
     }
-    .dex-stage-egg { background: #5C4827; color: #F0C060; border: 1px solid #8B6914; }
-    .dex-stage-baby { background: #1B3D2B; color: #6EE7B7; border: 1px solid #047857; }
-    .dex-stage-teen { background: #1E2D4A; color: #7CB8F0; border: 1px solid #1D4ED8; }
-    .dex-stage-adult { background: #2D1B3E; color: #C4B5FD; border: 1px solid #6D28D9; }
+    .dex-stage-egg { background: #FEF3C7; color: #92400E; border: 1px solid #F59E0B; }
+    .dex-stage-baby { background: #D1FAE5; color: #065F46; border: 1px solid #10B981; }
+    .dex-stage-teen { background: #DBEAFE; color: #1E40AF; border: 1px solid #3B82F6; }
+    .dex-stage-adult { background: #EDE9FE; color: #5B21B6; border: 1px solid #8B5CF6; }
 
+    /* 属性标签（浅色底） */
     .dex-type-tag {
       display: inline-flex; align-items: center; gap: 3px;
       padding: 2px 8px; border-radius: 8px;
       font-size: 11px; font-weight: 600;
     }
-    .dex-type-grass { background: #1B3D2B; color: #6EE7B7; }
-    .dex-type-fire { background: #4A1A1A; color: #FCA5A5; }
-    .dex-type-water { background: #1E2D4A; color: #7CB8F0; }
-    .dex-type-bug { background: #2D3A18; color: #BEF264; }
-    .dex-type-flying { background: #2D1B3E; color: #C4B5FD; }
-    .dex-type-normal { background: #2D2D28; color: #D6D3D1; }
-    .dex-type-electric { background: #4A3E18; color: #FDE68A; }
-    .dex-type-ice { background: #1A3A3E; color: #A5F0FC; }
-    .dex-type-fighting { background: #4A1818; color: #FCA5A5; }
-    .dex-type-ghost { background: #2D1B3E; color: #C4B5FD; }
-    .dex-type-rock { background: #3D2E18; color: #FCD34D; }
-    .dex-type-dragon { background: #3E1B2D; color: #FBCFE8; }
-    .dex-type-dark { background: #1F1F1B; color: #A8A29E; }
-    .dex-type-poison { background: #2D1B3E; color: #C4B5FD; }
-    .dex-type-ground { background: #3D2E18; color: #FCD34D; }
-    .dex-type-steel { background: #252D38; color: #CBD5E1; }
-    .dex-type-fairy { background: #3E1B2D; color: #FBCFE8; }
-    .dex-type-psychic { background: #3E1B2D; color: #FBCFE8; }
+    .dex-type-grass { background: #D1FAE5; color: #065F46; }
+    .dex-type-fire { background: #FEE2E2; color: #991B1B; }
+    .dex-type-water { background: #DBEAFE; color: #1E40AF; }
+    .dex-type-bug { background: #ECFCCB; color: #3F6212; }
+    .dex-type-flying { background: #EDE9FE; color: #5B21B6; }
+    .dex-type-normal { background: #E5E5E5; color: #44403C; }
+    .dex-type-electric { background: #FEF3C7; color: #92400E; }
+    .dex-type-ice { background: #ECFEFF; color: #155E75; }
+    .dex-type-fighting { background: #FEE2E2; color: #991B1B; }
+    .dex-type-ghost { background: #EDE9FE; color: #5B21B6; }
+    .dex-type-rock { background: #FEF3C7; color: #78350F; }
+    .dex-type-dragon { background: #FCE7F3; color: #9D174D; }
+    .dex-type-dark { background: #E5E5E5; color: #44403C; }
+    .dex-type-poison { background: #EDE9FE; color: #5B21B6; }
+    .dex-type-ground { background: #FEF3C7; color: #78350F; }
+    .dex-type-steel { background: #E2E8F0; color: #334155; }
+    .dex-type-fairy { background: #FCE7F3; color: #9D174D; }
+    .dex-type-psychic { background: #FCE7F3; color: #9D174D; }
 
-    /* 屏幕内分割线 */
+    /* 分割线 */
     .dex-divider {
-      height: 1px; background: rgba(255,255,255,0.1);
+      height: 1px; background: var(--dex-screen-divider);
       margin: 14px 0;
     }
 
-    /* 屏幕内经验条 */
+    /* 经验条 */
     .dex-exp-label {
       display: flex; justify-content: space-between; align-items: baseline;
-      font-size: 12px; color: #7EBF96; margin-bottom: 5px;
+      font-size: 12px; color: var(--dex-screen-muted); margin-bottom: 5px;
     }
-    .dex-exp-label .val { font-weight: 700; font-size: 14px; color: #FFE066; }
+    .dex-exp-label .val { font-weight: 700; font-size: 14px; color: var(--dex-screen-text); }
     .dex-exp-bar-wrap {
-      height: 12px; background: rgba(0,0,0,0.4); border-radius: 6px;
-      overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+      height: 12px; background: var(--dex-screen-card-bg); border-radius: 6px;
+      overflow: hidden; border: 1px solid var(--dex-screen-card-border);
     }
     .dex-exp-bar-fill {
       height: 100%; border-radius: 6px;
@@ -435,36 +445,36 @@
     .dex-exp-bar-fill::after {
       content: ''; position: absolute; right: 0; top: 0; bottom: 0;
       width: 20px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2));
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
       border-radius: 0 6px 6px 0;
     }
     .dex-stage-hint {
-      font-size: 11px; margin-top: 6px; color: #7EBF96;
+      font-size: 11px; margin-top: 6px; color: var(--dex-screen-muted);
       display: flex; justify-content: space-between;
     }
-    .dex-stage-hint .next { font-weight: 600; color: #FFE066; }
+    .dex-stage-hint .next { font-weight: 600; color: var(--color-primary); }
 
-    /* 屏幕内数据网格 */
+    /* 数据网格 */
     .dex-stats-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
       margin-top: 14px;
     }
     .dex-stat {
-      background: rgba(0,0,0,0.25);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--dex-screen-card-bg);
+      border: 1px solid var(--dex-screen-card-border);
       border-radius: 10px; padding: 12px;
       text-align: center;
     }
     .dex-stat .stat-label {
-      font-size: 10px; color: #7EBF96; margin-bottom: 4px;
+      font-size: 10px; color: var(--dex-screen-muted); margin-bottom: 4px;
       letter-spacing: 0.5px;
     }
     .dex-stat .stat-value {
-      font-size: 20px; font-weight: 700; color: #E0F8E8;
+      font-size: 20px; font-weight: 700; color: var(--dex-screen-text);
       line-height: 1.2;
     }
     .dex-stat .stat-sub {
-      font-size: 10px; color: #7EBF96; margin-top: 2px;
+      font-size: 10px; color: var(--dex-screen-muted); margin-top: 2px;
     }
 
     /* ── 下半部分 — 操作区 ── */
@@ -478,7 +488,6 @@
       box-shadow: inset 0 2px 6px rgba(255,255,255,0.15), inset 0 -4px 8px rgba(0,0,0,0.2);
       display: flex; align-items: center; justify-content: space-between;
     }
-    /* 铰链装饰 */
     .dex-bottom::before {
       content: '';
       position: absolute; left: 10%; right: 10%; top: -4px;
@@ -487,7 +496,7 @@
       box-shadow: 0 -1px 3px rgba(0,0,0,0.4);
     }
 
-    /* 十字键装饰 */
+    /* 十字键 */
     .dex-dpad {
       width: 64px; height: 64px; position: relative;
       flex-shrink: 0;
@@ -522,29 +531,27 @@
     .dex-speaker .grill:nth-child(3) { width: 44px; }
     .dex-speaker .grill:nth-child(4) { width: 40px; }
 
-    /* 点赞按钮（在底部） */
+    /* ── 精灵球点赞按钮 ── */
     .dex-like-btn {
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
       cursor: pointer; user-select: none;
-      transition: transform 0.2s; padding: 4px 12px;
-      border-radius: 12px; flex-shrink: 0;
-      background: rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+      flex-shrink: 0;
+      background: none; border: none; padding: 0;
     }
-    .dex-like-btn:hover { transform: scale(1.06); background: rgba(0,0,0,0.35); }
-    .dex-like-btn:active { transform: scale(0.95); }
-    .dex-like-btn .heart-icon {
-      font-size: 36px; transition: transform 0.3s; line-height: 1;
-    }
-    .dex-like-btn.pulse .heart-icon {
-      animation: heartPulse 0.5s cubic-bezier(0.16,1,0.3,1);
-    }
-    @keyframes heartPulse {
+    .dex-like-btn:hover { transform: scale(1.12); }
+    .dex-like-btn:active { transform: scale(0.9); }
+    .dex-like-btn.pulse { animation: pokeballBounce 0.4s cubic-bezier(0.16,1,0.3,1); }
+    @keyframes pokeballBounce {
       0% { transform: scale(1); }
-      25% { transform: scale(1.4); }
-      50% { transform: scale(0.9); }
-      75% { transform: scale(1.15); }
-      100% { transform: scale(1); }
+      30% { transform: scale(1.3) rotate(-10deg); }
+      50% { transform: scale(0.85) rotate(5deg); }
+      70% { transform: scale(1.1) rotate(-3deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .dex-like-btn svg {
+      width: 44px; height: 44px;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
     }
     .dex-like-count {
       font-size: 13px; font-weight: 700; color: var(--dex-label-text);
@@ -554,39 +561,39 @@
 
     /* ── 多结果列表（在屏幕内） ── */
     .dex-multi-header {
-      font-size: 14px; font-weight: 700; color: #FFE066;
+      font-size: 14px; font-weight: 700; color: var(--dex-screen-text);
       margin-bottom: 10px;
     }
     .dex-multi-item {
       display: flex; align-items: center; gap: 12px; padding: 10px;
       border-radius: 8px; margin-bottom: 6px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--dex-screen-card-bg);
+      border: 1px solid var(--dex-screen-card-border);
       cursor: pointer; transition: all 0.2s;
     }
     .dex-multi-item:hover {
-      background: rgba(255,255,255,0.12);
-      border-color: rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.06);
+      border-color: rgba(0,0,0,0.12);
       transform: translateX(3px);
     }
     .dex-multi-item .mini-av {
       width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
-      background: rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.04);
       display: flex; align-items: center; justify-content: center; font-size: 22px;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(0,0,0,0.08);
     }
     .dex-multi-item .mini-av img { width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
     .dex-multi-item .mini-info { flex: 1; min-width: 0; }
     .dex-multi-item .mini-info .n {
-      font-size: 15px; font-weight: 700; color: #E0F8E8;
+      font-size: 15px; font-weight: 700; color: var(--dex-screen-text);
     }
     .dex-multi-item .mini-info .m {
-      font-size: 11px; color: #7EBF96; margin-top: 2px;
+      font-size: 11px; color: var(--dex-screen-muted); margin-top: 2px;
       display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
     }
     .dex-multi-item .mini-info .m .t {
       display: inline-block; padding: 1px 6px; border-radius: 4px;
-      background: rgba(255,255,255,0.12); color: #E0F8E8;
+      background: rgba(0,0,0,0.06); color: var(--dex-screen-text);
       font-weight: 600; font-size: 10px;
     }
 
@@ -626,13 +633,14 @@
       .dex-speaker .grill:nth-child(2) { width: 40px; }
       .dex-speaker .grill:nth-child(3) { width: 36px; }
       .dex-speaker .grill:nth-child(4) { width: 32px; }
+      .dex-like-btn svg { width: 38px; height: 38px; }
     }
   </style>
 </head>
 <body>
 
 <!-- 导航栏 -->
-<nav class="nav-bar" data-theme-el="nav">
+<nav class="nav-bar">
   <div class="nav-inner">
     <span class="nav-brand">
       <span class="pokeball">
@@ -696,11 +704,22 @@
       <div class="dex-speaker">
         <div class="grill"></div><div class="grill"></div><div class="grill"></div><div class="grill"></div>
       </div>
-      <div class="dex-like-btn" id="dexLikeBtn" style="display:none;">
-        <span class="heart-icon">🤍</span>
+      <!-- 精灵球点赞按钮 -->
+      <button class="dex-like-btn" id="dexLikeBtn" style="display:none;" title="点赞">
+        <svg id="dexLikeBall" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- 上半红球 -->
+          <clipPath id="topHalf"><rect x="0" y="0" width="100" height="50"/></clipPath>
+          <circle cx="50" cy="50" r="46" fill="white" stroke="#333" stroke-width="3"/>
+          <circle cx="50" cy="50" r="46" fill="#E53935" clip-path="url(#topHalf)"/>
+          <!-- 中心带 -->
+          <rect x="3" y="46" width="94" height="8" fill="#333"/>
+          <!-- 中心按钮 -->
+          <circle cx="50" cy="50" r="13" fill="white" stroke="#333" stroke-width="3"/>
+          <circle cx="50" cy="50" r="6" fill="#555"/>
+        </svg>
         <span class="dex-like-count" id="dexLikeCount">0</span>
         <span class="dex-like-label">点赞</span>
-      </div>
+      </button>
     </div>
   </div>
 </div>
@@ -902,16 +921,17 @@ function renderLikes() {
   var lc=likes(currentStudentId);
   dexLikeCount.textContent = lc;
   dexLikeBtn.style.display = 'flex';
-  dexLikeBtn.querySelector('.heart-icon').textContent = lc>0 ? '💜' : '🤍';
+  // 重置精灵球动画状态
+  dexLikeBtn.classList.remove('pulse');
 }
 
-// 绑定点赞
+// 绑定点赞 — 精灵球弹跳动画
 dexLikeBtn.addEventListener('click', function() {
   if (!currentStudentId) return;
   var nc = addLike(currentStudentId);
+  dexLikeBtn.classList.remove('pulse');
+  void dexLikeBtn.offsetWidth;
   dexLikeBtn.classList.add('pulse');
-  setTimeout(function(){ dexLikeBtn.classList.remove('pulse'); }, 500);
-  dexLikeBtn.querySelector('.heart-icon').textContent = '💜';
   dexLikeCount.textContent = nc;
   spawnEmojis(dexLikeBtn.getBoundingClientRect());
 });
