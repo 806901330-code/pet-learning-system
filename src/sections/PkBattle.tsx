@@ -435,11 +435,11 @@ function QuestionBankPanel({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* 新建题库 */}
-      <Card>
+      <Card className="game-card">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base">📚 新建题库</CardTitle>
+          <CardTitle className="text-base font-game text-[#003A70]">📚 新建题库</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-2">
@@ -448,10 +448,11 @@ function QuestionBankPanel({
               value={newBankName}
               onChange={e => setNewBankName(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleCreate()}
+              className="game-input flex-1"
             />
-            <Button onClick={handleCreate} disabled={!newBankName.trim()}>
+            <button className="game-btn game-btn-yellow text-sm px-4" onClick={handleCreate} disabled={!newBankName.trim()}>
               创建
-            </Button>
+            </button>
           </div>
         </CardContent>
       </Card>
@@ -1118,7 +1119,7 @@ function VictoryScreen({
   }));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       {/* 烟花粒子 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {particles.map(p => (
@@ -1139,36 +1140,65 @@ function VictoryScreen({
         ))}
       </div>
 
+      {/* 光晕背景 */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 50% 40%, rgba(255,215,0,0.18) 0%, transparent 65%)',
+        }}
+      />
+
       {/* 胜利卡片 */}
       <div
-        className="relative z-10 bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center gap-6 max-w-sm w-full mx-4"
+        className="relative z-10 rounded-3xl shadow-2xl p-8 flex flex-col items-center gap-5 max-w-sm w-full mx-4"
         style={{
-          border: '4px solid #FFD700',
-          boxShadow: '0 0 60px rgba(255, 215, 0, 0.6), 0 20px 60px rgba(0,0,0,0.3)',
+          background: 'linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+          border: '3px solid #FFD700',
+          boxShadow: '0 0 80px rgba(255,215,0,0.5), 0 0 20px rgba(255,215,0,0.3), 0 20px 60px rgba(0,0,0,0.5)',
         }}
       >
-        {/* 皇冠 */}
-        <div className="text-7xl animate-bounce">👑</div>
+        {/* 顶部装饰线 */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 rounded-full text-xs font-black tracking-widest"
+          style={{ background: '#FFD700', color: '#7C4700' }}>
+          ★ VICTORY ★
+        </div>
 
-        {/* 标题 */}
+        {/* 徽章图片 */}
+        <div className="relative flex items-center justify-center">
+          <div
+            className="absolute rounded-full blur-3xl"
+            style={{ width: 120, height: 120, background: 'radial-gradient(circle, #FFD700 0%, transparent 70%)', opacity: 0.6 }}
+          />
+          <img
+            src="/badge-victory.png"
+            alt="胜利徽章"
+            className="relative z-10 animate-bounce"
+            style={{ width: 96, height: 96, filter: 'drop-shadow(0 0 16px #FFD700)' }}
+          />
+        </div>
+
+        {/* 胜利文字 */}
         <div className="text-center space-y-1">
           <div
             className="text-4xl font-black tracking-wider"
             style={{
-              background: 'linear-gradient(135deg, #FFD700, #FF6B6B, #4ECDC4)',
+              background: 'linear-gradient(135deg, #FFD700, #FFA500)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
+              textShadow: 'none',
+              filter: 'drop-shadow(0 2px 8px rgba(255,215,0,0.6))',
             }}
           >
             胜利！
           </div>
-          <div className="text-xl font-bold text-foreground">{winner.name}</div>
+          <div className="text-2xl font-black text-white tracking-wide">{winner.name}</div>
+          <div className="text-xs text-yellow-300/70 tracking-widest">的宝可梦赢得了对战！</div>
         </div>
 
         {/* 宠物 */}
         <div className="relative">
           <div
-            className="absolute inset-0 rounded-full blur-2xl opacity-40"
+            className="absolute inset-0 rounded-full blur-2xl opacity-60"
             style={{ background: petType.color }}
           />
           <Pet
@@ -1180,21 +1210,22 @@ function VictoryScreen({
         </div>
 
         {/* +10 经验提示 */}
-        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-5 py-3">
+        <div className="flex items-center gap-3 rounded-2xl px-5 py-3 w-full justify-center"
+          style={{ background: 'rgba(255,215,0,0.12)', border: '1px solid rgba(255,215,0,0.3)' }}>
           <span className="text-2xl">⭐</span>
           <div className="text-center">
-            <div className="font-bold text-amber-700 text-lg">+10 经验值</div>
-            <div className="text-xs text-amber-600">已获得奖励</div>
+            <div className="font-black text-yellow-300 text-lg">+10 经验值</div>
+            <div className="text-xs text-yellow-400/60">战斗奖励已获得</div>
           </div>
         </div>
 
         <Button
           size="lg"
-          className="w-full text-base font-bold rounded-xl"
-          style={{ background: 'linear-gradient(135deg, #FFD700, #FF9500)', color: '#7C4700' }}
+          className="w-full text-base font-black rounded-xl tracking-wide"
+          style={{ background: 'linear-gradient(135deg, #FFD700, #FF9500)', color: '#7C4700', border: 'none' }}
           onClick={onDismiss}
         >
-          继续对战 →
+          ⚔️ 继续对战
         </Button>
       </div>
     </div>
@@ -1250,13 +1281,6 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
 
   const canAttack = !!selectedBankId && bankExists
     && (banks.find(b => b.id === selectedBankId)?.questions.length ?? 0) > 0;
-
-  const leftPetType = leftStudent
-    ? petTypes.find(p => p.id === leftStudent.pet.petTypeId) || petTypes[0]
-    : null;
-  const rightPetType = rightStudent
-    ? petTypes.find(p => p.id === rightStudent.pet.petTypeId) || petTypes[0]
-    : null;
 
   const winnerPetType = winner
     ? petTypes.find(p => p.id === winner.pet.petTypeId) || petTypes[0]
@@ -1348,9 +1372,34 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
           </Card>
 
           {/* 主对战区域 */}
-          <div className="flex gap-4 items-stretch min-h-[500px]">
+          <div
+            className="flex gap-4 items-stretch min-h-[500px] rounded-2xl p-4 relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(160deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+              boxShadow: 'inset 0 0 60px rgba(59,130,246,0.1)',
+            }}
+          >
+            {/* 场地装饰：网格线 */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-10"
+              style={{
+                backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+                backgroundSize: '40px 40px',
+              }}
+            />
+            {/* 场地装饰：蓝色光晕（左） */}
+            <div
+              className="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none"
+              style={{ width: 200, height: 200, background: 'radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%)', borderRadius: '50%' }}
+            />
+            {/* 场地装饰：红色光晕（右） */}
+            <div
+              className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
+              style={{ width: 200, height: 200, background: 'radial-gradient(circle, rgba(239,68,68,0.25) 0%, transparent 70%)', borderRadius: '50%' }}
+            />
+
             {/* 左侧选手 */}
-            <div className="w-56 shrink-0 flex flex-col gap-3">
+            <div className="w-56 shrink-0 flex flex-col gap-3 relative z-10">
               <FighterSelector
                 label="🔵 左方选手"
                 side="left"
@@ -1374,22 +1423,43 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
             </div>
 
             {/* 中间题目区 */}
-            <div className="flex-1 flex flex-col">
-              <div className="flex items-center justify-center mb-3">
-                <div className="text-3xl font-black bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 bg-clip-text text-transparent tracking-widest">VS</div>
+            <div className="flex-1 flex flex-col relative z-10">
+              {/* VS 标志 */}
+              <div className="flex items-center justify-center mb-3 relative">
+                {/* 闪电装饰 */}
+                <span className="text-yellow-400 text-xl mr-1 animate-pulse">⚡</span>
+                <div
+                  className="text-4xl font-black tracking-widest px-4 py-1 rounded-xl"
+                  style={{
+                    background: 'linear-gradient(135deg, #3B82F6, #8B5CF6, #EF4444)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    filter: 'drop-shadow(0 0 12px rgba(139,92,246,0.8))',
+                  }}
+                >VS</div>
+                <span className="text-yellow-400 text-xl ml-1 animate-pulse" style={{ animationDelay: '0.5s' }}>⚡</span>
               </div>
-              <div className="flex-1 bg-gradient-to-b from-slate-50 to-white rounded-2xl border-2 border-dashed border-muted-foreground/20 p-6 flex flex-col">
+
+              {/* 题目展示区 */}
+              <div
+                className="flex-1 rounded-2xl p-6 flex flex-col"
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
                 <QuestionDisplay key={questionKey} question={currentQuestion} />
               </div>
               {canAttack && (leftStudent || rightStudent) && !currentQuestion && (
-                <p className="text-center text-xs text-muted-foreground mt-2">
+                <p className="text-center text-xs text-white/40 mt-2">
                   点击下方「出招」按钮随机抽题
                 </p>
               )}
             </div>
 
             {/* 右侧选手 */}
-            <div className="w-56 shrink-0 flex flex-col gap-3">
+            <div className="w-56 shrink-0 flex flex-col gap-3 relative z-10">
               <FighterSelector
                 label="🔴 右方选手"
                 side="right"

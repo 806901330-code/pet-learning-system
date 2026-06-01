@@ -37,7 +37,6 @@ export function useQuestionBank() {
       if (raw) {
         const data = JSON.parse(raw);
         // 迁移旧格式：imageUrl → imageUrls，optionImages string → string[]
-        let migrated = false;
         const migratedData = data.map((bank: any) => ({
           ...bank,
           questions: bank.questions.map((q: any) => {

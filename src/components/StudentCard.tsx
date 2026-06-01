@@ -2,19 +2,12 @@ import { useState } from 'react';
 import type { Student, PetType } from '@/types/pet';
 import { getStageByExperience } from '@/types/pet';
 import { Pet } from './Pet';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription,
+  AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
 interface StudentCardProps {
@@ -28,15 +21,42 @@ interface StudentCardProps {
   onToggleSelect?: () => void;
 }
 
-export function StudentCard({ 
-  student,
-  petTypes,
-  onAddPoints, 
-  onDelete, 
-  onRename,
-  onSetNickname,
-  isSelected, 
-  onToggleSelect 
+const stageLabels: Record<string, string> = {
+  egg: '🥚蛋',
+  baby: '🐣幼年',
+  teen: '⭐成长',
+  adult: '👑完全',
+};
+const stageKeys = ['egg', 'baby', 'teen', 'adult'] as const;
+
+/* ── 内联精灵球 SVG 组件 ── */
+function PokeballBg({ color, opacity = 0.06 }: { color: string; opacity?: number }) {
+  return (
+    <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" style={{ opacity }}>
+      <circle cx="50" cy="50" r="46" fill="none" stroke={color} strokeWidth="3"/>
+      <path d="M4 50 Q50 72 96 50" fill="#EE1515" fillOpacity="0.15" stroke={color} strokeWidth="3"/>
+      <line x1="4" y1="50" x2="96" y2="50" stroke={color} strokeWidth="3"/>
+      <circle cx="50" cy="50" r="12" fill="white" stroke={color} strokeWidth="3"/>
+      <circle cx="50" cy="50" r="5" fill={color}/>
+    </svg>
+  );
+}
+
+function PokeballIcon({ className = 'w-4 h-4' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none">
+      <circle cx="12" cy="12" r="11" fill="white" stroke="#003A70" strokeWidth="1.5"/>
+      <path d="M1 12 Q12 19 23 12" fill="#EE1515" fillOpacity="0.12" stroke="#003A70" strokeWidth="1.5"/>
+      <line x1="1" y1="12" x2="23" y2="12" stroke="#003A70" strokeWidth="2"/>
+      <circle cx="12" cy="12" r="3" fill="white" stroke="#003A70" strokeWidth="1.5"/>
+      <circle cx="12" cy="12" r="1.2" fill="#003A70"/>
+    </svg>
+  );
+}
+
+export function StudentCard({
+  student, petTypes, onAddPoints, onDelete,
+  onRename, onSetNickname, isSelected, onToggleSelect,
 }: StudentCardProps) {
   const [showAddPoints, setShowAddPoints] = useState(false);
   const [points, setPoints] = useState(10);
@@ -46,35 +66,31 @@ export function StudentCard({
   const [renameError, setRenameError] = useState('');
   const [showNickname, setShowNickname] = useState(false);
   const [nicknameInput, setNicknameInput] = useState('');
-  
-  const petType = petTypes.find(p => p.id === student.pet.petTypeId) || petTypes[0];
+
+  const petType = petTypes.find((p) => p.id === student.pet.petTypeId) || petTypes[0];
   const currentStage = getStageByExperience(student.pet.experience);
+  const stageIdx = stageKeys.indexOf(currentStage);
+
+  /* 经验条进度 */
+  const stageThresholds = [100, 300, 600];
+  let expProgress = 1;
+  if (stageIdx < stageThresholds.length) {
+    const prev = stageIdx > 0 ? stageThresholds[stageIdx - 1] : 0;
+    const next = stageThresholds[stageIdx];
+    expProgress = Math.min(1, Math.max(0, (student.pet.experience - prev) / (next - prev)));
+  }
 
   const handleAddPoints = () => {
-    if (points > 0) {
-      onAddPoints(student.id, points);
-      setShowAddPoints(false);
-      setPoints(10);
-    }
+    if (points > 0) { onAddPoints(student.id, points); setShowAddPoints(false); setPoints(10); }
   };
 
   const handleRename = () => {
     const trimmed = newName.trim();
-    if (!trimmed) {
-      setRenameError('姓名不能为空');
-      return;
-    }
-    if (trimmed === student.name) {
-      setShowRename(false);
-      return;
-    }
+    if (!trimmed) { setRenameError('姓名不能为空'); return; }
+    if (trimmed === student.name) { setShowRename(false); return; }
     const success = onRename?.(student.id, trimmed);
-    if (success === false) {
-      setRenameError('该姓名已存在，请换一个');
-      return;
-    }
-    setShowRename(false);
-    setRenameError('');
+    if (success === false) { setRenameError('该姓名已存在，请换一个'); return; }
+    setShowRename(false); setRenameError('');
   };
 
   const handleSetNickname = () => {
@@ -84,152 +100,199 @@ export function StudentCard({
 
   return (
     <>
-      <Card 
-        className={`relative overflow-hidden transition-all hover:shadow-lg cursor-pointer ${
-          isSelected ? 'ring-2 ring-primary shadow-lg' : ''
-        }`}
+      {/* ═══════════════════════════════════════════════════════
+          紧凑 TCG 卡片 · 4列布局 · 大精灵展示
+          ═══════════════════════════════════════════════════════ */}
+      <div
         onClick={onToggleSelect}
+        className={`tcg-card tcg-card--compact cursor-pointer animate-card-in ${
+          isSelected ? 'tcg-card--selected' : ''
+        }`}
       >
-        {/* 顶部颜色条 */}
-        <div 
-          className="absolute top-0 left-0 right-0 h-1"
-          style={{ background: petType.color }}
-        />
-        
-        <CardContent className="pt-4">
-          <div className="flex items-start gap-4">
-            {/* 宠物 */}
-            <Pet 
-              petType={petType}
-              stage={currentStage}
-              experience={student.pet.experience}
-              size="lg"
-            />
-            
-            {/* 信息 */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="font-bold text-lg truncate">{student.name}</h3>
-                <Badge variant="outline" style={{ color: petType.color, borderColor: petType.color }}>
-                  {petType.name}
-                </Badge>
-              </div>
-              
-              <div className="text-sm text-muted-foreground space-y-1">
-                <div>经验值: {student.pet.experience}</div>
-                <div>
-                  成长阶段: {currentStage === 'egg' && '🥚'}
-                  {currentStage === 'baby' && '🐣'}
-                  {currentStage === 'teen' && '⭐'}
-                  {currentStage === 'adult' && '👑'}
-                  {' '}{['蛋', '幼年体', '成长体', '完全体'][['egg', 'baby', 'teen', 'adult'].indexOf(currentStage)]}
-                </div>
-              </div>
-              
-              {/* 操作按钮 */}
-              <div className="grid grid-cols-2 gap-1.5 mt-3">
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  className="text-xs h-7 w-full"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowAddPoints(true);
-                  }}
-                >
-                  ➕ 加分
-                </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  className="text-xs h-7 w-full"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setNewName(student.name);
-                    setRenameError('');
-                    setShowRename(true);
-                  }}
-                >
-                  ✏️ 改名
-                </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  className="text-xs h-7 w-full text-purple-600 border-purple-300 hover:bg-purple-50"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setNicknameInput(student.nickname || '');
-                    setShowNickname(true);
-                  }}
-                >
-                  🏷️ 昵称
-                </Button>
-                <Button 
-                  size="sm" 
-                  variant="destructive"
-                  className="text-xs h-7 w-full"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowDelete(true);
-                  }}
-                >
-                  🗑️ 删除
-                </Button>
+        {/* ── 顶部类型色条 ── */}
+        <div className="tcg-card__type-bar tcg-card__type-bar--thin" style={{ background: petType.color }} />
+
+        <div className="p-1">
+          {/* ── 标题行：名字 + HP + 属性标签 ── */}
+          <div className="flex items-center justify-between mb-1">
+            <h3 className="font-extrabold text-[#003A70] text-sm truncate max-w-[120px] font-display leading-tight">
+              {student.name}
+            </h3>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="tcg-card__hp tcg-card__hp--sm">{student.pet.experience}</span>
+              <span
+                className="type-tag type-tag--sm"
+                style={{
+                  background: `${petType.color}18`,
+                  color: petType.color,
+                }}
+              >
+                {petType.pokemonType}
+              </span>
+            </div>
+          </div>
+
+          {/* ── 宠物形象 · 铺满框体 ── */}
+          <div className="relative mb-1">
+            <div
+              className="aspect-square rounded-2xl flex items-center justify-center overflow-hidden"
+              style={{
+                background: `radial-gradient(ellipse at 50% 55%, ${petType.color}18 0%, ${petType.color}08 50%, transparent 85%)`,
+                border: `2px solid ${petType.color}25`,
+              }}
+            >
+              {/* 背景精灵球水印 — 填满整个容器 */}
+              <PokeballBg color={petType.color} opacity={0.08} />
+
+              <div className="relative z-10">
+                <Pet
+                  petType={petType} stage={currentStage}
+                  experience={student.pet.experience} size="xl" showExp={false}
+                />
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* 加分对话框 */}
+          {/* ── 经验条（紧凑 HP 条）── */}
+          <div className="mb-1">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] font-extrabold text-[#003A70]/50 uppercase tracking-wider font-display">
+                EXP
+              </span>
+              <span className="text-[10px] font-extrabold text-[#003A70] tabular-nums">
+                {expProgress >= 1 && currentStage === 'adult'
+                  ? 'MAX'
+                  : `${student.pet.experience} / ${stageThresholds[stageIdx] || stageThresholds[2]}`}
+              </span>
+            </div>
+            <div className="hp-bar hp-bar--sm">
+              <div
+                className={`hp-bar-fill ${
+                  expProgress > 0.66 ? 'hp-bar-fill-high'
+                  : expProgress > 0.33 ? 'hp-bar-fill-mid'
+                  : 'hp-bar-fill-low'
+                } ${expProgress < 1 ? 'animate-exp-bar-pulse' : ''}`}
+                style={{ width: `${Math.max(4, expProgress * 100)}%` }}
+              />
+            </div>
+          </div>
+
+          {/* ── 阶段标签 ── */}
+          <div className="flex items-center gap-1 mb-1.5 flex-wrap">
+            <span
+              className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[9px] font-extrabold font-display"
+              style={{
+                background: `${petType.color}15`,
+                color: petType.color,
+                border: `1px solid ${petType.color}30`,
+              }}
+            >
+              {stageLabels[currentStage] || '🥚蛋'}
+            </span>
+            {student.nickname && (
+              <span className="text-[10px] font-semibold text-[#003A70]/45 bg-[#003A70]/5 px-2 py-0.5 rounded-lg truncate max-w-[90px]">
+                "{student.nickname}"
+              </span>
+            )}
+          </div>
+
+          {/* ── 操作按钮 · 2×2 游戏按钮 ── */}
+          <div className="grid grid-cols-2 gap-1.5">
+            {/* 加分按钮 · 精灵球装饰 */}
+            <button
+              className="game-btn game-btn-yellow text-xs !py-1.5 !px-1 !gap-1 !rounded-lg"
+              onClick={(e) => { e.stopPropagation(); setShowAddPoints(true); }}
+            >
+              <PokeballIcon className="w-4 h-4 shrink-0" />
+              加分
+            </button>
+            <button
+              className="game-btn game-btn-blue text-xs !py-1.5 !px-1 !gap-1 !rounded-lg"
+              onClick={(e) => { e.stopPropagation(); setNewName(student.name); setRenameError(''); setShowRename(true); }}
+            >
+              ✏ 改名
+            </button>
+            <button
+              className="game-btn game-btn-outline text-xs !py-1.5 !px-1 !gap-1 !rounded-lg"
+              onClick={(e) => { e.stopPropagation(); setNicknameInput(student.nickname || ''); setShowNickname(true); }}
+            >
+              🏷 昵称
+            </button>
+            <button
+              className="game-btn game-btn-red text-xs !py-1.5 !px-1 !gap-1 !rounded-lg"
+              onClick={(e) => { e.stopPropagation(); setShowDelete(true); }}
+            >
+              🗑 删除
+            </button>
+          </div>
+        </div>
+
+        {/* ── 右下角装饰精灵球印 ── */}
+        <svg viewBox="0 0 80 80" className="absolute -bottom-2 -right-2 w-16 h-16 opacity-[0.03] pointer-events-none">
+          <circle cx="40" cy="40" r="38" fill="none" stroke="#003A70" strokeWidth="3"/>
+          <path d="M2 40 Q40 60 78 40" fill="#EE1515" fillOpacity="0.3" stroke="#003A70" strokeWidth="3"/>
+          <line x1="2" y1="40" x2="78" y2="40" stroke="#003A70" strokeWidth="3"/>
+          <circle cx="40" cy="40" r="9" fill="white" stroke="#003A70" strokeWidth="3"/>
+          <circle cx="40" cy="40" r="3.5" fill="#003A70"/>
+        </svg>
+      </div>
+
+      {/* ── 加分对话框 ── */}
       <AlertDialog open={showAddPoints} onOpenChange={setShowAddPoints}>
-        <AlertDialogContent>
+        <AlertDialogContent className="game-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle>为 {student.name} 加分</AlertDialogTitle>
-            <AlertDialogDescription>
-              当前经验值: {student.pet.experience}
+            <AlertDialogTitle className="font-game text-xs text-[#003A70]">
+              ⚡ {student.name} · 增加经验
+            </AlertDialogTitle>
+            <AlertDialogDescription className="font-semibold">
+              当前经验值：<span className="font-extrabold text-[#EE1515]">{student.pet.experience}</span>
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="py-4">
-            <label className="text-sm font-medium">加分数量</label>
-            <div className="flex gap-2 mt-2">
-              <Button size="sm" variant="outline" onClick={() => setPoints(5)}>+5</Button>
-              <Button size="sm" variant="outline" onClick={() => setPoints(10)}>+10</Button>
-              <Button size="sm" variant="outline" onClick={() => setPoints(20)}>+20</Button>
-              <Button size="sm" variant="outline" onClick={() => setPoints(50)}>+50</Button>
+          <div className="py-4 space-y-4">
+            <div className="flex gap-2 flex-wrap">
+              {[5, 10, 20, 50].map((n) => (
+                <button
+                  key={n}
+                  className={`game-btn text-xs px-4 py-2 ${
+                    points === n ? 'game-btn-yellow' : 'game-btn-outline'
+                  }`}
+                  onClick={() => setPoints(n)}
+                >
+                  +{n}
+                </button>
+              ))}
             </div>
-            <Input 
-              type="number" 
-              value={points} 
+            <Input
+              type="number" value={points}
               onChange={(e) => setPoints(Number(e.target.value))}
-              className="mt-2"
-              min={1}
+              min={1} placeholder="自定义分数..."
+              className="game-input"
             />
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction onClick={handleAddPoints}>确认加分</AlertDialogAction>
+            <AlertDialogCancel className="game-btn game-btn-outline text-sm">取消</AlertDialogCancel>
+            <AlertDialogAction className="game-btn game-btn-yellow text-sm" onClick={handleAddPoints}>
+              ⚡ 确认加分
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* 删除确认对话框 */}
+      {/* ── 删除确认 ── */}
       <AlertDialog open={showDelete} onOpenChange={setShowDelete}>
-        <AlertDialogContent>
+        <AlertDialogContent className="game-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle>确认删除</AlertDialogTitle>
-            <AlertDialogDescription>
-              确定要删除学生 "{student.name}" 吗？此操作不可撤销，宠物的所有成长记录都将丢失。
+            <AlertDialogTitle className="font-game text-xs text-[#003A70]">⚠ 确认删除</AlertDialogTitle>
+            <AlertDialogDescription className="font-semibold">
+              确定要删除训练家 <span className="font-extrabold">"{student.name}"</span> 吗？
+              此操作不可撤销，{petType.emoji} {petType.name} 的所有成长记录都将丢失。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction 
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              onClick={() => {
-                onDelete(student.id);
-                setShowDelete(false);
-              }}
+            <AlertDialogCancel className="game-btn game-btn-outline text-sm">取消</AlertDialogCancel>
+            <AlertDialogAction
+              className="game-btn game-btn-red text-sm"
+              onClick={() => { onDelete(student.id); setShowDelete(false); }}
             >
               确认删除
             </AlertDialogAction>
@@ -237,62 +300,62 @@ export function StudentCard({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* 改名对话框 */}
+      {/* ── 改名 ── */}
       <AlertDialog open={showRename} onOpenChange={(open) => { setShowRename(open); setRenameError(''); }}>
-        <AlertDialogContent>
+        <AlertDialogContent className="game-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle>修改学生姓名</AlertDialogTitle>
-            <AlertDialogDescription>
-              当前姓名：{student.name}
+            <AlertDialogTitle className="font-game text-xs text-[#003A70]">✏ 修改训练家姓名</AlertDialogTitle>
+            <AlertDialogDescription className="font-semibold">
+              当前姓名：<span className="font-extrabold">{student.name}</span>
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="py-4 space-y-2">
-            <label className="text-sm font-medium">新姓名</label>
+          <div className="py-4 space-y-3">
+            <label className="text-sm font-extrabold text-[#003A70] font-display">新姓名</label>
             <Input
               value={newName}
               onChange={(e) => { setNewName(e.target.value); setRenameError(''); }}
               onKeyDown={(e) => { if (e.key === 'Enter') handleRename(); }}
               placeholder="请输入新姓名..."
               autoFocus
+              className="game-input"
             />
-            {renameError && (
-              <p className="text-sm text-destructive">{renameError}</p>
-            )}
+            {renameError && <p className="text-sm font-bold text-[#EE1515]">{renameError}</p>}
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setRenameError('')}>取消</AlertDialogCancel>
-            <AlertDialogAction onClick={handleRename}>确认改名</AlertDialogAction>
+            <AlertDialogCancel className="game-btn game-btn-outline text-sm">取消</AlertDialogCancel>
+            <AlertDialogAction className="game-btn game-btn-yellow text-sm" onClick={handleRename}>
+              确认改名
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* 昵称设置对话框 */}
+      {/* ── 昵称 ── */}
       <AlertDialog open={showNickname} onOpenChange={setShowNickname}>
-        <AlertDialogContent>
+        <AlertDialogContent className="game-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle>设置学员昵称</AlertDialogTitle>
-            <AlertDialogDescription>
-              昵称仅用于加分时快速查找学员，不会在页面上显示。<br/>
-              当前学员：{student.name}
-              {student.nickname && <>｜当前昵称：{student.nickname}</>}
+            <AlertDialogTitle className="font-game text-xs text-[#003A70]">🏷 设置昵称</AlertDialogTitle>
+            <AlertDialogDescription className="font-semibold">
+              昵称仅用于加分时快速查找，不会在页面上显示。<br />
+              当前训练家：<span className="font-extrabold">{student.name}</span>
+              {student.nickname && <span className="text-[#003A70]/50">｜当前：{student.nickname}</span>}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="py-4 space-y-2">
-            <label className="text-sm font-medium">昵称</label>
+          <div className="py-4 space-y-3">
+            <label className="text-sm font-extrabold text-[#003A70] font-display">昵称</label>
             <Input
               value={nicknameInput}
               onChange={(e) => setNicknameInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') handleSetNickname(); }}
-              placeholder="例如：小张、班长、英语课代表..."
+              placeholder="例如：小张、班长..."
               autoFocus
+              className="game-input"
             />
-            <p className="text-xs text-muted-foreground">
-              留空则清除昵称。设置后在加分名单中输入昵称也能匹配到该学员。
-            </p>
+            <p className="text-xs font-semibold text-[#003A70]/40">留空则清除昵称。</p>
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction onClick={handleSetNickname}>
+            <AlertDialogCancel className="game-btn game-btn-outline text-sm">取消</AlertDialogCancel>
+            <AlertDialogAction className="game-btn game-btn-yellow text-sm" onClick={handleSetNickname}>
               {nicknameInput.trim() ? '确认设置' : '清除昵称'}
             </AlertDialogAction>
           </AlertDialogFooter>

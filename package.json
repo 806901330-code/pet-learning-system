@@ -1,7 +1,7 @@
 {
   "name": "pet-learning-system",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "宠物养成学习系统",
   "main": "electron/main.cjs",
   "type": "module",

@@ -205,10 +205,41 @@ export function getNextStageExp(experience: number): number | null {
   return null; // 已满级
 }
 
+// ── 静态导入蛋图，让 Vite 走模块管道处理 ──
+import eggGrass from '../assets/pokemon/egg_grass.png';
+import eggFire from '../assets/pokemon/egg_fire.png';
+import eggWater from '../assets/pokemon/egg_water.png';
+import eggBug from '../assets/pokemon/egg_bug.png';
+import eggFlying from '../assets/pokemon/egg_flying.png';
+import eggNormal from '../assets/pokemon/egg_normal.png';
+import eggElectric from '../assets/pokemon/egg_electric.png';
+import eggIce from '../assets/pokemon/egg_ice.png';
+import eggFighting from '../assets/pokemon/egg_fighting.png';
+import eggGhost from '../assets/pokemon/egg_ghost.png';
+import eggRock from '../assets/pokemon/egg_rock.png';
+import eggDragon from '../assets/pokemon/egg_dragon.png';
+import eggDefault from '../assets/pokemon/egg_default.png';
+
+const EGG_IMAGE_MAP: Record<string, string> = {
+  grass: eggGrass,
+  fire: eggFire,
+  water: eggWater,
+  bug: eggBug,
+  flying: eggFlying,
+  normal: eggNormal,
+  electric: eggElectric,
+  ice: eggIce,
+  fighting: eggFighting,
+  ghost: eggGhost,
+  rock: eggRock,
+  dragon: eggDragon,
+  default: eggDefault,
+};
+
 // 获取宠物图片路径
 export function getPetImagePath(petId: string, stage: PetStage, pokemonType: PokemonType, petType?: PetType): string {
   if (stage === 'egg') {
-    return `./pokemon/egg_${pokemonType}.png`;
+    return EGG_IMAGE_MAP[pokemonType] || EGG_IMAGE_MAP.default;
   }
   // 如果是自定义宠物且有对应阶段的图片
   if (petType?.isCustom && petType.customImages?.[stage as 'baby' | 'teen' | 'adult']) {
