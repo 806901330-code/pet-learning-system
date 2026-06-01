@@ -54,7 +54,7 @@ export function Pet({ petType, stage, experience, size = 'md', showExp = true }:
       {showExp && (
         <div className="text-center w-full">
           {/* 阶段名称 */}
-          <div className={`${textSizes[size]} font-extrabold text-[#003A70] font-display mb-1`}>
+          <div className={`${textSizes[size]} font-extrabold text-primary font-display mb-1`}>
             {petType.stages[stage]}
           </div>
 
@@ -71,7 +71,7 @@ export function Pet({ petType, stage, experience, size = 'md', showExp = true }:
           </div>
 
           {/* 经验值文字 */}
-          <div className={`${textSizes[size]} font-extrabold text-[#003A70]/50 tabular-nums`}>
+          <div className={`${textSizes[size]} font-extrabold text-primary/50 tabular-nums`}>
             {experience}
             {nextExp && ` / ${nextExp}`}
             {!nextExp && ' MAX'}

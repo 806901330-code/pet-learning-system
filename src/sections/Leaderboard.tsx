@@ -35,7 +35,7 @@ export function Leaderboard({ students, petTypes }: LeaderboardProps) {
           <circle cx="50" cy="50" r="10" fill="white" stroke="#222224" strokeWidth="4"/>
           <circle cx="50" cy="50" r="4" fill="#222224"/>
         </svg>
-        <p className="text-sm font-extrabold text-[#003A70]/50 font-display">
+        <p className="text-sm font-extrabold text-primary/50 font-display">
           还没有训练家数据，快去添加吧！
         </p>
       </div>
@@ -67,8 +67,8 @@ export function Leaderboard({ students, petTypes }: LeaderboardProps) {
                 borderBottom: 'none',
               }}
             >
-              <div className="font-extrabold text-sm text-[#003A70] font-display">{topThree[1].name}</div>
-              <div className="text-[11px] font-bold text-[#003A70]/50 mt-1">{topThree[1].pet.experience} EXP</div>
+              <div className="font-extrabold text-sm text-primary font-display">{topThree[1].name}</div>
+              <div className="text-[11px] font-bold text-primary/50 mt-1">{topThree[1].pet.experience} EXP</div>
             </div>
           </div>
 
@@ -101,8 +101,8 @@ export function Leaderboard({ students, petTypes }: LeaderboardProps) {
                 boxShadow: `0 0 24px ${podiumColors[0]}30`,
               }}
             >
-              <div className="font-extrabold text-lg text-[#003A70] font-display">{topThree[0].name}</div>
-              <div className="text-sm font-extrabold text-[#003A70]/70 mt-1">{topThree[0].pet.experience} EXP</div>
+              <div className="font-extrabold text-lg text-primary font-display">{topThree[0].name}</div>
+              <div className="text-sm font-extrabold text-primary/70 mt-1">{topThree[0].pet.experience} EXP</div>
             </div>
           </div>
 
@@ -124,8 +124,8 @@ export function Leaderboard({ students, petTypes }: LeaderboardProps) {
                 borderBottom: 'none',
               }}
             >
-              <div className="font-extrabold text-sm text-[#003A70] font-display">{topThree[2].name}</div>
-              <div className="text-[11px] font-bold text-[#003A70]/50 mt-1">{topThree[2].pet.experience} EXP</div>
+              <div className="font-extrabold text-sm text-primary font-display">{topThree[2].name}</div>
+              <div className="text-[11px] font-bold text-primary/50 mt-1">{topThree[2].pet.experience} EXP</div>
             </div>
           </div>
         </div>
@@ -136,10 +136,11 @@ export function Leaderboard({ students, petTypes }: LeaderboardProps) {
           ═══════════════════════════════════════════════════════ */}
       <div>
         <div className="flex items-center gap-3 mb-5">
-          <h2 className="text-lg font-game text-[#003A70] tracking-tight">
+          <h2 className="text-lg font-game text-primary tracking-tight">
             经验排行
           </h2>
-          <span className="px-3 py-1 rounded-xl bg-[#FFCB05]/15 text-[#003A70] text-xs font-extrabold font-display border-2 border-[#FFCB05]/30">
+          <span className="px-3 py-1 rounded-xl text-primary text-xs font-extrabold font-display border-2"
+            style={{ backgroundColor: 'var(--color-accent-soft)', borderColor: 'var(--color-accent-soft)' }}>
             {students.length} 人
           </span>
         </div>
@@ -157,16 +158,17 @@ export function Leaderboard({ students, petTypes }: LeaderboardProps) {
                 key={student.id}
                 className={`flex items-center gap-4 p-4 rounded-2xl transition-all ${
                   isTop3
-                    ? 'bg-gradient-to-r from-[#FFCB05]/10 to-[#FFCB05]/5 border-2 border-[#FFCB05]/30'
-                    : 'bg-white border-2 border-[#003A70]/10 hover:border-[#003A70]/20 hover:shadow-sm'
+                    ? 'bg-primary/5 border-2'
+                    : 'bg-card border-2 border-primary/10 hover:border-primary/20 hover:shadow-sm'
                 }`}
+                style={isTop3 ? { borderColor: 'var(--color-accent-soft)', background: 'linear-gradient(135deg, var(--color-accent-soft), var(--color-primary-ghost))' } : {}}
               >
                 {/* 排名 */}
                 <div className="w-10 text-center shrink-0">
                   {isTop3 ? (
                     <span className="text-2xl">{medals[student.rank]}</span>
                   ) : (
-                    <span className="text-sm font-extrabold text-[#003A70]/40 font-display">
+                    <span className="text-sm font-extrabold text-primary/40 font-display">
                       #{student.rank}
                     </span>
                   )}
@@ -182,10 +184,10 @@ export function Leaderboard({ students, petTypes }: LeaderboardProps) {
 
                 {/* 名字 */}
                 <div className="flex-1 min-w-0">
-                  <div className="font-extrabold text-[#003A70] truncate font-display">
+                  <div className="font-extrabold text-primary truncate font-display">
                     {student.name}
                   </div>
-                  <div className="text-[11px] font-semibold text-[#003A70]/40 truncate hidden sm:block">
+                  <div className="text-[11px] font-semibold text-primary/40 truncate hidden sm:block">
                     {petType.stages[student.stage]}
                   </div>
                 </div>
@@ -204,10 +206,10 @@ export function Leaderboard({ students, petTypes }: LeaderboardProps) {
 
                 {/* 经验值 */}
                 <div className="text-right shrink-0 w-20">
-                  <div className="font-extrabold text-lg text-[#003A70] font-display tabular-nums">
+                  <div className="font-extrabold text-lg text-primary font-display tabular-nums">
                     {student.pet.experience}
                   </div>
-                  <div className="text-[10px] font-bold text-[#003A70]/30 uppercase tracking-wider">
+                  <div className="text-[10px] font-bold text-primary/30 uppercase tracking-wider">
                     EXP
                   </div>
                 </div>

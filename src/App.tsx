@@ -14,6 +14,7 @@ import { PkBattle } from '@/sections/PkBattle';
 import { useStudents } from '@/hooks/useStudents';
 import { useCustomPets } from '@/hooks/useCustomPets';
 import { useClasses } from '@/hooks/useClasses';
+import { useTheme } from '@/hooks/useTheme';
 import { PET_TYPES } from '@/types/pet';
 import {
   AlertDialog,
@@ -34,9 +35,9 @@ const TOKEN_STORAGE_KEY = 'github-sync-token';
 
 /* ── 导航标签定义 ── */
 const NAV_TABS = [
-  { id: 'students',    icon: '👥', label: '训练家',   color: '#FFCB05' },
+  { id: 'students',    icon: '👥', label: '训练家',   color: '#D4A017' },
   { id: 'classes',     icon: '🏫', label: '道馆',     color: '#3D7DCA' },
-  { id: 'points',      icon: '⚡', label: '经验值',   color: '#FFCB05' },
+  { id: 'points',      icon: '⚡', label: '经验值',   color: '#D4A017' },
   { id: 'pets',        icon: '🎒', label: '分配',     color: '#4CAF50' },
   { id: 'status',      icon: '📋', label: '图鉴',     color: '#9C27B0' },
   { id: 'leaderboard', icon: '🏆', label: '排行榜',   color: '#FF9800' },
@@ -53,11 +54,12 @@ function App() {
     batchAssignPet, deleteStudent, renameStudent, setNickname, clearAll,
   } = useStudents();
 
-  const { customPets, loaded: customPetsLoaded } = useCustomPets();
+  const { customPets, loaded: customPetsLoaded, createCustomPet, deleteCustomPet } = useCustomPets();
   const {
     classes, loaded: classesLoaded, createClass, renameClass,
     updateClassColor, importStudentsToClass, removeStudentFromClass, deleteClass,
   } = useClasses();
+  const { theme, toggleTheme } = useTheme();
 
   const allPetTypes = [...PET_TYPES, ...customPets];
 
@@ -189,7 +191,7 @@ function App() {
   /* ── 加载状态 ── */
   if (!loaded || !customPetsLoaded || !classesLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFF8F0]">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center space-y-6">
           <svg viewBox="0 0 100 100" className="w-20 h-20 mx-auto animate-pokeball-catch">
             <circle cx="50" cy="50" r="46" fill="white" stroke="#222224" strokeWidth="4"/>
@@ -198,7 +200,7 @@ function App() {
             <circle cx="50" cy="50" r="11" fill="white" stroke="#222224" strokeWidth="4"/>
             <circle cx="50" cy="50" r="5" fill="#222224"/>
           </svg>
-          <p className="text-sm font-extrabold text-[#003A70] font-display">
+          <p className="text-sm font-extrabold text-primary font-display">
             正在加载精灵数据...
           </p>
         </div>
@@ -206,18 +208,16 @@ function App() {
     );
   }
 
-  const adultCount = students.filter(s => s.pet.stage === 'adult').length;
-
   return (
-    <div className="min-h-screen bg-[#FFF8F0]">
+    <div className="min-h-screen bg-background">
       <Toaster position="top-center" richColors />
 
       {/* ═══════════════════════════════════════════════════════
-          顶部导航 · Nintendo Switch 游戏菜单风格
+          顶部导航 · Nintendo Switch 游戏菜单 → 红白机经典
           ═══════════════════════════════════════════════════════ */}
       <header className="sticky top-0 z-50">
         {/* 主标题栏：Logo(左) + 导航(中) + 统计(右) */}
-        <div className="bg-[#003A70] text-white border-b-2 border-[#FFCB05]">
+        <div className="bg-primary text-primary-foreground border-b-2" style={{ borderColor: 'var(--color-nav-accent)' }}>
           <div className="max-w-7xl mx-auto px-5 py-3">
             <div className="flex items-center justify-between gap-4">
               {/* Logo */}
@@ -231,8 +231,8 @@ function App() {
                 <p
                   className="text-sm font-black font-display tracking-widest"
                   style={{
-                    color: '#FFCB05',
-                    textShadow: '0 1px 3px rgba(0,0,0,0.8), 0 0 12px rgba(255,203,5,0.6)',
+                    color: '#FFF8DC',
+                    textShadow: '0 1px 3px rgba(0,0,0,0.8), 0 0 12px rgba(255,248,220,0.4)',
                   }}
                 >
                   学习养成系统
@@ -253,11 +253,11 @@ function App() {
                           text-sm font-extrabold font-display whitespace-nowrap
                           transition-all duration-200
                           ${isActive
-                            ? 'bg-white text-[#003A70] shadow-[0_3px_0_0_rgba(255,203,5,0.5)] scale-105'
+                            ? 'bg-white text-primary shadow-[0_3px_0_0_var(--color-nav-accent-glow)] scale-105'
                             : 'text-white/70 hover:text-white hover:bg-white/10'
                           }
                         `}
-                        style={isActive ? { borderBottom: `3px solid ${tab.color}` } : {}}
+                        style={isActive ? { borderBottom: '3px solid var(--color-accent)' } : {}}
                       >
                         <span className="text-base">{tab.icon}</span>
                         <span className="hidden sm:inline">{tab.label}</span>
@@ -270,14 +270,8 @@ function App() {
               {/* 统计 + 操作 */}
               <div className="flex items-center gap-2 shrink-0">
                 <div className="hidden lg:flex items-center gap-1">
-                  <span className="px-2.5 py-1.5 bg-white/10 rounded-lg text-xs font-extrabold font-display whitespace-nowrap">
-                    👥 {students.length}
-                  </span>
-                  <span className="px-2.5 py-1.5 bg-[#FFCB05]/20 rounded-lg text-xs font-extrabold text-[#FFCB05] font-display whitespace-nowrap">
-                    👑 {adultCount}
-                  </span>
                   {hasPendingSync && (
-                    <span className="px-2.5 py-1.5 bg-[#EE1515]/20 rounded-lg text-xs font-extrabold text-[#EE1515] font-display animate-pulse whitespace-nowrap">
+                    <span className="px-2.5 py-1.5 bg-primary/20 rounded-lg text-xs font-extrabold text-[#FFD700] font-display animate-pulse whitespace-nowrap">
                       ⚠ 待同步
                     </span>
                   )}
@@ -303,6 +297,16 @@ function App() {
                   </div>
                 )}
               </div>
+
+              {/* 主题切换 — 最右侧独立位置 */}
+              <button
+                onClick={toggleTheme}
+                className="theme-toggle shrink-0"
+                data-theme={theme}
+                title={theme === 'red' ? '切换到经典蓝' : '切换到砖红'}
+              >
+                <span className="theme-toggle__knob" />
+              </button>
             </div>
           </div>
         </div>
@@ -346,7 +350,13 @@ function App() {
           <Leaderboard students={students} petTypes={allPetTypes} />
         )}
         {activeTab === 'creator' && (
-          <PetCreator students={students} onBatchAssignPet={batchAssignPet} />
+          <PetCreator
+            students={students}
+            onBatchAssignPet={batchAssignPet}
+            customPets={customPets}
+            onCreateCustomPet={createCustomPet}
+            onDeleteCustomPet={deleteCustomPet}
+          />
         )}
         {activeTab === 'pk' && (
           <PkBattle students={students} petTypes={allPetTypes} onAddPoints={addPoints} />
@@ -356,15 +366,13 @@ function App() {
       {/* ═══════════════════════════════════════════════════════
           底部 · 精灵球画廊
           ═══════════════════════════════════════════════════════ */}
-      <footer className="bg-[#003A70] text-white/60 py-8">
+      <footer className="bg-primary text-white/60 py-8">
         <div className="max-w-7xl mx-auto px-5 text-center">
           <div className="flex justify-center gap-3 mb-4 flex-wrap">
             {PET_TYPES.slice(0, 10).map((pet) => (
               <span
                 key={pet.id}
-                className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20
-                  flex items-center justify-center text-lg
-                  hover:scale-125 hover:border-[#FFCB05] transition-all duration-200 cursor-default"
+                className="footer-ball"
                 title={pet.name}
               >
                 {pet.emoji}
@@ -381,7 +389,7 @@ function App() {
       <AlertDialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
         <AlertDialogContent className="game-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-game text-sm text-[#003A70]">⚠ 确认清空所有数据？</AlertDialogTitle>
+            <AlertDialogTitle className="font-game text-sm text-primary">⚠ 确认清空所有数据？</AlertDialogTitle>
             <AlertDialogDescription className="font-semibold">
               此操作将删除所有学生和宠物的数据，包括所有经验值和成长记录。此操作不可撤销！
             </AlertDialogDescription>
@@ -402,12 +410,13 @@ function App() {
       <AlertDialog open={showTokenSetup} onOpenChange={setShowTokenSetup}>
         <AlertDialogContent className="game-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-game text-sm text-[#003A70]">🔑 设置 GitHub Token</AlertDialogTitle>
+            <AlertDialogTitle className="font-game text-sm text-primary">🔑 设置 GitHub Token</AlertDialogTitle>
             <AlertDialogDescription className="space-y-3 font-medium">
               <p>同步需要 GitHub Personal Access Token 来提交数据文件。</p>
-              <div className="bg-[#FFF8F0] border-2 border-[#FFCB05] rounded-xl p-4 text-left text-sm">
+              <div className="bg-background border-2 rounded-xl p-4 text-left text-sm"
+                style={{ borderColor: 'var(--color-accent)' }}>
                 <p className="font-extrabold mb-2">📋 获取 Token 步骤：</p>
-                <ol className="list-decimal list-inside space-y-1 text-[#003A70]">
+                <ol className="list-decimal list-inside space-y-1 text-primary">
                   <li>打开 <a href="https://github.com/settings/tokens" target="_blank" className="underline text-[#3D7DCA] font-extrabold">github.com/settings/tokens</a></li>
                   <li>点击 Generate new token (classic)</li>
                   <li>Note 填写 <code className="bg-gray-200 px-1 rounded">pet-learning-sync</code></li>

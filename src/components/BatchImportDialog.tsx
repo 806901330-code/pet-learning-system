@@ -51,7 +51,7 @@ export function BatchImportDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md game-dialog">
         <DialogHeader>
-          <DialogTitle className="font-game text-xs text-[#003A70]">{title}</DialogTitle>
+          <DialogTitle className="font-game text-xs text-primary">{title}</DialogTitle>
           <DialogDescription className="font-semibold">{description}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -63,7 +63,7 @@ export function BatchImportDialog({
           />
           {parsedNames.length > 0 && (
             <div className="space-y-2">
-              <div className="text-sm font-extrabold text-[#003A70] font-display">
+              <div className="text-sm font-extrabold text-primary font-display">
                 已识别 <span className="text-[#EE1515]">{parsedNames.length}</span> 个名字：
               </div>
               <div className="flex flex-wrap gap-2 max-h-[120px] overflow-y-auto">

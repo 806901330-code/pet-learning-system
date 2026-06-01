@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { useCustomPets } from '@/hooks/useCustomPets';
 import type { PetType, PokemonType, Student } from '@/types/pet';
 import { PET_TYPES, getPetImagePath } from '@/types/pet';
 import {
@@ -22,6 +21,13 @@ import { toast } from 'sonner';
 interface PetCreatorProps {
   students: Student[];
   onBatchAssignPet: (studentIds: string[], petTypeId: string) => void;
+  customPets: PetType[];
+  onCreateCustomPet: (
+    name: string, eggType: PokemonType,
+    babyImage: string | null, teenImage: string | null, adultImage: string | null,
+    babyName?: string, teenName?: string, adultName?: string, color?: string,
+  ) => PetType;
+  onDeleteCustomPet: (petId: string) => void;
 }
 
 function ImageUploader({
@@ -58,7 +64,7 @@ function ImageUploader({
     <div className="space-y-2">
       <Label className="text-sm font-medium">{label}</Label>
       <div
-        className="relative border-2 border-dashed rounded-xl p-3 cursor-pointer hover:border-purple-300 hover:bg-purple-50/50 transition-all group min-h-[100px] flex flex-col items-center justify-center"
+        className="relative border-2 border-dashed rounded-xl p-3 cursor-pointer hover:border-red-300 hover:bg-red-50/50 transition-all group min-h-[100px] flex flex-col items-center justify-center"
         onClick={() => fileInputRef.current?.click()}
       >
         {value ? (
@@ -73,7 +79,7 @@ function ImageUploader({
           </div>
         ) : (
           <div className="flex flex-col items-center gap-1">
-            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition-colors">
               <span className="text-lg">📷</span>
             </div>
             <span className="text-xs text-muted-foreground">{placeholder}</span>
@@ -104,8 +110,7 @@ function ImageUploader({
   );
 }
 
-export function PetCreator({ students, onBatchAssignPet }: PetCreatorProps) {
-  const { customPets, createCustomPet, deleteCustomPet } = useCustomPets();
+export function PetCreator({ students, onBatchAssignPet, customPets, onCreateCustomPet, onDeleteCustomPet }: PetCreatorProps) {
   const [name, setName] = useState('');
   const [babyImage, setBabyImage] = useState<string | null>(null);
   const [teenImage, setTeenImage] = useState<string | null>(null);
@@ -144,7 +149,7 @@ export function PetCreator({ students, onBatchAssignPet }: PetCreatorProps) {
       return;
     }
 
-    createCustomPet(
+    onCreateCustomPet(
       name.trim(),
       selectedEggType,
       babyImage,
@@ -167,7 +172,7 @@ export function PetCreator({ students, onBatchAssignPet }: PetCreatorProps) {
 
   const handleDelete = () => {
     if (deleteTarget) {
-      deleteCustomPet(deleteTarget.id);
+      onDeleteCustomPet(deleteTarget.id);
       setDeleteTarget(null);
     }
   };
@@ -211,7 +216,7 @@ export function PetCreator({ students, onBatchAssignPet }: PetCreatorProps) {
   return (
     <div className="space-y-6">
       {/* 创建新宠物表单 */}
-      <Card className="border-2 border-dashed border-purple-200 bg-gradient-to-br from-purple-50/50 to-pink-50/50">
+      <Card className="border-2 border-dashed border-red-300 bg-gradient-to-br from-red-50/50 to-amber-50/50">
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <span className="text-2xl">🎨</span>
@@ -246,7 +251,7 @@ export function PetCreator({ students, onBatchAssignPet }: PetCreatorProps) {
                       onClick={() => setSelectedEggType(egg.type)}
                       className={`flex flex-col items-center gap-1.5 p-2 rounded-lg border-2 transition-all hover:scale-105 ${
                         selectedEggType === egg.type
-                          ? 'border-purple-400 bg-purple-50 shadow-md'
+                          ? 'border-red-400 bg-red-50 shadow-md'
                           : 'border-gray-200 bg-white hover:border-gray-300'
                       }`}
                     >
@@ -290,7 +295,8 @@ export function PetCreator({ students, onBatchAssignPet }: PetCreatorProps) {
               {/* 创建按钮 */}
               <Button
                 onClick={handleCreate}
-                className="w-full h-11 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium shadow-lg"
+                className="w-full h-11 text-white font-medium shadow-lg rounded-xl"
+                style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-dark))' }}
               >
                 ✨ 创作宠物
               </Button>
@@ -664,7 +670,7 @@ export function PetCreator({ students, onBatchAssignPet }: PetCreatorProps) {
             <div className="flex gap-2 w-full">
               <AlertDialogCancel className="flex-1">取消</AlertDialogCancel>
               <AlertDialogAction
-                className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                className="flex-1 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white"
                 onClick={handleAssign}
               >
                 ✅ 确认分配

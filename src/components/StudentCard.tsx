@@ -45,11 +45,11 @@ function PokeballBg({ color, opacity = 0.06 }: { color: string; opacity?: number
 function PokeballIcon({ className = 'w-4 h-4' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none">
-      <circle cx="12" cy="12" r="11" fill="white" stroke="#003A70" strokeWidth="1.5"/>
-      <path d="M1 12 Q12 19 23 12" fill="#EE1515" fillOpacity="0.12" stroke="#003A70" strokeWidth="1.5"/>
-      <line x1="1" y1="12" x2="23" y2="12" stroke="#003A70" strokeWidth="2"/>
-      <circle cx="12" cy="12" r="3" fill="white" stroke="#003A70" strokeWidth="1.5"/>
-      <circle cx="12" cy="12" r="1.2" fill="#003A70"/>
+      <circle cx="12" cy="12" r="11" fill="white" stroke="var(--color-primary-dark)" strokeWidth="1.5"/>
+      <path d="M1 12 Q12 19 23 12" fill="#EE1515" fillOpacity="0.12" stroke="var(--color-primary-dark)" strokeWidth="1.5"/>
+      <line x1="1" y1="12" x2="23" y2="12" stroke="var(--color-primary-dark)" strokeWidth="2"/>
+      <circle cx="12" cy="12" r="3" fill="white" stroke="var(--color-primary-dark)" strokeWidth="1.5"/>
+      <circle cx="12" cy="12" r="1.2" fill="var(--color-primary-dark)"/>
     </svg>
   );
 }
@@ -115,7 +115,7 @@ export function StudentCard({
         <div className="p-1">
           {/* ── 标题行：名字 + HP + 属性标签 ── */}
           <div className="flex items-center justify-between mb-1">
-            <h3 className="font-extrabold text-[#003A70] text-sm truncate max-w-[120px] font-display leading-tight">
+            <h3 className="font-extrabold text-primary text-sm truncate max-w-[120px] font-display leading-tight">
               {student.name}
             </h3>
             <div className="flex items-center gap-1.5 shrink-0">
@@ -156,10 +156,10 @@ export function StudentCard({
           {/* ── 经验条（紧凑 HP 条）── */}
           <div className="mb-1">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-extrabold text-[#003A70]/50 uppercase tracking-wider font-display">
+              <span className="text-[10px] font-extrabold text-primary/50 uppercase tracking-wider font-display">
                 EXP
               </span>
-              <span className="text-[10px] font-extrabold text-[#003A70] tabular-nums">
+              <span className="text-[10px] font-extrabold text-primary tabular-nums">
                 {expProgress >= 1 && currentStage === 'adult'
                   ? 'MAX'
                   : `${student.pet.experience} / ${stageThresholds[stageIdx] || stageThresholds[2]}`}
@@ -190,7 +190,7 @@ export function StudentCard({
               {stageLabels[currentStage] || '🥚蛋'}
             </span>
             {student.nickname && (
-              <span className="text-[10px] font-semibold text-[#003A70]/45 bg-[#003A70]/5 px-2 py-0.5 rounded-lg truncate max-w-[90px]">
+              <span className="text-[10px] font-semibold text-primary/45 bg-primary/5 px-2 py-0.5 rounded-lg truncate max-w-[90px]">
                 "{student.nickname}"
               </span>
             )}
@@ -229,11 +229,11 @@ export function StudentCard({
 
         {/* ── 右下角装饰精灵球印 ── */}
         <svg viewBox="0 0 80 80" className="absolute -bottom-2 -right-2 w-16 h-16 opacity-[0.03] pointer-events-none">
-          <circle cx="40" cy="40" r="38" fill="none" stroke="#003A70" strokeWidth="3"/>
-          <path d="M2 40 Q40 60 78 40" fill="#EE1515" fillOpacity="0.3" stroke="#003A70" strokeWidth="3"/>
-          <line x1="2" y1="40" x2="78" y2="40" stroke="#003A70" strokeWidth="3"/>
-          <circle cx="40" cy="40" r="9" fill="white" stroke="#003A70" strokeWidth="3"/>
-          <circle cx="40" cy="40" r="3.5" fill="#003A70"/>
+          <circle cx="40" cy="40" r="38" fill="none" stroke="var(--color-primary-dark)" strokeWidth="3"/>
+          <path d="M2 40 Q40 60 78 40" fill="#EE1515" fillOpacity="0.3" stroke="var(--color-primary-dark)" strokeWidth="3"/>
+          <line x1="2" y1="40" x2="78" y2="40" stroke="var(--color-primary-dark)" strokeWidth="3"/>
+          <circle cx="40" cy="40" r="9" fill="white" stroke="var(--color-primary-dark)" strokeWidth="3"/>
+          <circle cx="40" cy="40" r="3.5" fill="var(--color-primary-dark)"/>
         </svg>
       </div>
 
@@ -241,7 +241,7 @@ export function StudentCard({
       <AlertDialog open={showAddPoints} onOpenChange={setShowAddPoints}>
         <AlertDialogContent className="game-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-game text-xs text-[#003A70]">
+            <AlertDialogTitle className="font-game text-xs text-primary">
               ⚡ {student.name} · 增加经验
             </AlertDialogTitle>
             <AlertDialogDescription className="font-semibold">
@@ -282,7 +282,7 @@ export function StudentCard({
       <AlertDialog open={showDelete} onOpenChange={setShowDelete}>
         <AlertDialogContent className="game-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-game text-xs text-[#003A70]">⚠ 确认删除</AlertDialogTitle>
+            <AlertDialogTitle className="font-game text-xs text-primary">⚠ 确认删除</AlertDialogTitle>
             <AlertDialogDescription className="font-semibold">
               确定要删除训练家 <span className="font-extrabold">"{student.name}"</span> 吗？
               此操作不可撤销，{petType.emoji} {petType.name} 的所有成长记录都将丢失。
@@ -304,13 +304,13 @@ export function StudentCard({
       <AlertDialog open={showRename} onOpenChange={(open) => { setShowRename(open); setRenameError(''); }}>
         <AlertDialogContent className="game-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-game text-xs text-[#003A70]">✏ 修改训练家姓名</AlertDialogTitle>
+            <AlertDialogTitle className="font-game text-xs text-primary">✏ 修改训练家姓名</AlertDialogTitle>
             <AlertDialogDescription className="font-semibold">
               当前姓名：<span className="font-extrabold">{student.name}</span>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4 space-y-3">
-            <label className="text-sm font-extrabold text-[#003A70] font-display">新姓名</label>
+            <label className="text-sm font-extrabold text-primary font-display">新姓名</label>
             <Input
               value={newName}
               onChange={(e) => { setNewName(e.target.value); setRenameError(''); }}
@@ -334,15 +334,15 @@ export function StudentCard({
       <AlertDialog open={showNickname} onOpenChange={setShowNickname}>
         <AlertDialogContent className="game-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-game text-xs text-[#003A70]">🏷 设置昵称</AlertDialogTitle>
+            <AlertDialogTitle className="font-game text-xs text-primary">🏷 设置昵称</AlertDialogTitle>
             <AlertDialogDescription className="font-semibold">
               昵称仅用于加分时快速查找，不会在页面上显示。<br />
               当前训练家：<span className="font-extrabold">{student.name}</span>
-              {student.nickname && <span className="text-[#003A70]/50">｜当前：{student.nickname}</span>}
+              {student.nickname && <span className="text-primary/50">｜当前：{student.nickname}</span>}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4 space-y-3">
-            <label className="text-sm font-extrabold text-[#003A70] font-display">昵称</label>
+            <label className="text-sm font-extrabold text-primary font-display">昵称</label>
             <Input
               value={nicknameInput}
               onChange={(e) => setNicknameInput(e.target.value)}
@@ -351,7 +351,7 @@ export function StudentCard({
               autoFocus
               className="game-input"
             />
-            <p className="text-xs font-semibold text-[#003A70]/40">留空则清除昵称。</p>
+            <p className="text-xs font-semibold text-primary/40">留空则清除昵称。</p>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel className="game-btn game-btn-outline text-sm">取消</AlertDialogCancel>

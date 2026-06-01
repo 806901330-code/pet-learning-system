@@ -161,7 +161,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
         scale: 2,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#FFF8F0',  // 明确背景色，避免透明导致"空白"
+        backgroundColor: 'var(--color-bg)',  // 明确背景色，避免透明导致"空白"
         logging: false,
       });
       const url = canvas.toDataURL('image/png');
@@ -260,7 +260,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
           {/* 左侧：姓名居中 + 底部阶段属性 */}
           <div className="flex flex-col min-w-0" style={{ width: '38%' }}>
             <div className="flex-1 flex items-center justify-center min-h-0">
-              <div className="font-extrabold text-[#003A70] font-display leading-relaxed"
+              <div className="font-extrabold text-primary font-display leading-relaxed"
                 style={{
                   fontSize: student.name.length > 3 ? '16px' : student.name.length > 2 ? '18px' : '20px',
                   lineHeight: '1.8',
@@ -334,10 +334,10 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
       {/* 操作区 */}
       <Card className="game-card">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-game text-xs text-[#003A70]">
+          <CardTitle className="flex items-center gap-2 font-game text-xs text-primary">
             📋 学生图鉴
           </CardTitle>
-          <CardDescription className="font-semibold text-[#003A70]/50">
+          <CardDescription className="font-semibold text-primary/50">
             按班级快速筛选，或批量导入学生名单，浏览宠物状态。按姓氏排序，每页展示 20 名学生。
           </CardDescription>
         </CardHeader>
@@ -345,7 +345,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
           {/* 班级筛选 Tabs */}
           {classes.length > 0 && (
             <div>
-              <div className="text-xs font-extrabold text-[#003A70]/50 mb-2 flex items-center gap-1 font-display">
+              <div className="text-xs font-extrabold text-primary/50 mb-2 flex items-center gap-1 font-display">
                 <School className="w-3.5 h-3.5" />
                 按班级筛选
               </div>
@@ -435,7 +435,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
                 <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: cls.color }} />
                 <div className="text-sm font-semibold">
                   当前班级：<span className="font-extrabold" style={{ color: cls.color }}>{cls.name}</span>
-                  <span className="text-[#003A70]/40 ml-2">（共 {displayStudents.length} 名学生）</span>
+                  <span className="text-primary/40 ml-2">（共 {displayStudents.length} 名学生）</span>
                 </div>
               </div>
             );
@@ -443,9 +443,9 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
 
           {/* 名单筛选状态 */}
           {!showAll && filteredNames.length > 0 && (
-            <div className="p-3 rounded-lg" style={{ background: '#FFCB0510', border: '1.5px solid #FFCB0530' }}>
-              <div className="text-sm font-semibold text-[#003A70]/50 mb-1">
-                名单筛选: <span className="font-extrabold text-[#003A70]">{filteredNames.length}</span> 名学生
+            <div className="p-3 rounded-lg" style={{ background: 'var(--color-accent-soft)', border: '1.5px solid var(--color-accent-soft)' }}>
+              <div className="text-sm font-semibold text-primary/50 mb-1">
+                名单筛选: <span className="font-extrabold text-primary">{filteredNames.length}</span> 名学生
               </div>
               <div className="flex flex-wrap gap-1 max-h-16 overflow-y-auto">
                 {filteredNames.map((name, i) => (
@@ -462,7 +462,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
         <Card className="game-card">
           <CardContent className="py-16 text-center">
             <div className="text-4xl mb-4">🔍</div>
-            <p className="font-extrabold text-[#003A70]/40 font-display">
+            <p className="font-extrabold text-primary/40 font-display">
               {students.length === 0 ? '还没有学生数据，快去添加学生吧！' : '没有找到匹配的学生'}
             </p>
           </CardContent>
@@ -472,7 +472,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
           <Card className="game-card">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between flex-wrap gap-3">
-                <CardTitle className="flex items-center gap-2 font-game text-xs text-[#003A70]">
+                <CardTitle className="flex items-center gap-2 font-game text-xs text-primary">
                   {selectedClassId
                     ? (() => {
                         const cls = classes.find(c => c.id === selectedClassId);
@@ -483,7 +483,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
                   <Badge variant="secondary" className="ml-2 text-[10px] font-extrabold">{displayStudents.length} 人</Badge>
                 </CardTitle>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-extrabold text-[#003A70]/40 font-display">
+                  <span className="text-xs font-extrabold text-primary/40 font-display">
                     第 {safeCurrentPage} / {totalPages} 页
                   </span>
                   <button
@@ -512,7 +512,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
                 <div
                   ref={gridRef}
                   className="aspect-[4/3] w-full rounded-2xl p-2"
-                  style={{ background: '#FFF8F0' }}
+                  style={{ background: 'var(--color-bg)' }}
                 >
                 <div className="h-full grid grid-cols-5 grid-rows-4 gap-1.5">
                   {pageStudents.map(renderTcgCard)}
@@ -556,7 +556,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
                       );
                     }
                     if (page === safeCurrentPage - 2 || page === safeCurrentPage + 2) {
-                      return <span key={page} className="text-[#003A70]/30 font-extrabold text-sm">...</span>;
+                      return <span key={page} className="text-primary/30 font-extrabold text-sm">...</span>;
                     }
                     return null;
                   }

@@ -439,7 +439,7 @@ function QuestionBankPanel({
       {/* 新建题库 */}
       <Card className="game-card">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-game text-[#003A70]">📚 新建题库</CardTitle>
+          <CardTitle className="text-base font-game text-primary">📚 新建题库</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-2">
@@ -618,7 +618,7 @@ function QuestionBankPanel({
                           {q.imageUrls && q.imageUrls.length > 0 && <span className="text-xs text-primary shrink-0">🖼️×{q.imageUrls.length}</span>}
                         </div>
                         {q.answer && (
-                          <span className="text-xs text-amber-600 mt-0.5 block">
+                          <span className="text-xs text-red-600 mt-0.5 block">
                             答：{q.answer}
                           </span>
                         )}
@@ -714,9 +714,9 @@ function FighterSelector({
     : null;
   const stage = selected ? getStageByExperience(selected.pet.experience) : null;
 
-  const borderColor = side === 'left' ? '#3B82F6' : '#EF4444';
-  const gradient = side === 'left' ? 'from-blue-50 to-indigo-50' : 'from-red-50 to-orange-50';
-  const labelColor = side === 'left' ? 'text-blue-600' : 'text-red-500';
+  const borderColor = side === 'left' ? '#B84C4C' : '#3D7DCA';
+  const gradient = side === 'left' ? 'from-red-50 to-rose-50' : 'from-blue-50 to-sky-50';
+  const labelColor = side === 'left' ? 'text-red-700' : 'text-blue-700';
 
   return (
     <div
@@ -1021,14 +1021,14 @@ function QuestionDisplay({ question }: { question: Question | null }) {
       {question.answer && (
         <div className="flex flex-col items-center gap-2">
           {showAnswer ? (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl px-5 py-3 text-center">
-              <span className="text-xs text-amber-600 font-medium block mb-1">参考答案</span>
-              <span className="text-amber-800 font-bold">{question.answer}</span>
+            <div className="bg-red-50 border border-red-200 rounded-xl px-5 py-3 text-center">
+              <span className="text-xs text-red-600 font-medium block mb-1">参考答案</span>
+              <span className="text-red-800 font-bold">{question.answer}</span>
             </div>
           ) : (
             <Button
               variant="outline" size="sm"
-              className="text-amber-600 border-amber-300 hover:bg-amber-50"
+              className="text-red-600 border-red-300 hover:bg-red-50"
               onClick={() => setShowAnswer(true)}
             >👁️ 显示答案</Button>
           )}
@@ -1115,7 +1115,7 @@ function VictoryScreen({
     y: Math.random() * 100,
     delay: Math.random() * 1.5,
     size: 8 + Math.random() * 16,
-    color: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'][Math.floor(Math.random() * 6)],
+    color: ['#D4A017', '#B84C4C', '#FFD700', '#FF6347', '#FFF8DC', '#FFA500'][Math.floor(Math.random() * 6)],
   }));
 
   return (
@@ -1144,7 +1144,7 @@ function VictoryScreen({
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 50% 40%, rgba(255,215,0,0.18) 0%, transparent 65%)',
+          background: 'radial-gradient(ellipse at 50% 40%, rgba(212,160,23,0.18) 0%, transparent 65%)',
         }}
       />
 
@@ -1152,14 +1152,14 @@ function VictoryScreen({
       <div
         className="relative z-10 rounded-3xl shadow-2xl p-8 flex flex-col items-center gap-5 max-w-sm w-full mx-4"
         style={{
-          background: 'linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-          border: '3px solid #FFD700',
-          boxShadow: '0 0 80px rgba(255,215,0,0.5), 0 0 20px rgba(255,215,0,0.3), 0 20px 60px rgba(0,0,0,0.5)',
+          background: 'linear-gradient(160deg, #1A0A0A 0%, #2C1010 50%, #1A0A0A 100%)',
+          border: '3px solid var(--color-accent)',
+          boxShadow: '0 0 80px rgba(212,160,23,0.5), 0 0 20px rgba(212,160,23,0.3), 0 20px 60px rgba(0,0,0,0.5)',
         }}
       >
         {/* 顶部装饰线 */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 rounded-full text-xs font-black tracking-widest"
-          style={{ background: '#FFD700', color: '#7C4700' }}>
+          style={{ background: 'var(--color-accent)', color: '#5C3A00' }}>
           ★ VICTORY ★
         </div>
 
@@ -1167,13 +1167,13 @@ function VictoryScreen({
         <div className="relative flex items-center justify-center">
           <div
             className="absolute rounded-full blur-3xl"
-            style={{ width: 120, height: 120, background: 'radial-gradient(circle, #FFD700 0%, transparent 70%)', opacity: 0.6 }}
+            style={{ width: 120, height: 120, background: 'radial-gradient(circle, var(--color-accent) 0%, transparent 70%)', opacity: 0.6 }}
           />
           <img
             src="/badge-victory.png"
             alt="胜利徽章"
             className="relative z-10 animate-bounce"
-            style={{ width: 96, height: 96, filter: 'drop-shadow(0 0 16px #FFD700)' }}
+            style={{ width: 96, height: 96, filter: 'drop-shadow(0 0 16px var(--color-accent))' }}
           />
         </div>
 
@@ -1182,11 +1182,11 @@ function VictoryScreen({
           <div
             className="text-4xl font-black tracking-wider"
             style={{
-              background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+              background: 'linear-gradient(135deg, var(--color-accent), var(--color-primary))',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               textShadow: 'none',
-              filter: 'drop-shadow(0 2px 8px rgba(255,215,0,0.6))',
+              filter: 'drop-shadow(0 2px 8px rgba(212,160,23,0.6))',
             }}
           >
             胜利！
@@ -1211,7 +1211,7 @@ function VictoryScreen({
 
         {/* +10 经验提示 */}
         <div className="flex items-center gap-3 rounded-2xl px-5 py-3 w-full justify-center"
-          style={{ background: 'rgba(255,215,0,0.12)', border: '1px solid rgba(255,215,0,0.3)' }}>
+          style={{ background: 'rgba(212,160,23,0.12)', border: '1px solid rgba(212,160,23,0.3)' }}>
           <span className="text-2xl">⭐</span>
           <div className="text-center">
             <div className="font-black text-yellow-300 text-lg">+10 经验值</div>
@@ -1222,7 +1222,7 @@ function VictoryScreen({
         <Button
           size="lg"
           className="w-full text-base font-black rounded-xl tracking-wide"
-          style={{ background: 'linear-gradient(135deg, #FFD700, #FF9500)', color: '#7C4700', border: 'none' }}
+          style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-dark))', color: '#FFF8DC', border: 'none' }}
           onClick={onDismiss}
         >
           ⚔️ 继续对战
@@ -1371,37 +1371,145 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
             </CardContent>
           </Card>
 
-          {/* 主对战区域 */}
+          {/* 主对战区域 · 道馆竞技场 */}
           <div
             className="flex gap-4 items-stretch min-h-[500px] rounded-2xl p-4 relative overflow-hidden"
             style={{
-              background: 'linear-gradient(160deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
-              boxShadow: 'inset 0 0 60px rgba(59,130,246,0.1)',
+              background: 'linear-gradient(170deg, #EDE8DE 0%, #E3DDD0 35%, #D9D2C3 65%, #CFC8B8 100%)',
+              boxShadow: 'inset 0 0 0 4px rgba(161,140,110,0.4), inset 0 0 0 1px rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.08)',
             }}
           >
-            {/* 场地装饰：网格线 */}
+            {/* 地板纹理：细木纹 */ }
             <div
-              className="absolute inset-0 pointer-events-none opacity-10"
+              className="absolute inset-0 pointer-events-none"
               style={{
-                backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-                backgroundSize: '40px 40px',
+                opacity: 0.25,
+                backgroundImage: `
+                  repeating-linear-gradient(0deg, transparent, transparent 18px, rgba(180,165,140,0.4) 18px, rgba(180,165,140,0.4) 19px),
+                  repeating-linear-gradient(90deg, transparent, transparent 120px, rgba(180,165,140,0.2) 120px, rgba(180,165,140,0.2) 121px)
+                `,
               }}
             />
-            {/* 场地装饰：蓝色光晕（左） */}
+
+            {/* 精灵球底纹：平铺小精灵球 */ }
             <div
-              className="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none"
-              style={{ width: 200, height: 200, background: 'radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%)', borderRadius: '50%' }}
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                opacity: 0.10,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='28' fill='none' stroke='%23996633' stroke-width='1.5' opacity='0.6'/%3E%3Cpath d='M40 12 A28 28 0 0 1 68 40' fill='none' stroke='%23CC3333' stroke-width='1.5' opacity='0.5'/%3E%3Cpath d='M40 68 A28 28 0 0 1 12 40' fill='none' stroke='%23999999' stroke-width='1.5' opacity='0.5'/%3E%3Cline x1='4' y1='40' x2='76' y2='40' stroke='%23666666' stroke-width='2' opacity='0.35'/%3E%3Ccircle cx='40' cy='40' r='5' fill='%23999999' opacity='0.3' stroke='%23666666' stroke-width='1' opacity='0.35'/%3E%3Ccircle cx='40' cy='40' r='2.5' fill='%23DDDDDD' opacity='0.5'/%3E%3C/svg%3E")`,
+                backgroundSize: '100px 100px',
+              }}
             />
-            {/* 场地装饰：红色光晕（右） */}
+
+            {/* 场地边界线 · 外框 */ }
             <div
-              className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
-              style={{ width: 200, height: 200, background: 'radial-gradient(circle, rgba(239,68,68,0.25) 0%, transparent 70%)', borderRadius: '50%' }}
+              className="absolute inset-3 pointer-events-none rounded-xl"
+              style={{
+                border: '2px solid rgba(161,140,110,0.4)',
+              }}
+            />
+            {/* 场地边界线 · 内框 */ }
+            <div
+              className="absolute inset-6 pointer-events-none rounded-lg"
+              style={{
+                border: '1.5px dashed rgba(161,140,110,0.3)',
+              }}
+            />
+
+            {/* 中线 */ }
+            <div
+              className="absolute left-1/2 top-3 bottom-3 w-[2px] pointer-events-none"
+              style={{
+                background: 'linear-gradient(to bottom, transparent 0%, rgba(161,140,110,0.35) 15%, rgba(161,140,110,0.35) 85%, transparent 100%)',
+              }}
+            />
+
+            {/* 中心圆 */ }
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+              style={{
+                width: 160,
+                height: 160,
+                borderRadius: '50%',
+                border: '2px solid rgba(161,140,110,0.35)',
+                background: 'radial-gradient(circle, rgba(161,140,110,0.06) 0%, transparent 55%)',
+              }}
+            />
+
+            {/* 中央精灵球 · 场地标志 */ }
+            <svg
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+              width="100"
+              height="100"
+              viewBox="0 0 100 100"
+              style={{ opacity: 0.35 }}
+            >
+              {/* 上半球 · 红 */ }
+              <path d="M50 5 A45 45 0 0 1 95 50" fill="none" stroke="#CC3333" strokeWidth="3.5" opacity="0.8" />
+              <clipPath id="pkball-top-clip">
+                <rect x="0" y="0" width="100" height="50" />
+              </clipPath>
+              <circle cx="50" cy="50" r="43" fill="#CC3333" fillOpacity="0.15" clipPath="url(#pkball-top-clip)" />
+              {/* 下半球 · 白 */ }
+              <path d="M50 95 A45 45 0 0 1 5 50" fill="none" stroke="#BBBBBB" strokeWidth="3.5" opacity="0.7" />
+              <clipPath id="pkball-bottom-clip">
+                <rect x="0" y="50" width="100" height="50" />
+              </clipPath>
+              <circle cx="50" cy="50" r="43" fill="#CCCCCC" fillOpacity="0.2" clipPath="url(#pkball-bottom-clip)" />
+              {/* 外圈 */ }
+              <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(100,80,60,0.3)" strokeWidth="2" />
+              {/* 中轴线 */ }
+              <line x1="2" y1="50" x2="98" y2="50" stroke="rgba(80,60,40,0.35)" strokeWidth="3.5" />
+              <line x1="2" y1="50" x2="98" y2="50" stroke="rgba(180,160,140,0.3)" strokeWidth="1" />
+              {/* 中心按钮 */ }
+              <circle cx="50" cy="50" r="8" fill="rgba(200,190,175,0.6)" stroke="rgba(100,80,60,0.25)" strokeWidth="2" />
+              <circle cx="50" cy="50" r="4" fill="rgba(220,215,205,0.8)" />
+            </svg>
+
+            {/* 左侧训练师站台区 */ }
+            <div
+              className="absolute left-0 top-0 bottom-0 w-[260px] pointer-events-none rounded-l-2xl"
+              style={{
+                background: 'linear-gradient(90deg, rgba(184,76,76,0.15) 0%, rgba(184,76,76,0.04) 60%, transparent 100%)',
+                borderRight: '1px solid rgba(184,76,76,0.12)',
+              }}
+            />
+            {/* 右侧训练师站台区 */ }
+            <div
+              className="absolute right-0 top-0 bottom-0 w-[260px] pointer-events-none rounded-r-2xl"
+              style={{
+                background: 'linear-gradient(270deg, rgba(61,125,202,0.15) 0%, rgba(61,125,202,0.04) 60%, transparent 100%)',
+                borderLeft: '1px solid rgba(61,125,202,0.12)',
+              }}
+            />
+
+            {/* 左训练师站立点 */ }
+            <div
+              className="absolute left-[80px] top-1/2 -translate-y-1/2 pointer-events-none"
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: '50%',
+                background: 'rgba(184,76,76,0.25)',
+                boxShadow: '0 0 0 4px rgba(184,76,76,0.15), inset 0 2px 4px rgba(0,0,0,0.08)',
+              }}
+            />
+            {/* 右训练师站立点 */ }
+            <div
+              className="absolute right-[80px] top-1/2 -translate-y-1/2 pointer-events-none"
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: '50%',
+                background: 'rgba(61,125,202,0.25)',
+                boxShadow: '0 0 0 4px rgba(61,125,202,0.15), inset 0 2px 4px rgba(0,0,0,0.08)',
+              }}
             />
 
             {/* 左侧选手 */}
             <div className="w-56 shrink-0 flex flex-col gap-3 relative z-10">
               <FighterSelector
-                label="🔵 左方选手"
+                label="🔴 左方选手"
                 side="left"
                 students={students}
                 petTypes={petTypes}
@@ -1411,13 +1519,13 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
               <AttackButton
                 label={leftStudent ? leftStudent.name : '左方'}
                 disabled={!canAttack || !leftStudent}
-                color="#3B82F6"
+                color="#B84C4C"
                 onAttack={handleAttack}
               />
               <WinButton
                 label={leftStudent ? leftStudent.name : '左方'}
                 disabled={!leftStudent}
-                color="#3B82F6"
+                color="#B84C4C"
                 onWin={() => handleWin('left')}
               />
             </div>
@@ -1426,33 +1534,35 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
             <div className="flex-1 flex flex-col relative z-10">
               {/* VS 标志 */}
               <div className="flex items-center justify-center mb-3 relative">
-                {/* 闪电装饰 */}
-                <span className="text-yellow-400 text-xl mr-1 animate-pulse">⚡</span>
-                <div
-                  className="text-4xl font-black tracking-widest px-4 py-1 rounded-xl"
-                  style={{
-                    background: 'linear-gradient(135deg, #3B82F6, #8B5CF6, #EF4444)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    filter: 'drop-shadow(0 0 12px rgba(139,92,246,0.8))',
-                  }}
-                >VS</div>
-                <span className="text-yellow-400 text-xl ml-1 animate-pulse" style={{ animationDelay: '0.5s' }}>⚡</span>
+                <div className="flex items-center gap-1 px-4 py-1 rounded-full"
+                  style={{ background: 'rgba(200,190,175,0.5)', backdropFilter: 'blur(4px)' }}>
+                  <span className="text-amber-500 text-lg animate-pulse">⚡</span>
+                  <div
+                    className="text-3xl font-black tracking-widest"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--color-accent), var(--color-primary), var(--color-primary-dark))',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      textShadow: 'none',
+                      filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))',
+                    }}
+                  >VS</div>
+                  <span className="text-amber-500 text-lg animate-pulse" style={{ animationDelay: '0.5s' }}>⚡</span>
+                </div>
               </div>
 
               {/* 题目展示区 */}
               <div
                 className="flex-1 rounded-2xl p-6 flex flex-col"
                 style={{
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  backdropFilter: 'blur(8px)',
+                  background: 'var(--color-card-bg)',
+                  border: '2px solid var(--color-accent-soft)',
                 }}
               >
                 <QuestionDisplay key={questionKey} question={currentQuestion} />
               </div>
               {canAttack && (leftStudent || rightStudent) && !currentQuestion && (
-                <p className="text-center text-xs text-white/40 mt-2">
+                <p className="text-center text-xs mt-2" style={{ color: 'rgba(120,100,75,0.6)' }}>
                   点击下方「出招」按钮随机抽题
                 </p>
               )}
@@ -1461,7 +1571,7 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
             {/* 右侧选手 */}
             <div className="w-56 shrink-0 flex flex-col gap-3 relative z-10">
               <FighterSelector
-                label="🔴 右方选手"
+                label="🔵 右方选手"
                 side="right"
                 students={students}
                 petTypes={petTypes}
@@ -1471,21 +1581,21 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
               <AttackButton
                 label={rightStudent ? rightStudent.name : '右方'}
                 disabled={!canAttack || !rightStudent}
-                color="#EF4444"
+                color="#3D7DCA"
                 onAttack={handleAttack}
               />
               <WinButton
                 label={rightStudent ? rightStudent.name : '右方'}
                 disabled={!rightStudent}
-                color="#EF4444"
+                color="#3D7DCA"
                 onWin={() => handleWin('right')}
               />
             </div>
           </div>
 
           {students.length === 0 && (
-            <Card className="border-amber-200 bg-amber-50">
-              <CardContent className="py-4 text-center text-amber-700 text-sm">
+            <Card className="border-red-200 bg-red-50">
+              <CardContent className="py-4 text-center text-red-700 text-sm">
                 💡 还没有学生数据，请先在「学生管理」页面导入学生
               </CardContent>
             </Card>

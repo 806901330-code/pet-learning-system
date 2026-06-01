@@ -73,11 +73,11 @@ export function StudentManagement({
           </button>
 
           <div className="flex items-center gap-3">
-            <span className="text-xs font-extrabold text-[#003A70]/60 font-display uppercase tracking-wider whitespace-nowrap">
+            <span className="text-xs font-extrabold text-primary/60 font-display uppercase tracking-wider whitespace-nowrap">
               初始精灵
             </span>
             <Select value={selectedPet} onValueChange={setSelectedPet}>
-              <SelectTrigger className="w-40 h-10 text-sm font-bold border-2 border-[#003A70]/20 rounded-xl">
+              <SelectTrigger className="w-40 h-10 text-sm font-bold border-2 border-primary/20 rounded-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -131,7 +131,7 @@ export function StudentManagement({
 
         {/* 搜索框 */}
         <div className="relative">
-          <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#003A70]/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
           </svg>
           <input
@@ -148,7 +148,7 @@ export function StudentManagement({
       <div>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3 flex-wrap">
-            <h2 className="text-sm font-game text-[#003A70] tracking-tight">
+            <h2 className="text-sm font-game text-primary tracking-tight">
               精灵训练家
             </h2>
             {stageFilter && (
@@ -168,11 +168,12 @@ export function StudentManagement({
                 </button>
               </span>
             )}
-            <span className="px-2.5 py-0.5 rounded-xl bg-[#FFCB05]/15 text-[#003A70] text-[10px] font-extrabold font-display border-2 border-[#FFCB05]/30">
+            <span className="px-2.5 py-0.5 rounded-xl text-primary text-[10px] font-extrabold font-display border-2"
+              style={{ backgroundColor: 'var(--color-accent-soft)', borderColor: 'var(--color-accent-soft)' }}>
               {filteredStudents.length} 人
             </span>
           </div>
-          <p className="text-[10px] font-semibold text-[#003A70]/40 hidden sm:block">
+          <p className="text-[10px] font-semibold text-primary/40 hidden sm:block">
             点击卡片管理训练家
           </p>
         </div>
@@ -180,13 +181,13 @@ export function StudentManagement({
         {filteredStudents.length === 0 ? (
           <div className="game-card text-center py-16">
             <svg viewBox="0 0 100 100" className="w-20 h-20 mx-auto mb-4 opacity-10">
-              <circle cx="50" cy="50" r="46" fill="none" stroke="#003A70" strokeWidth="4"/>
-              <path d="M4 50 Q50 73 96 50" fill="#EE1515" stroke="#003A70" strokeWidth="4"/>
-              <line x1="4" y1="50" x2="96" y2="50" stroke="#003A70" strokeWidth="4"/>
-              <circle cx="50" cy="50" r="10" fill="white" stroke="#003A70" strokeWidth="4"/>
-              <circle cx="50" cy="50" r="4" fill="#003A70"/>
+              <circle cx="50" cy="50" r="46" fill="none" stroke="var(--color-primary-dark)" strokeWidth="4"/>
+              <path d="M4 50 Q50 73 96 50" fill="#EE1515" stroke="var(--color-primary-dark)" strokeWidth="4"/>
+              <line x1="4" y1="50" x2="96" y2="50" stroke="var(--color-primary-dark)" strokeWidth="4"/>
+              <circle cx="50" cy="50" r="10" fill="white" stroke="var(--color-primary-dark)" strokeWidth="4"/>
+              <circle cx="50" cy="50" r="4" fill="var(--color-primary-dark)"/>
             </svg>
-            <p className="text-sm font-extrabold text-[#003A70]/50 font-display">
+            <p className="text-sm font-extrabold text-primary/50 font-display">
               {students.length === 0
                 ? '还没有训练家，点击上方按钮导入吧！'
                 : '没有找到匹配的训练家'}
