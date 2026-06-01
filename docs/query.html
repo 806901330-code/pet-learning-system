@@ -6,8 +6,8 @@
   <title>宝可梦养成系统 · 学生查询</title>
   <style>
     /* ═══════════════════════════════════════════════
-       宝可梦查询页 · 双主题设计系统
-       主题：砖红 (红白机复古) / 经典蓝 (宝可梦原版)
+       宝可梦查询页 · 图鉴风格设计系统
+       主题：砖红图鉴 / 经典蓝图鉴
        ═══════════════════════════════════════════════ */
 
     :root {
@@ -18,7 +18,7 @@
       --color-accent-dark: #8B6914;
       --header-bg: #7D3232;
       --header-text: #fff;
-      --body-bg: #F8F4E8;
+      --body-bg: #F0EBE0;
       --body-text: #3D2B1F;
       --card-bg: #FFFDF5;
       --card-bg-end: #F5F0E1;
@@ -38,6 +38,17 @@
       --like-heart: '💜';
       --theme-dot: '🔴';
       --nav-gradient: linear-gradient(135deg, #B84C4C, #7D3232);
+      /* 图鉴设备色 */
+      --dex-shell-top: #D43D3D;
+      --dex-shell-bottom: #C23030;
+      --dex-shell-dark: #8B1A1A;
+      --dex-hinge: #2A2A2A;
+      --dex-screen-bg: #2D4A3A;
+      --dex-screen-border: #1A1A2E;
+      --dex-led-red: #FF3B3B;
+      --dex-led-blue: #3B8BFF;
+      --dex-led-yellow: #FFD700;
+      --dex-label-text: #FFE8CC;
     }
 
     [data-theme="blue"] {
@@ -48,7 +59,7 @@
       --color-accent-dark: #B89028;
       --header-bg: #1A3A6B;
       --header-text: #fff;
-      --body-bg: #F4F6FA;
+      --body-bg: #EDF0F5;
       --body-text: #1E293B;
       --card-bg: #FFFFFF;
       --card-bg-end: #F0F4FA;
@@ -68,6 +79,17 @@
       --like-heart: '💙';
       --theme-dot: '🔵';
       --nav-gradient: linear-gradient(135deg, #3D7DCA, #1A3A6B);
+      /* 蓝图鉴设备色 */
+      --dex-shell-top: #3D7DCA;
+      --dex-shell-bottom: #2E6AB5;
+      --dex-shell-dark: #1A3A6B;
+      --dex-hinge: #1E293B;
+      --dex-screen-bg: #1B3A4A;
+      --dex-screen-border: #0F172A;
+      --dex-led-red: #FF3B3B;
+      --dex-led-blue: #60A5FA;
+      --dex-led-yellow: #FBBF24;
+      --dex-label-text: #DBEAFE;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -81,7 +103,7 @@
       overflow-x: hidden;
     }
 
-    /* ── 道馆大门导航栏 ── */
+    /* ── 导航栏 ── */
     .nav-bar {
       background: var(--nav-gradient);
       padding: 0;
@@ -90,13 +112,13 @@
       transition: background 0.4s;
     }
     .nav-inner {
-      max-width: 520px; margin: 0 auto;
+      max-width: 600px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 20px; height: 52px;
     }
     .nav-brand {
       display: flex; align-items: center; gap: 10px;
-      text-decoration: none; color: white;
+      color: white;
     }
     .nav-brand .pokeball {
       width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
@@ -135,7 +157,7 @@
 
     /* ── 主容器 ── */
     .container {
-      max-width: 520px; margin: 0 auto; padding: 0 20px 50px;
+      max-width: 600px; margin: 0 auto; padding: 0 20px 50px;
     }
 
     /* ── 英雄区 ── */
@@ -161,16 +183,15 @@
       font-size: 14px; color: var(--muted); margin-top: 4px;
     }
 
-    /* ── 搜索卡片 (TCG风格) ── */
+    /* ── 搜索卡片 ── */
     .search-card {
       background: linear-gradient(170deg, var(--card-bg) 0%, var(--card-bg-end) 100%);
       border: 1.5px solid var(--card-border);
       border-radius: 20px; padding: 28px 24px 24px;
       box-shadow: 0 4px 24px var(--card-shadow);
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       position: relative;
       overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
     }
     .search-card::before {
       content: ''; position: absolute; top: -40px; right: -40px;
@@ -182,9 +203,7 @@
       display: flex; align-items: center; gap: 8px;
       color: var(--body-text);
     }
-    .search-label::before {
-      content: '🔍'; font-size: 20px;
-    }
+    .search-label::before { content: '🔍'; font-size: 20px; }
     .search-row {
       display: flex; gap: 10px; position: relative; z-index: 1;
     }
@@ -227,154 +246,297 @@
       font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px;
     }
 
-    /* ── 结果卡片 (TCG风格) ── */
-    .result-card {
-      background: linear-gradient(170deg, var(--card-bg) 0%, var(--card-bg-end) 100%);
-      border: 2px solid var(--card-border);
-      border-radius: 20px; padding: 28px 24px;
-      box-shadow: 0 4px 24px var(--card-shadow);
-      display: none; overflow: hidden;
-      animation: slideUp 0.45s cubic-bezier(0.16,1,0.3,1);
+    /* ═══════════════════════════════════════════════
+       宝可梦图鉴设备 (Pokédex Device)
+       ═══════════════════════════════════════════════ */
+
+    /* 图鉴外壳 */
+    .pokedex {
+      display: none;
+      position: relative;
+      margin-bottom: 20px;
+      animation: dexOpen 0.5s cubic-bezier(0.16,1,0.3,1);
+      filter: drop-shadow(0 8px 32px rgba(0,0,0,0.25));
+    }
+    @keyframes dexOpen {
+      from { opacity: 0; transform: translateY(30px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* 上半部分 — 屏幕区 */
+    .dex-top {
+      background: var(--dex-shell-top);
+      border-radius: 24px 24px 8px 8px;
+      padding: 22px 20px 18px;
+      position: relative;
+      border: 3px solid var(--dex-shell-dark);
+      border-bottom: none;
+      box-shadow: inset 0 2px 6px rgba(255,255,255,0.2), inset 0 -4px 8px rgba(0,0,0,0.15);
+    }
+    /* 铰链装饰条 */
+    .dex-top::after {
+      content: '';
+      position: absolute; left: 10%; right: 10%; bottom: -4px;
+      height: 8px; background: var(--dex-hinge);
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    /* LED 指示灯区 */
+    .dex-leds {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+      padding: 0 4px;
+    }
+    .dex-led {
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 2px solid rgba(0,0,0,0.4);
+      box-shadow: 0 0 8px currentColor, 0 0 2px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.3);
+    }
+    .dex-led.red { background: var(--dex-led-red); color: var(--dex-led-red); }
+    .dex-led.blue { background: var(--dex-led-blue); color: var(--dex-led-blue); width: 16px; height: 16px; }
+    .dex-led.yellow { background: var(--dex-led-yellow); color: var(--dex-led-yellow); }
+
+    .dex-top-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--dex-label-text);
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-left: auto;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    /* 屏幕外框 */
+    .dex-screen-frame {
+      background: var(--dex-hinge);
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.2);
       position: relative;
     }
-    .result-card::after {
-      content: ''; position: absolute; bottom: -30px; left: -30px;
-      width: 80px; height: 80px; border-radius: 50%;
-      background: var(--card-border); pointer-events: none;
+    /* 屏幕面板 */
+    .dex-screen {
+      background: var(--dex-screen-bg);
+      border-radius: 8px;
+      padding: 18px 16px;
+      min-height: 240px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.2);
     }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* 屏幕扫描线纹理 */
+    .dex-screen::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none; z-index: 1;
+    }
+    /* 屏幕轻微发光 */
+    .dex-screen::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(120,255,180,0.06) 0%, transparent 70%);
+      pointer-events: none; z-index: 2;
     }
 
-    /* 结果头部 */
-    .result-header {
-      display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
-      position: relative; z-index: 1;
+    /* 屏幕内的所有内容需要 z-index 高于伪元素 */
+    .dex-screen > * { position: relative; z-index: 3; }
+
+    /* 屏幕内文字颜色 — 用亮色在暗底上显示 */
+    .screen-text { color: #C8F0D8; }
+    .screen-text-muted { color: #7EBF96; }
+    .screen-text-accent { color: #FFE066; }
+
+    /* 图鉴内结果头部 */
+    .dex-result-header {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 18px;
     }
-    .result-avatar {
-      width: 88px; height: 88px; border-radius: 22px;
-      background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 10%, #fff) 0%, color-mix(in srgb, var(--color-primary) 18%, #fff) 100%);
+    .dex-avatar {
+      width: 72px; height: 72px; border-radius: 12px;
+      background: rgba(255,255,255,0.1);
       display: flex; align-items: center; justify-content: center;
-      font-size: 48px; flex-shrink: 0;
-      box-shadow: 0 8px 24px color-mix(in srgb, var(--color-primary) 20%, transparent);
-      border: 2px solid var(--card-border);
+      font-size: 40px; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.2);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      overflow: hidden;
     }
-    .result-avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 22px; }
-    .result-info { flex: 1; min-width: 0; }
-    .result-info h3 {
-      font-size: 22px; font-weight: 800; color: var(--body-text); line-height: 1.2;
+    .dex-avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
+    .dex-info { flex: 1; min-width: 0; }
+    .dex-info .name {
+      font-size: 20px; font-weight: 800; color: #E0F8E8; line-height: 1.2;
+      text-shadow: 0 0 8px rgba(150,255,180,0.3);
     }
-    .result-info .pet-name {
-      font-size: 14px; font-weight: 600; color: var(--color-primary-dark); margin-top: 3px;
+    .dex-info .pet-name {
+      font-size: 13px; font-weight: 600; color: #FFE066; margin-top: 2px;
     }
-    .stage-badge {
-      display: inline-block; margin-top: 6px; padding: 5px 16px;
-      border-radius: 20px; font-size: 12px; font-weight: 700;
-      letter-spacing: 0.3px;
+    .dex-info .details {
+      display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; align-items: center;
     }
-    .stage-egg { background: #FEF3C7; color: #B45309; }
-    .stage-baby { background: #D1FAE5; color: #047857; }
-    .stage-teen { background: #DBEAFE; color: #1D4ED8; }
-    .stage-adult { background: #EDE9FE; color: #6D28D9; }
+    .dex-stage-tag {
+      display: inline-block; padding: 3px 12px; border-radius: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+    }
+    .dex-stage-egg { background: #5C4827; color: #F0C060; border: 1px solid #8B6914; }
+    .dex-stage-baby { background: #1B3D2B; color: #6EE7B7; border: 1px solid #047857; }
+    .dex-stage-teen { background: #1E2D4A; color: #7CB8F0; border: 1px solid #1D4ED8; }
+    .dex-stage-adult { background: #2D1B3E; color: #C4B5FD; border: 1px solid #6D28D9; }
 
-    /* 属性标签 */
-    .type-tags {
-      display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap;
-    }
-    .type-tag {
+    .dex-type-tag {
       display: inline-flex; align-items: center; gap: 3px;
-      padding: 3px 10px; border-radius: 10px;
-      font-size: 12px; font-weight: 600;
+      padding: 2px 8px; border-radius: 8px;
+      font-size: 11px; font-weight: 600;
     }
-    .type-grass { background: #D1FAE5; color: #047857; }
-    .type-fire { background: #FEE2E2; color: #DC2626; }
-    .type-water { background: #DBEAFE; color: #1D4ED8; }
-    .type-bug { background: #ECFCCB; color: #4D7C0F; }
-    .type-flying { background: #EDE9FE; color: #6D28D9; }
-    .type-normal { background: #F5F5F4; color: #57534E; }
-    .type-electric { background: #FEF9C3; color: #A16207; }
-    .type-ice { background: #E0F2FE; color: #0369A1; }
-    .type-fighting { background: #FEE2E2; color: #991B1B; }
-    .type-ghost { background: #EDE9FE; color: #5B21B6; }
-    .type-rock { background: #FEF3C7; color: #92400E; }
-    .type-dragon { background: #FCE7F3; color: #9D174D; }
-    .type-dark { background: #E7E5E4; color: #44403C; }
-    .type-poison { background: #F3E8FF; color: #6D28D9; }
-    .type-ground { background: #FEF3C7; color: #92400E; }
-    .type-steel { background: #F1F5F9; color: #475569; }
-    .type-fairy { background: #FCE7F3; color: #9D174D; }
-    .type-psychic { background: #FCE7F3; color: #9D174D; }
+    .dex-type-grass { background: #1B3D2B; color: #6EE7B7; }
+    .dex-type-fire { background: #4A1A1A; color: #FCA5A5; }
+    .dex-type-water { background: #1E2D4A; color: #7CB8F0; }
+    .dex-type-bug { background: #2D3A18; color: #BEF264; }
+    .dex-type-flying { background: #2D1B3E; color: #C4B5FD; }
+    .dex-type-normal { background: #2D2D28; color: #D6D3D1; }
+    .dex-type-electric { background: #4A3E18; color: #FDE68A; }
+    .dex-type-ice { background: #1A3A3E; color: #A5F0FC; }
+    .dex-type-fighting { background: #4A1818; color: #FCA5A5; }
+    .dex-type-ghost { background: #2D1B3E; color: #C4B5FD; }
+    .dex-type-rock { background: #3D2E18; color: #FCD34D; }
+    .dex-type-dragon { background: #3E1B2D; color: #FBCFE8; }
+    .dex-type-dark { background: #1F1F1B; color: #A8A29E; }
+    .dex-type-poison { background: #2D1B3E; color: #C4B5FD; }
+    .dex-type-ground { background: #3D2E18; color: #FCD34D; }
+    .dex-type-steel { background: #252D38; color: #CBD5E1; }
+    .dex-type-fairy { background: #3E1B2D; color: #FBCFE8; }
+    .dex-type-psychic { background: #3E1B2D; color: #FBCFE8; }
 
-    /* 经验条 */
-    .exp-section { margin-bottom: 22px; position: relative; z-index: 1; }
-    .exp-label {
+    /* 屏幕内分割线 */
+    .dex-divider {
+      height: 1px; background: rgba(255,255,255,0.1);
+      margin: 14px 0;
+    }
+
+    /* 屏幕内经验条 */
+    .dex-exp-label {
       display: flex; justify-content: space-between; align-items: baseline;
-      font-size: 13px; color: var(--muted); margin-bottom: 6px;
+      font-size: 12px; color: #7EBF96; margin-bottom: 5px;
     }
-    .exp-label .val { font-weight: 700; font-size: 15px; color: var(--color-primary-dark); }
-    .exp-bar-wrap {
-      height: 16px; background: var(--bar-track); border-radius: 10px;
-      overflow: hidden; position: relative;
+    .dex-exp-label .val { font-weight: 700; font-size: 14px; color: #FFE066; }
+    .dex-exp-bar-wrap {
+      height: 12px; background: rgba(0,0,0,0.4); border-radius: 6px;
+      overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
     }
-    .exp-bar-fill {
-      height: 100%; border-radius: 10px;
-      background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary), var(--color-primary-dark));
+    .dex-exp-bar-fill {
+      height: 100%; border-radius: 6px;
+      background: linear-gradient(90deg, #4ADE80, #22C55E, #16A34A);
       transition: width 1s cubic-bezier(0.16,1,0.3,1);
       position: relative;
     }
-    .exp-bar-fill::after {
+    .dex-exp-bar-fill::after {
       content: ''; position: absolute; right: 0; top: 0; bottom: 0;
-      width: 30px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35));
-      border-radius: 0 10px 10px 0;
+      width: 20px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2));
+      border-radius: 0 6px 6px 0;
     }
-    .stage-hint {
-      font-size: 13px; margin-top: 8px; color: var(--muted);
+    .dex-stage-hint {
+      font-size: 11px; margin-top: 6px; color: #7EBF96;
       display: flex; justify-content: space-between;
     }
-    .stage-hint .next { font-weight: 600; color: var(--color-primary-dark); }
+    .dex-stage-hint .next { font-weight: 600; color: #FFE066; }
 
-    /* 成长信息网格 */
-    .growth-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-      margin-bottom: 24px; position: relative; z-index: 1;
+    /* 屏幕内数据网格 */
+    .dex-stats-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      margin-top: 14px;
     }
-    .growth-item {
-      background: color-mix(in srgb, var(--color-primary) 5%, #fff);
-      border: 1px solid var(--divider);
-      border-radius: 14px; padding: 16px 14px;
+    .dex-stat {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px; padding: 12px;
       text-align: center;
     }
-    .growth-item .label {
-      font-size: 12px; color: var(--muted); margin-bottom: 6px;
+    .dex-stat .stat-label {
+      font-size: 10px; color: #7EBF96; margin-bottom: 4px;
+      letter-spacing: 0.5px;
     }
-    .growth-item .value {
-      font-size: 24px; font-weight: 700; color: var(--color-primary-dark);
+    .dex-stat .stat-value {
+      font-size: 20px; font-weight: 700; color: #E0F8E8;
       line-height: 1.2;
     }
-    .growth-item .sub {
-      font-size: 12px; color: var(--muted); margin-top: 3px;
+    .dex-stat .stat-sub {
+      font-size: 10px; color: #7EBF96; margin-top: 2px;
     }
 
-    /* 点赞区 */
-    .like-section {
-      text-align: center; padding-top: 18px;
-      border-top: 1.5px solid var(--divider);
-      position: relative; z-index: 1;
+    /* ── 下半部分 — 操作区 ── */
+    .dex-bottom {
+      background: var(--dex-shell-bottom);
+      border-radius: 8px 8px 24px 24px;
+      padding: 18px 20px 22px;
+      position: relative;
+      border: 3px solid var(--dex-shell-dark);
+      border-top: none;
+      box-shadow: inset 0 2px 6px rgba(255,255,255,0.15), inset 0 -4px 8px rgba(0,0,0,0.2);
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .like-btn {
-      display: inline-flex; flex-direction: column; align-items: center;
-      gap: 6px; cursor: pointer; user-select: none;
-      transition: transform 0.2s; padding: 8px 20px;
-      border-radius: 16px;
+    /* 铰链装饰 */
+    .dex-bottom::before {
+      content: '';
+      position: absolute; left: 10%; right: 10%; top: -4px;
+      height: 8px; background: var(--dex-hinge);
+      border-radius: 4px;
+      box-shadow: 0 -1px 3px rgba(0,0,0,0.4);
     }
-    .like-btn:hover { transform: scale(1.06); }
-    .like-btn:active { transform: scale(0.95); }
-    .like-btn .heart-icon {
-      font-size: 50px; transition: transform 0.3s; line-height: 1;
+
+    /* 十字键装饰 */
+    .dex-dpad {
+      width: 64px; height: 64px; position: relative;
+      flex-shrink: 0;
     }
-    .like-btn.pulse .heart-icon {
+    .dex-dpad .dpad-v {
+      position: absolute; left: 22px; top: 0; width: 20px; height: 64px;
+      background: var(--dex-hinge); border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.1);
+    }
+    .dex-dpad .dpad-h {
+      position: absolute; left: 0; top: 22px; width: 64px; height: 20px;
+      background: var(--dex-hinge); border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.1);
+    }
+    .dex-dpad .dpad-center {
+      position: absolute; left: 24px; top: 24px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #444;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.6);
+    }
+
+    /* 扬声器格栅 */
+    .dex-speaker {
+      display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;
+    }
+    .dex-speaker .grill {
+      height: 3px; background: var(--dex-hinge); border-radius: 1px;
+      opacity: 0.6;
+    }
+    .dex-speaker .grill:nth-child(1) { width: 44px; }
+    .dex-speaker .grill:nth-child(2) { width: 48px; }
+    .dex-speaker .grill:nth-child(3) { width: 44px; }
+    .dex-speaker .grill:nth-child(4) { width: 40px; }
+
+    /* 点赞按钮（在底部） */
+    .dex-like-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      cursor: pointer; user-select: none;
+      transition: transform 0.2s; padding: 4px 12px;
+      border-radius: 12px; flex-shrink: 0;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .dex-like-btn:hover { transform: scale(1.06); background: rgba(0,0,0,0.35); }
+    .dex-like-btn:active { transform: scale(0.95); }
+    .dex-like-btn .heart-icon {
+      font-size: 36px; transition: transform 0.3s; line-height: 1;
+    }
+    .dex-like-btn.pulse .heart-icon {
       animation: heartPulse 0.5s cubic-bezier(0.16,1,0.3,1);
     }
     @keyframes heartPulse {
@@ -384,10 +546,49 @@
       75% { transform: scale(1.15); }
       100% { transform: scale(1); }
     }
-    .like-count {
-      font-size: 15px; font-weight: 700; color: var(--color-primary-dark);
+    .dex-like-count {
+      font-size: 13px; font-weight: 700; color: var(--dex-label-text);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
-    .like-label { font-size: 12px; color: var(--muted); }
+    .dex-like-label { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+    /* ── 多结果列表（在屏幕内） ── */
+    .dex-multi-header {
+      font-size: 14px; font-weight: 700; color: #FFE066;
+      margin-bottom: 10px;
+    }
+    .dex-multi-item {
+      display: flex; align-items: center; gap: 12px; padding: 10px;
+      border-radius: 8px; margin-bottom: 6px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .dex-multi-item:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateX(3px);
+    }
+    .dex-multi-item .mini-av {
+      width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+      background: rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .dex-multi-item .mini-av img { width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
+    .dex-multi-item .mini-info { flex: 1; min-width: 0; }
+    .dex-multi-item .mini-info .n {
+      font-size: 15px; font-weight: 700; color: #E0F8E8;
+    }
+    .dex-multi-item .mini-info .m {
+      font-size: 11px; color: #7EBF96; margin-top: 2px;
+      display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+    }
+    .dex-multi-item .mini-info .m .t {
+      display: inline-block; padding: 1px 6px; border-radius: 4px;
+      background: rgba(255,255,255,0.12); color: #E0F8E8;
+      font-weight: 600; font-size: 10px;
+    }
 
     /* 浮动emoji */
     .floating-emoji {
@@ -401,85 +602,37 @@
       100% { transform: translateY(-320px) translateX(var(--dx2)) scale(0.15) rotate(var(--rot)); opacity: 0; }
     }
 
-    /* 多结果列表 */
-    .multi-results { position: relative; z-index: 1; }
-    .multi-header {
-      font-size: 15px; font-weight: 700; color: var(--body-text);
-      margin-bottom: 12px; padding: 0 4px;
-    }
-    .multi-item {
-      display: flex; align-items: center; gap: 14px; padding: 14px;
-      border-radius: 14px; margin-bottom: 8px;
-      background: color-mix(in srgb, var(--color-primary) 4%, #fff);
-      border: 1px solid var(--divider);
-      cursor: pointer; transition: all 0.2s;
-    }
-    .multi-item:hover {
-      background: color-mix(in srgb, var(--color-primary) 8%, #fff);
-      border-color: var(--card-border);
-      transform: translateX(4px);
-    }
-    .multi-item .mini-avatar {
-      width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
-      background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 8%, #fff) 0%, color-mix(in srgb, var(--color-primary) 14%, #fff) 100%);
-      display: flex; align-items: center; justify-content: center; font-size: 26px;
-      border: 1.5px solid var(--card-border);
-    }
-    .multi-item .mini-avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 14px; }
-    .multi-item .mini-info { flex: 1; min-width: 0; }
-    .multi-item .mini-info h4 {
-      font-size: 16px; font-weight: 700; color: var(--body-text);
-    }
-    .multi-item .mini-info .meta {
-      font-size: 12px; color: var(--muted); margin-top: 2px;
-      display: flex; gap: 8px; flex-wrap: wrap;
-    }
-    .multi-item .mini-info .meta .tag {
-      display: inline-block; padding: 2px 8px; border-radius: 6px;
-      background: var(--tag-bg); color: var(--tag-text);
-      font-weight: 600; font-size: 11px;
-    }
-
-    /* 页脚 */
-    .footer {
-      text-align: center; padding: 24px 0 40px;
-    }
-    .footer a {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 10px 24px;
-      background: linear-gradient(135deg, var(--btn-red-bg), var(--color-primary-dark));
-      color: white; text-decoration: none;
-      border-radius: 14px; font-size: 14px; font-weight: 600;
-      border: 2px solid var(--btn-red-border);
-      transition: all 0.2s;
-      box-shadow: 0 3px 12px color-mix(in srgb, var(--btn-red-bg) 35%, transparent);
-    }
-    .footer a:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px color-mix(in srgb, var(--btn-red-bg) 40%, transparent);
-    }
-
     /* 响应式 */
-    @media (max-width: 400px) {
+    @media (max-width: 420px) {
       .nav-inner { padding: 0 14px; }
       .container { padding: 0 14px 40px; }
       .hero { padding: 28px 0 16px; }
       .hero-emoji { font-size: 44px; }
       .hero h1 { font-size: 20px; }
-      .search-card, .result-card { padding: 22px 16px; border-radius: 16px; }
-      .result-avatar { width: 66px; height: 66px; font-size: 36px; border-radius: 16px; }
-      .result-header { gap: 12px; }
-      .result-info h3 { font-size: 18px; }
-      .growth-grid { grid-template-columns: 1fr; }
-      .search-row { gap: 8px; }
-      .search-row button { padding: 14px 20px; font-size: 14px; }
+      .search-card { padding: 22px 16px; border-radius: 16px; }
+      .dex-top { padding: 16px 14px 14px; border-radius: 20px 20px 6px 6px; }
+      .dex-bottom { padding: 14px 14px 18px; border-radius: 6px 6px 20px 20px; }
+      .dex-screen { padding: 14px 12px; min-height: 200px; }
+      .dex-screen-frame { padding: 7px; }
+      .dex-avatar { width: 56px; height: 56px; font-size: 30px; }
+      .dex-info .name { font-size: 17px; }
+      .dex-dpad { width: 50px; height: 50px; }
+      .dex-dpad .dpad-v { left: 17px; top: 0; width: 16px; height: 50px; }
+      .dex-dpad .dpad-h { left: 0; top: 17px; width: 50px; height: 16px; }
+      .dex-dpad .dpad-center { left: 19px; top: 19px; width: 12px; height: 12px; }
+      .dex-stats-grid { grid-template-columns: 1fr; }
+      .dex-bottom { gap: 8px; }
+      .dex-speaker .grill:nth-child(1) { width: 36px; }
+      .dex-speaker .grill:nth-child(2) { width: 40px; }
+      .dex-speaker .grill:nth-child(3) { width: 36px; }
+      .dex-speaker .grill:nth-child(4) { width: 32px; }
     }
   </style>
 </head>
 <body>
 
 <!-- 导航栏 -->
-<nav class="nav-bar">
+<nav class="nav-bar" data-theme-el="nav">
   <div class="nav-inner">
     <span class="nav-brand">
       <span class="pokeball">
@@ -505,7 +658,7 @@
   <div class="hero">
     <div class="hero-emoji">📖</div>
     <h1>学生宝可梦图鉴</h1>
-    <p>输入你的名字，看看你的宠物成长到哪个阶段了~</p>
+    <p>输入你的名字，打开图鉴看看你的宠物吧</p>
   </div>
 
   <!-- 搜索卡片 -->
@@ -519,12 +672,36 @@
     <div class="data-info" id="dataInfo"></div>
   </div>
 
-  <!-- 结果卡片 -->
-  <div class="result-card" id="resultCard">
-    <div class="result-header" id="resultHeader"></div>
-    <div class="exp-section" id="expSection"></div>
-    <div class="growth-grid" id="growthGrid"></div>
-    <div class="like-section" id="likeSection"></div>
+  <!-- 宝可梦图鉴 -->
+  <div class="pokedex" id="pokedex">
+    <!-- 上半部分：屏幕 -->
+    <div class="dex-top">
+      <div class="dex-leds">
+        <span class="dex-led red"></span>
+        <span class="dex-led blue"></span>
+        <span class="dex-led yellow"></span>
+        <span class="dex-top-label">Pokédex</span>
+      </div>
+      <div class="dex-screen-frame">
+        <div class="dex-screen" id="dexScreen"></div>
+      </div>
+    </div>
+    <!-- 下半部分：操作区 -->
+    <div class="dex-bottom">
+      <div class="dex-dpad">
+        <div class="dpad-v"></div>
+        <div class="dpad-h"></div>
+        <div class="dpad-center"></div>
+      </div>
+      <div class="dex-speaker">
+        <div class="grill"></div><div class="grill"></div><div class="grill"></div><div class="grill"></div>
+      </div>
+      <div class="dex-like-btn" id="dexLikeBtn" style="display:none;">
+        <span class="heart-icon">🤍</span>
+        <span class="dex-like-count" id="dexLikeCount">0</span>
+        <span class="dex-like-label">点赞</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -604,11 +781,10 @@ var nameInput = document.getElementById('nameInput');
 var searchBtn = document.getElementById('searchBtn');
 var errorMsg = document.getElementById('errorMsg');
 var dataInfo = document.getElementById('dataInfo');
-var resultCard = document.getElementById('resultCard');
-var resultHeader = document.getElementById('resultHeader');
-var expSection = document.getElementById('expSection');
-var growthGrid = document.getElementById('growthGrid');
-var likeSection = document.getElementById('likeSection');
+var pokedex = document.getElementById('pokedex');
+var dexScreen = document.getElementById('dexScreen');
+var dexLikeBtn = document.getElementById('dexLikeBtn');
+var dexLikeCount = document.getElementById('dexLikeCount');
 
 var allStudents = [], customPets = [], dataLoaded = false;
 
@@ -640,7 +816,7 @@ function updateInfo() {
 
 // ═══════════════ 点赞 ═══════════════
 var LK = 'pet-query-likes-';
-var EM = ['❤️','💖','💕','💝','🎁','🎈','🎀','🌟','✨','💫','🧸','🎮','🎯','🏆','💎','🌸','🌺','🍀','🎪','🦋','🐣','🌈'];
+var EM = ['❤️','💖','💕','💝','🎁','🎈','🎀','🌟','✨','💫','🧸','🎮','🎯','🏆','💎','🌸','🌺','🍀','🦋','🐣','🌈'];
 
 function likes(id) { try { return parseInt(localStorage.getItem(LK+id)||'0'); } catch(_){ return 0; } }
 function addLike(id) {
@@ -670,11 +846,14 @@ function spawnEmojis(rect) {
   }
 }
 
-// ═══════════════ 显示结果 ═══════════════
+// ═══════════════ 图鉴显示结果 ═══════════════
+var currentStudentId = null;
+
 function showResult(s) {
   var pet=s.pet;
   if(!pet) { showErr('该学生还没有宠物数据'); return; }
 
+  currentStudentId = s.id;
   var pt=findPet(pet.petTypeId,customPets);
   var stage=getStage(pet.experience);
   var next=nextStageExp(pet.experience);
@@ -682,54 +861,60 @@ function showResult(s) {
   var prog=Math.min(100,Math.max(0,((pet.experience-sc.minExp)/((next||600)-sc.minExp))*100));
   var stageName=pt&&pt.stages?pt.stages[stage]:sc.name;
 
-  resultHeader.innerHTML =
-    '<div class="result-avatar">'+petImg(pt,stage)+'</div>'+
-    '<div class="result-info">'+
-      '<h3>'+esc(s.name)+'</h3>'+
-      '<div class="pet-name">'+(pt?pt.emoji+' '+(pt.isCustom?'✨ ':'')+pt.name:'未知宠物')+'</div>'+
-      '<span class="stage-badge stage-'+stage+'">'+sc.label+'</span>'+
-      (pt?'<div class="type-tags"><span class="type-tag type-'+pt.pokemonType+'">'+pt.emoji+' '+pt.pokemonType+'</span></div>':'')+
+  dexScreen.innerHTML =
+    /* 宠物头部信息 */
+    '<div class="dex-result-header">'+
+      '<div class="dex-avatar">'+petImg(pt,stage)+'</div>'+
+      '<div class="dex-info">'+
+        '<div class="name">'+esc(s.name)+'</div>'+
+        '<div class="pet-name">'+(pt?pt.emoji+' '+(pt.isCustom?'✨ ':'')+pt.name:'未知宠物')+'</div>'+
+        '<div class="details">'+
+          '<span class="dex-stage-tag dex-stage-'+stage+'">'+sc.label+'</span>'+
+          (pt?'<span class="dex-type-tag dex-type-'+pt.pokemonType+'">'+pt.emoji+' '+pt.pokemonType+'</span>':'')+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+
+    '<div class="dex-divider"></div>'+
+
+    /* 经验条 */
+    '<div class="dex-exp-label"><span>EXP</span><span class="val">'+pet.experience+' / '+(next||600)+'</span></div>'+
+    '<div class="dex-exp-bar-wrap"><div class="dex-exp-bar-fill" style="width:'+prog+'%"></div></div>'+
+    '<div class="dex-stage-hint"><span>'+esc(stageName)+'</span>'+
+    '<span class="next">'+(next?'→ 还需 '+(next-pet.experience)+' EXP':'★ MAX LEVEL ★')+'</span></div>'+
+
+    /* 数据网格 */
+    '<div class="dex-stats-grid">'+
+      '<div class="dex-stat"><div class="stat-label">🐾 宠物</div><div class="stat-value" style="font-size:14px;">'+(pt?pt.emoji+' '+pt.name:'❓')+'</div></div>'+
+      '<div class="dex-stat"><div class="stat-label">📊 阶段</div><div class="stat-value">'+(sc.emoji||'🐾')+'</div><div class="stat-sub">'+esc(stageName)+'</div></div>'+
+      '<div class="dex-stat"><div class="stat-label">⭐ 经验</div><div class="stat-value">'+pet.experience+'</div></div>'+
+      '<div class="dex-stat"><div class="stat-label">🏆 排名</div><div class="stat-value">'+getRank(s.id)+'</div><div class="stat-sub">共 '+allStudents.length+' 名</div></div>'+
     '</div>';
 
-  expSection.innerHTML =
-    '<div class="exp-label"><span>经验值</span><span class="val">'+pet.experience+' / '+(next||600)+'</span></div>'+
-    '<div class="exp-bar-wrap"><div class="exp-bar-fill" style="width:'+prog+'%"></div></div>'+
-    '<div class="stage-hint"><span>当前：'+esc(stageName)+'</span>'+
-    '<span class="next">'+(next?'距下一阶段还需 '+(next-pet.experience)+' 经验':'🎉 已达满级！')+'</span></div>';
-
-  growthGrid.innerHTML =
-    '<div class="growth-item"><div class="label">🐾 宠物类型</div><div class="value" style="font-size:16px;">'+(pt?pt.emoji+' '+pt.name:'❓')+'</div></div>'+
-    '<div class="growth-item"><div class="label">📊 成长阶段</div><div class="value">'+(sc.emoji||'🐾')+'</div><div class="sub">'+esc(stageName)+'</div></div>'+
-    '<div class="growth-item"><div class="label">⭐ 当前经验</div><div class="value">'+pet.experience+'</div></div>'+
-    '<div class="growth-item"><div class="label">🏆 排名</div><div class="value">'+getRank(s.id)+'</div><div class="sub">共 '+allStudents.length+' 名</div></div>';
-
-  renderLikes(s.id);
-  resultCard.style.display='block';
-  resultCard.style.animation='none'; resultCard.offsetHeight;
-  resultCard.style.animation='slideUp 0.45s cubic-bezier(0.16,1,0.3,1)';
+  renderLikes();
+  pokedex.style.display='block';
+  pokedex.style.animation='none'; pokedex.offsetHeight;
+  pokedex.style.animation='dexOpen 0.5s cubic-bezier(0.16,1,0.3,1)';
 }
 
-function renderLikes(sid) {
-  var lc=likes(sid);
-  likeSection.innerHTML =
-    '<div class="like-btn" id="likeBtn" data-sid="'+sid+'">'+
-      '<span class="heart-icon">'+(lc>0?'\uD83D\uDC9C':'\uD83E\uDD0D')+'</span>'+
-      '<span class="like-count">'+lc+' 次点赞</span>'+
-      '<span class="like-label">点击送爱心 ❤️</span>'+
-    '</div>';
-  setTimeout(function(){
-    var b=document.getElementById('likeBtn');
-    if(!b)return;
-    b.addEventListener('click',function(){
-      var nc=addLike(sid);
-      b.classList.add('pulse');
-      setTimeout(function(){b.classList.remove('pulse');},500);
-      b.querySelector('.heart-icon').textContent='\uD83D\uDC9C';
-      b.querySelector('.like-count').textContent=nc+' 次点赞';
-      spawnEmojis(b.getBoundingClientRect());
-    });
-  },50);
+function renderLikes() {
+  if (!currentStudentId) return;
+  var lc=likes(currentStudentId);
+  dexLikeCount.textContent = lc;
+  dexLikeBtn.style.display = 'flex';
+  dexLikeBtn.querySelector('.heart-icon').textContent = lc>0 ? '💜' : '🤍';
 }
+
+// 绑定点赞
+dexLikeBtn.addEventListener('click', function() {
+  if (!currentStudentId) return;
+  var nc = addLike(currentStudentId);
+  dexLikeBtn.classList.add('pulse');
+  setTimeout(function(){ dexLikeBtn.classList.remove('pulse'); }, 500);
+  dexLikeBtn.querySelector('.heart-icon').textContent = '💜';
+  dexLikeCount.textContent = nc;
+  spawnEmojis(dexLikeBtn.getBoundingClientRect());
+});
 
 function getRank(sid) {
   var te=null;
@@ -741,16 +926,41 @@ function getRank(sid) {
   if(r===1)return'🥇 1st';
   if(r===2)return'🥈 2nd';
   if(r===3)return'🥉 3rd';
-  return'第'+r+'名';
+  return'#'+r;
 }
 
 function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+// ═══════════════ 多结果 ═══════════════
+function showMulti(matches) {
+  currentStudentId = null;
+  dexLikeBtn.style.display = 'none';
+
+  var h='<div class="dex-multi-header">🔍 找到 '+matches.length+' 个匹配：</div>';
+  for(var i=0;i<matches.length;i++) {
+    var s=matches[i], pt=findPet(s.pet.petTypeId,customPets), stage=getStage(s.pet.experience);
+    h+='<div class="dex-multi-item" data-sid="'+s.id+'" onclick="pickStudent(\''+s.id+'\')">'+
+      '<div class="mini-av">'+petImg(pt,stage)+'</div>'+
+      '<div class="mini-info"><div class="n">'+esc(s.name)+'</div>'+
+      '<div class="m"><span class="t">'+(pt?pt.emoji+' '+pt.name:'未知')+'</span><span class="t">'+STAGE_CONFIG[stage].label+'</span><span>'+s.pet.experience+' EXP</span></div>'+
+      '</div></div>';
+  }
+  dexScreen.innerHTML = h;
+  pokedex.style.display='block';
+  pokedex.style.animation='none'; pokedex.offsetHeight;
+  pokedex.style.animation='dexOpen 0.5s cubic-bezier(0.16,1,0.3,1)';
+}
+
+window.pickStudent=function(sid) {
+  for(var i=0;i<allStudents.length;i++) if(allStudents[i].id===sid){showResult(allStudents[i]);return;}
+};
 
 // ═══════════════ 搜索 ═══════════════
 function doSearch() {
   var q=nameInput.value.trim();
   errorMsg.style.display='none';
-  resultCard.style.display='none';
+  pokedex.style.display='none';
+  dexLikeBtn.style.display='none';
 
   if(!q){showErr('请输入姓名');return;}
   if(!dataLoaded){showErr('数据加载中，请稍后...');return;}
@@ -770,32 +980,6 @@ function doSearch() {
 }
 
 function showErr(m){errorMsg.textContent=m;errorMsg.style.display='block';}
-
-function showMulti(matches) {
-  resultHeader.innerHTML='';
-  expSection.innerHTML = '<div class="multi-results"><div class="multi-header">找到 '+matches.length+' 个匹配的学生：</div>'+buildMultiList(matches)+'</div>';
-  growthGrid.innerHTML=''; likeSection.innerHTML='';
-  resultCard.style.display='block';
-  resultCard.style.animation='none';resultCard.offsetHeight;
-  resultCard.style.animation='slideUp 0.45s cubic-bezier(0.16,1,0.3,1)';
-}
-
-function buildMultiList(list) {
-  var h='';
-  for(var i=0;i<list.length;i++) {
-    var s=list[i], pt=findPet(s.pet.petTypeId,customPets), stage=getStage(s.pet.experience);
-    h+='<div class="multi-item" data-sid="'+s.id+'" onclick="pickStudent(\''+s.id+'\')">'+
-      '<div class="mini-avatar">'+petImg(pt,stage)+'</div>'+
-      '<div class="mini-info"><h4>'+esc(s.name)+'</h4>'+
-      '<div class="meta"><span class="tag">'+(pt?pt.emoji+' '+pt.name:'未知')+'</span><span class="tag">'+STAGE_CONFIG[stage].label+'</span><span>'+s.pet.experience+' 经验</span></div>'+
-      '</div></div>';
-  }
-  return h;
-}
-
-window.pickStudent=function(sid) {
-  for(var i=0;i<allStudents.length;i++) if(allStudents[i].id===sid){showResult(allStudents[i]);return;}
-};
 
 // ═══════════════ 事件 ═══════════════
 searchBtn.addEventListener('click',doSearch);
