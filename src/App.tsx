@@ -41,7 +41,6 @@ const NAV_TABS = [
   { id: 'points',      icon: '⚡', label: '经验值',   color: '#D4A017' },
   { id: 'pets',        icon: '🎒', label: '分配',     color: '#4CAF50' },
   { id: 'status',      icon: '📋', label: '图鉴',     color: '#9C27B0' },
-  { id: 'leaderboard', icon: '🏆', label: '排行榜',   color: '#FF9800' },
   { id: 'creator',     icon: '🎨', label: '创作',     color: '#00BCD4' },
   { id: 'pk',          icon: '⚔️', label: '对战',     color: '#EE1515' },
 ];
@@ -340,6 +339,7 @@ function App() {
             onImportStudentsToClass={importStudentsToClass}
             onRemoveStudentFromClass={removeStudentFromClass}
             onDeleteClass={deleteClass}
+            petTypes={allPetTypes}
           />
         )}
         {activeTab === 'points' && (
@@ -353,9 +353,6 @@ function App() {
         )}
         {activeTab === 'status' && (
           <StudentStatusView students={students} petTypes={allPetTypes} classes={classes} />
-        )}
-        {activeTab === 'leaderboard' && (
-          <Leaderboard students={students} petTypes={allPetTypes} />
         )}
         {activeTab === 'creator' && (
           <PetCreator

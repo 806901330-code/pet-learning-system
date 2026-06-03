@@ -25,11 +25,13 @@ import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, Users, Upload, X, School } from 'lucide-react';
 import type { ClassGroup } from '@/hooks/useClasses';
 import { CLASS_COLORS } from '@/hooks/useClasses';
-import type { Student } from '@/types/pet';
+import type { Student, PetType } from '@/types/pet';
+import { Leaderboard } from './Leaderboard';
 
 interface ClassManagementProps {
   classes: ClassGroup[];
   students: Student[];
+  petTypes: PetType[];
   onCreateClass: (name: string, studentNames: string[]) => ClassGroup;
   onRenameClass: (classId: string, newName: string) => void;
   onUpdateClassColor: (classId: string, color: string) => void;
@@ -49,6 +51,7 @@ function parseNames(text: string): string[] {
 export function ClassManagement({
   classes,
   students,
+  petTypes,
   onCreateClass,
   onRenameClass,
   onUpdateClassColor,
@@ -286,6 +289,22 @@ export function ClassManagement({
           })}
         </div>
       )}
+
+      {/* ═══════════════════════════════════════════════════════
+          排行榜 · 班级下方
+          ═══════════════════════════════════════════════════════ */}
+      <div className="mt-2">
+        <div className="flex items-center gap-3 mb-5">
+          <h2 className="text-lg font-game text-primary tracking-tight">🏆 排行榜</h2>
+          <span
+            className="px-3 py-1 rounded-xl text-primary text-xs font-extrabold font-display border-2"
+            style={{ backgroundColor: 'var(--color-accent-soft)', borderColor: 'var(--color-accent-soft)' }}
+          >
+            全员
+          </span>
+        </div>
+        <Leaderboard students={students} petTypes={petTypes} />
+      </div>
 
       {/* ── 新建班级对话框 ────────────────────────────────────────────────────── */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
