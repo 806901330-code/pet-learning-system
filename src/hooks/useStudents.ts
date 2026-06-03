@@ -1,6 +1,30 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { Student, PetStage } from '@/types/pet';
+import type { Student, PetStage, StageUpgradeRecord } from '@/types/pet';
 import { getStageByExperience } from '@/types/pet';
+
+/** 工具函数：在加分后自动记录升级历史 */
+function applyExpWithHistory(
+  pet: Student['pet'],
+  deltaPoints: number,
+): Student['pet'] {
+  const newExp = pet.experience + deltaPoints;
+  const oldStage = pet.stage;
+  const newStage = getStageByExperience(newExp);
+
+  let stageHistory: StageUpgradeRecord[] = pet.stageHistory ? [...pet.stageHistory] : [];
+
+  // 如果阶段发生了升级，记录此次升级时间
+  if (newStage !== oldStage) {
+    const now = Date.now();
+    // 检查该阶段是否已有记录，避免重复写入
+    const alreadyRecorded = stageHistory.some(r => r.stage === newStage);
+    if (!alreadyRecorded) {
+      stageHistory = [...stageHistory, { stage: newStage, upgradedAt: now }];
+    }
+  }
+
+  return { ...pet, experience: newExp, stage: newStage, stageHistory };
+}
 
 const STORAGE_KEY = 'pet-learning-system-data';
 
@@ -56,37 +80,19 @@ export function useStudents() {
     return newStudents.length;
   }, []);
 
-  // 为学生加分
+  // 为学生加分（自动记录升级时间）
   const addPoints = useCallback((studentId: string, points: number) => {
     setStudents(prev => prev.map(student => {
       if (student.id !== studentId) return student;
-      const newExp = student.pet.experience + points;
-      const newStage = getStageByExperience(newExp);
-      return {
-        ...student,
-        pet: {
-          ...student.pet,
-          experience: newExp,
-          stage: newStage,
-        },
-      };
+      return { ...student, pet: applyExpWithHistory(student.pet, points) };
     }));
   }, []);
 
-  // 批量加分
+  // 批量加分（自动记录升级时间）
   const batchAddPoints = useCallback((studentIds: string[], points: number) => {
     setStudents(prev => prev.map(student => {
       if (!studentIds.includes(student.id)) return student;
-      const newExp = student.pet.experience + points;
-      const newStage = getStageByExperience(newExp);
-      return {
-        ...student,
-        pet: {
-          ...student.pet,
-          experience: newExp,
-          stage: newStage,
-        },
-      };
+      return { ...student, pet: applyExpWithHistory(student.pet, points) };
     }));
   }, []);
 

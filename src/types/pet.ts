@@ -26,11 +26,18 @@ export interface PetType {
   };
 }
 
+// 阶段升级历史记录
+export interface StageUpgradeRecord {
+  stage: PetStage;       // 升到哪个阶段
+  upgradedAt: number;    // 升级时间戳（ms）
+}
+
 // 学生宠物信息
 export interface StudentPet {
   petTypeId: string;
   experience: number;
   stage: PetStage;
+  stageHistory?: StageUpgradeRecord[];  // 升级历史（含各阶段达到的时间）
 }
 
 // 学生信息

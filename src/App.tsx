@@ -16,6 +16,7 @@ import { useCustomPets } from '@/hooks/useCustomPets';
 import { useClasses } from '@/hooks/useClasses';
 import { useTheme } from '@/hooks/useTheme';
 import { PET_TYPES } from '@/types/pet';
+import { exportStudentReport } from '@/utils/exportReport';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -279,6 +280,13 @@ function App() {
 
                 {students.length > 0 && (
                   <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => exportStudentReport(students, allPetTypes)}
+                      className="game-btn game-btn-outline text-xs px-3 py-2"
+                      title="导出宠物成长报告（CSV）"
+                    >
+                      📥 导出
+                    </button>
                     <button
                       onClick={handleSync}
                       disabled={syncing}
