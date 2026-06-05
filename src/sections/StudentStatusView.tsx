@@ -238,7 +238,9 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
       setExportAllCurrent(n => n + 1);
     }, 300);
     return () => clearTimeout(timer);
-  }, [exportAllCurrent]);
+  // exportAllQueue.length 必须在依赖里 —— exportAllCurrent 初值 = setExportAllCurrent(0)，
+  // React 不触发更新，必须队列长度变化来"唤醒"这个 effect
+  }, [exportAllCurrent, exportAllQueue.length]);
 
   /* ════════════════════════════════════════════════════════
      TCG 卡片渲染函数（浏览器 & 导出共用逻辑）
