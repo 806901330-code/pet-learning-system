@@ -153,15 +153,25 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
     });
   };
 
+  /* 读取当前主题的实际背景色（html2canvas 不解析 CSS 变量，必须提前求值） */
+  const getThemeBgColor = (): string => {
+    try {
+      const v = getComputedStyle(document.documentElement)
+        .getPropertyValue('--color-bg').trim();
+      if (v) return v;
+    } catch {}
+    const isBlue = document.documentElement.getAttribute('data-theme') === 'blue';
+    return isBlue ? '#1e293b' : '#f8fafc';
+  };
+
   const captureAndDownload = async (element: HTMLElement, filename: string) => {
-    // 最简单方案：直接对可见元素截图，不克隆、不额外设置
     await waitForImages(element);
     try {
       const canvas = await html2canvas(element, {
         scale: 2,
-        useCORS: true,
+        useCORS: false,           // 关键修复：同域资源不需要 CORS，设为 true 反而导致 canvas 污染
         allowTaint: true,
-        backgroundColor: 'var(--color-bg)',  // 明确背景色，避免透明导致"空白"
+        backgroundColor: getThemeBgColor(),
         logging: false,
       });
       const url = canvas.toDataURL('image/png');
