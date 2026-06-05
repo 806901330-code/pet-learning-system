@@ -222,7 +222,9 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
         const label = showAll ? '全部' : '筛选';
         const filename = `学生状态-${label}第${page}页-${new Date().toLocaleDateString('zh-CN')}.png`;
         await captureAndDownload(gridRef.current, filename);
-      } catch {}
+      } catch (e: any) {
+        console.error('导出第', page, '页失败:', e);
+      }
       setExportAllCurrent(n => n + 1);
     }, 300);
     return () => clearTimeout(timer);
@@ -303,7 +305,6 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
               className="relative z-10 object-contain"
               style={{ maxWidth: '85%', maxHeight: '85%' }}
               draggable={false}
-              crossOrigin="anonymous"
             />
             <PokeballCorner className="absolute bottom-1 right-1 w-4 h-4 opacity-[0.06]" style={{ color: petType.color }} />
           </div>
