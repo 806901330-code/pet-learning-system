@@ -1,4 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import badgeVictoryUrl from '/badge-victory.png';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -860,14 +862,15 @@ function ImageLightbox({
   const zoomIn  = () => setZoom(z => Math.min(3, +(z + 0.25).toFixed(2)));
   const zoomOut = () => setZoom(z => Math.max(0.25, +(z - 0.25).toFixed(2)));
 
-  return (
+  // 用 createPortal 渲染到 body，彻底脱离父容器的 stacking context
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm"
       onClick={onClose}
     >
       {/* 缩放控制栏 - 底部中央 */}
       <div
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-1
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[10000] flex items-center gap-1
                    bg-black/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
@@ -896,7 +899,7 @@ function ImageLightbox({
       {/* 关闭按钮 */}
       <button
         className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40
-                   text-white text-xl flex items-center justify-center transition-colors z-[60]"
+                   text-white text-xl flex items-center justify-center transition-colors z-[10000]"
         onClick={onClose}
       >×</button>
 
@@ -928,7 +931,8 @@ function ImageLightbox({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -1118,8 +1122,8 @@ function VictoryScreen({
     color: ['#D4A017', '#B84C4C', '#FFD700', '#FF6347', '#FFF8DC', '#FFA500'][Math.floor(Math.random() * 6)],
   }));
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm">
       {/* 烟花粒子 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {particles.map(p => (
@@ -1170,7 +1174,7 @@ function VictoryScreen({
             style={{ width: 120, height: 120, background: 'radial-gradient(circle, var(--color-accent) 0%, transparent 70%)', opacity: 0.6 }}
           />
           <img
-            src="/badge-victory.png"
+            src={badgeVictoryUrl}
             alt="胜利徽章"
             className="relative z-10 animate-bounce"
             style={{ width: 96, height: 96, filter: 'drop-shadow(0 0 16px var(--color-accent))' }}
@@ -1228,7 +1232,8 @@ function VictoryScreen({
           ⚔️ 继续对战
         </Button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
