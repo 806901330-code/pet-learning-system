@@ -343,7 +343,7 @@ function App() {
           />
         )}
         {activeTab === 'points' && (
-          <BatchPoints students={students} onBatchAddPoints={batchAddPoints} />
+          <BatchPoints students={students} classes={classes} onBatchAddPoints={batchAddPoints} />
         )}
         {activeTab === 'pets' && (
           <BatchPetAssignment
