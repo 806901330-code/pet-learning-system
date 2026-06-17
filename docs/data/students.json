@@ -3352,9 +3352,14 @@
       "name": "测试 1",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 140,
-        "stage": "baby",
-        "stageHistory": []
+        "experience": 300,
+        "stage": "teen",
+        "stageHistory": [
+          {
+            "stage": "teen",
+            "upgradedAt": 1781675808490
+          }
+        ]
       },
       "createdAt": 1780212423989
     },
@@ -3370,5 +3375,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-17T05:56:25.366Z"
+  "exportedAt": "2026-06-17T05:56:52.288Z"
 }
