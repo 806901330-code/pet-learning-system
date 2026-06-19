@@ -2690,9 +2690,14 @@
       "name": "梁景硕",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 290,
-        "stage": "baby",
-        "stageHistory": []
+        "experience": 390,
+        "stage": "teen",
+        "stageHistory": [
+          {
+            "stage": "teen",
+            "upgradedAt": 1781878904543
+          }
+        ]
       },
       "createdAt": 1779459773579
     },
@@ -3375,5 +3380,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-19T14:20:10.677Z"
+  "exportedAt": "2026-06-19T14:22:08.522Z"
 }
