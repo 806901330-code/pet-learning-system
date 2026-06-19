@@ -35,28 +35,82 @@ interface PkBattleProps {
 }
 
 // ─────────────── 图片上传工具 ───────────────
-function imageFileToBase64(file: File): Promise<string> {
+
+// 压缩图片（保持原始分辨率，仅降低画质以减小体积）
+// 输出格式：image/jpeg（比 png 小 5-10 倍），质量 0.75
+async function compressImage(file: File, maxDimension = 2400): Promise<Blob> {
   return new Promise((res, rej) => {
-    const reader = new FileReader();
-    reader.onload = () => res(reader.result as string);
-    reader.onerror = rej;
-    reader.readAsDataURL(file);
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);  // 释放内存
+      let { width, height } = img;
+      if (width > maxDimension || height > maxDimension) {
+        const ratio = Math.min(maxDimension / width, maxDimension / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d')!;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        blob => {
+          if (blob) res(blob);
+          else rej(new Error('压缩失败'));
+        },
+        'image/jpeg',
+        0.75,
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      rej(new Error('图片加载失败'));
+    };
+    img.src = objectUrl;
   });
 }
 
-// 从粘贴事件提取图片
-function extractImageFromClipboard(e: React.ClipboardEvent): Promise<string | null> {
-  return new Promise(res => {
-    const items = Array.from(e.clipboardData.items);
-    const imgItem = items.find(it => it.type.startsWith('image/'));
-    if (!imgItem) return res(null);
-    const file = imgItem.getAsFile();
-    if (!file) return res(null);
-    const reader = new FileReader();
-    reader.onload = () => res(reader.result as string);
-    reader.onerror = () => res(null);
-    reader.readAsDataURL(file);
+function imageFileToBase64(file: File): Promise<string> {
+  return new Promise(async (res, rej) => {
+    try {
+      // 非图片文件或 gif 直接原样转换
+      if (!file.type.startsWith('image/') || file.type === 'image/gif') {
+        const reader = new FileReader();
+        reader.onload = () => res(reader.result as string);
+        reader.onerror = rej;
+        reader.readAsDataURL(file);
+        return;
+      }
+      // 压缩后再转 base64
+      const compressedBlob = await compressImage(file);
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result as string);
+      reader.onerror = rej;
+      reader.readAsDataURL(compressedBlob);
+    } catch (e) {
+      // 压缩失败，降级为原图
+      console.warn('图片压缩失败，使用原图', e);
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result as string);
+      reader.onerror = rej;
+      reader.readAsDataURL(file);
+    }
   });
+}
+
+// 从粘贴事件提取图片（带压缩）
+async function extractImageFromClipboard(e: React.ClipboardEvent): Promise<string | null> {
+  const items = Array.from(e.clipboardData.items);
+  const imgItem = items.find(it => it.type.startsWith('image/'));
+  if (!imgItem) return null;
+  const file = imgItem.getAsFile();
+  if (!file) return null;
+  // 粘贴的图片也走压缩流程
+  return await imageFileToBase64(file);
 }
 
 // ─────────────── 多图片上传组件 ───────────────
