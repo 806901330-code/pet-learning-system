@@ -1881,7 +1881,7 @@
       "name": "杨小寒",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 380,
+        "experience": 480,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3375,5 +3375,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-19T14:00:04.420Z"
+  "exportedAt": "2026-06-19T14:20:10.677Z"
 }
