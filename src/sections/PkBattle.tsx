@@ -1241,6 +1241,8 @@ function VictoryScreen({
 export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
   const {
     banks,
+    loaded,
+    saveError,
     createBank,
     deleteBank,
     renameBank,
@@ -1250,6 +1252,13 @@ export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
     deleteQuestion,
     pickRandom,
   } = useQuestionBank();
+
+  // 题库保存失败时提示用户
+  useEffect(() => {
+    if (saveError) {
+      toast.error(saveError, { duration: 6000 });
+    }
+  }, [saveError]);
 
   const [tab, setTab] = useState<'battle' | 'banks'>('battle');
   const [leftStudent, setLeftStudent] = useState<Student | null>(null);

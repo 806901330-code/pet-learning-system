@@ -29,6 +29,7 @@ function generateId(): string {
 export function useQuestionBank() {
   const [banks, setBanks] = useState<QuestionBank[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   // 初始加载（含数据迁移）
   useEffect(() => {
@@ -64,10 +65,28 @@ export function useQuestionBank() {
     setLoaded(true);
   }, []);
 
-  // 持久化
+  // 持久化（带错误处理，防止 localStorage 满导致白屏）
   useEffect(() => {
-    if (loaded) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(banks));
+    if (!loaded) return;
+    try {
+      const data = JSON.stringify(banks);
+      localStorage.setItem(STORAGE_KEY, data);
+      setSaveError(null);
+    } catch (e: any) {
+      const msg = '⚠️ 题库保存失败：存储空间不足，请删除部分题目图片后重试';
+      console.error(msg, e);
+      setSaveError(msg);
+      // 尝试保存不含图片的轻量版本作为兜底
+      try {
+        const lightBanks = banks.map(b => ({
+          ...b,
+          questions: b.questions.map(q => {
+            const { imageUrls, optionImages, ...rest } = q;
+            return rest;
+          }),
+        }));
+        localStorage.setItem(STORAGE_KEY + '-backup', JSON.stringify(lightBanks));
+      } catch {}
     }
   }, [banks, loaded]);
 
@@ -194,6 +213,7 @@ export function useQuestionBank() {
   return {
     banks,
     loaded,
+    saveError,
     createBank,
     deleteBank,
     renameBank,
