@@ -602,7 +602,7 @@
       "name": "袁家昊",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 430,
+        "experience": 530,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1169,7 +1169,7 @@
       "name": "徐志豪",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 430,
+        "experience": 530,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3066,9 +3066,14 @@
       "name": "歆悦",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 280,
-        "stage": "baby",
-        "stageHistory": []
+        "experience": 380,
+        "stage": "teen",
+        "stageHistory": [
+          {
+            "stage": "teen",
+            "upgradedAt": 1781966538441
+          }
+        ]
       },
       "createdAt": 1779459773579,
       "nickname": "来歆悦"
@@ -3198,7 +3203,7 @@
       "name": "张舒茜",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 430,
+        "experience": 530,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3415,5 +3420,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-20T12:57:23.530Z"
+  "exportedAt": "2026-06-20T14:46:53.350Z"
 }
