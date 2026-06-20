@@ -2841,7 +2841,7 @@
       "name": "张青岚",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 350,
+        "experience": 450,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3405,5 +3405,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-19T15:30:52.680Z"
+  "exportedAt": "2026-06-20T00:54:48.175Z"
 }
