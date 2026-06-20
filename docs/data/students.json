@@ -1397,7 +1397,7 @@
       "name": "胡溪昂",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 380,
+        "experience": 480,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3405,5 +3405,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-20T00:54:48.175Z"
+  "exportedAt": "2026-06-20T00:55:07.185Z"
 }
