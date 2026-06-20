@@ -1014,7 +1014,7 @@
       "name": "李卿源",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 430,
+        "experience": 530,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1928,9 +1928,14 @@
       "name": "李书见",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 290,
-        "stage": "baby",
-        "stageHistory": []
+        "experience": 390,
+        "stage": "teen",
+        "stageHistory": [
+          {
+            "stage": "teen",
+            "upgradedAt": 1781950810582
+          }
+        ]
       },
       "createdAt": 1779459773579
     },
@@ -3410,5 +3415,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-20T01:31:07.856Z"
+  "exportedAt": "2026-06-20T10:20:43.715Z"
 }
