@@ -21,7 +21,7 @@
       "name": "闻婴昔",
       "pet": {
         "petTypeId": "pidgey",
-        "experience": 430,
+        "experience": 530,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3415,5 +3415,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-20T10:20:43.715Z"
+  "exportedAt": "2026-06-20T12:57:23.530Z"
 }
