@@ -2008,7 +2008,7 @@
       "name": "农谨萌",
       "pet": {
         "petTypeId": "mudkip",
-        "experience": 380,
+        "experience": 480,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3420,5 +3420,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-20T14:46:53.350Z"
+  "exportedAt": "2026-06-20T14:50:47.199Z"
 }
