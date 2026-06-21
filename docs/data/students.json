@@ -327,7 +327,7 @@
       "name": "范馨予",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 430,
+        "experience": 530,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3515,5 +3515,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-21T11:50:38.367Z"
+  "exportedAt": "2026-06-21T12:07:32.057Z"
 }
