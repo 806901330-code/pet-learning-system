@@ -1276,7 +1276,7 @@
       "name": "李婧颐",
       "pet": {
         "petTypeId": "squirtle",
-        "experience": 450,
+        "experience": 550,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3515,5 +3515,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-21T05:20:25.757Z"
+  "exportedAt": "2026-06-21T11:50:38.367Z"
 }
