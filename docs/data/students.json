@@ -102,7 +102,7 @@
       "name": "赵高羽杉",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 430,
+        "experience": 530,
         "stage": "teen",
         "stageHistory": [
           {
@@ -311,7 +311,7 @@
       "name": "吕朵柔",
       "pet": {
         "petTypeId": "pidgey",
-        "experience": 430,
+        "experience": 530,
         "stage": "teen",
         "stageHistory": [
           {
@@ -982,7 +982,7 @@
       "name": "开心",
       "pet": {
         "petTypeId": "mudkip",
-        "experience": 430,
+        "experience": 530,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1835,7 +1835,7 @@
       "name": "房心毅",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 410,
+        "experience": 510,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2748,7 +2748,7 @@
       "name": "戴晨栩",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 430,
+        "experience": 530,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3515,5 +3515,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-21T12:07:32.057Z"
+  "exportedAt": "2026-06-21T14:36:21.293Z"
 }
