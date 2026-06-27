@@ -1131,7 +1131,7 @@
       "name": "李奕琦",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 550,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3535,5 +3535,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-27T01:18:40.650Z"
+  "exportedAt": "2026-06-27T03:32:55.762Z"
 }
