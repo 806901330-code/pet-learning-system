@@ -2853,7 +2853,7 @@
       "name": "姜清婉",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 470,
+        "experience": 570,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3555,5 +3555,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-28T05:22:46.777Z"
+  "exportedAt": "2026-06-28T12:29:18.660Z"
 }
