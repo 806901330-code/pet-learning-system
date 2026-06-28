@@ -1,16 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Toaster, toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { StudentManagement } from '@/sections/StudentManagement';
-import { BatchPoints } from '@/sections/BatchPoints';
-import { BatchPetAssignment } from '@/sections/BatchPetAssignment';
-import { Leaderboard } from '@/sections/Leaderboard';
-import { StudentStatusView } from '@/sections/StudentStatusView';
-import { PetCreator } from '@/sections/PetCreator';
-import { ClassManagement } from '@/sections/ClassManagement';
-import { PkBattle } from '@/sections/PkBattle';
 import { useStudents } from '@/hooks/useStudents';
 import { useCustomPets } from '@/hooks/useCustomPets';
 import { useClasses } from '@/hooks/useClasses';
@@ -27,6 +19,27 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+
+/* ── 懒加载 section（代码分割，减少首屏 JS）── */
+const StudentManagement = lazy(() => import('@/sections/StudentManagement').then(m => ({ default: m.StudentManagement })));
+const BatchPoints = lazy(() => import('@/sections/BatchPoints').then(m => ({ default: m.BatchPoints })));
+const BatchPetAssignment = lazy(() => import('@/sections/BatchPetAssignment').then(m => ({ default: m.BatchPetAssignment })));
+const StudentStatusView = lazy(() => import('@/sections/StudentStatusView').then(m => ({ default: m.StudentStatusView })));
+const PetCreator = lazy(() => import('@/sections/PetCreator').then(m => ({ default: m.PetCreator })));
+const ClassManagement = lazy(() => import('@/sections/ClassManagement').then(m => ({ default: m.ClassManagement })));
+const PkBattle = lazy(() => import('@/sections/PkBattle').then(m => ({ default: m.PkBattle })));
+
+/* ── 加载占位（tab 切换时显示）── */
+function TabLoading() {
+  return (
+    <div className="flex items-center justify-center py-20">
+      <div className="text-center space-y-4">
+        <div className="w-10 h-10 mx-auto border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+        <p className="text-sm font-extrabold text-primary font-display">加载中...</p>
+      </div>
+    </div>
+  );
+}
 
 const GITHUB_OWNER = '806901330-code';
 const GITHUB_REPO = 'pet-learning-system';
@@ -323,49 +336,51 @@ function App() {
           主内容区
           ═══════════════════════════════════════════════════════ */}
       <main className="max-w-7xl mx-auto px-5 pt-8 pb-20">
-        {activeTab === 'students' && (
-          <StudentManagement
-            students={students} onAddStudents={addStudents}
-            onAddPoints={addPoints} onDeleteStudent={deleteStudent}
-            onRenameStudent={renameStudent} onSetNickname={setNickname}
-            petTypes={allPetTypes}
-          />
-        )}
-        {activeTab === 'classes' && (
-          <ClassManagement
-            classes={classes} students={students}
-            onCreateClass={createClass} onRenameClass={renameClass}
-            onUpdateClassColor={updateClassColor}
-            onImportStudentsToClass={importStudentsToClass}
-            onRemoveStudentFromClass={removeStudentFromClass}
-            onDeleteClass={deleteClass}
-            petTypes={allPetTypes}
-          />
-        )}
-        {activeTab === 'points' && (
-          <BatchPoints students={students} classes={classes} onBatchAddPoints={batchAddPoints} />
-        )}
-        {activeTab === 'pets' && (
-          <BatchPetAssignment
-            students={students} onBatchAssignPet={batchAssignPet}
-            petTypes={allPetTypes}
-          />
-        )}
-        {activeTab === 'status' && (
-          <StudentStatusView students={students} petTypes={allPetTypes} classes={classes} />
-        )}
-        {activeTab === 'creator' && (
-          <PetCreator
-            students={students}
-            onBatchAssignPet={batchAssignPet}
-            customPets={customPets}
-            onCreateCustomPet={createCustomPet}
-            onDeleteCustomPet={deleteCustomPet}
-          />
-        )}
-        {activeTab === 'pk' && (
-          <PkBattle students={students} petTypes={allPetTypes} onAddPoints={addPoints} />
-        )}
+        <Suspense fallback={<TabLoading />}>
+          {activeTab === 'students' && (
+            <StudentManagement
+              students={students} onAddStudents={addStudents}
+              onAddPoints={addPoints} onDeleteStudent={deleteStudent}
+              onRenameStudent={renameStudent} onSetNickname={setNickname}
+              petTypes={allPetTypes}
+            />
+          )}
+          {activeTab === 'classes' && (
+            <ClassManagement
+              classes={classes} students={students}
+              onCreateClass={createClass} onRenameClass={renameClass}
+              onUpdateClassColor={updateClassColor}
+              onImportStudentsToClass={importStudentsToClass}
+              onRemoveStudentFromClass={removeStudentFromClass}
+              onDeleteClass={deleteClass}
+              petTypes={allPetTypes}
+            />
+          )}
+          {activeTab === 'points' && (
+            <BatchPoints students={students} classes={classes} onBatchAddPoints={batchAddPoints} />
+          )}
+          {activeTab === 'pets' && (
+            <BatchPetAssignment
+              students={students} onBatchAssignPet={batchAssignPet}
+              petTypes={allPetTypes}
+            />
+          )}
+          {activeTab === 'status' && (
+            <StudentStatusView students={students} petTypes={allPetTypes} classes={classes} />
+          )}
+          {activeTab === 'creator' && (
+            <PetCreator
+              students={students}
+              onBatchAssignPet={batchAssignPet}
+              customPets={customPets}
+              onCreateCustomPet={createCustomPet}
+              onDeleteCustomPet={deleteCustomPet}
+            />
+          )}
+          {activeTab === 'pk' && (
+            <PkBattle students={students} petTypes={allPetTypes} onAddPoints={addPoints} />
+          )}
+        </Suspense>
       </main>
 
       {/* ═══════════════════════════════════════════════════════
