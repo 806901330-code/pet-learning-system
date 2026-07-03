@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { idbGet, idbSet, migrateFromLocalStorage, STORES } from '@/utils/idb';
 
 // 题目类型
 export type QuestionType = 'choice' | 'truefalse' | 'short';
@@ -20,74 +21,95 @@ export interface QuestionBank {
   createdAt: number;
 }
 
-const STORAGE_KEY = 'pet-learning-system-question-banks';
+const OLD_STORAGE_KEY = 'pet-learning-system-question-banks';
 
 function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+/** 旧格式数据迁移：imageUrl → imageUrls，optionImages string → string[] */
+function migrateQuestionFormat(data: any[]): QuestionBank[] {
+  return data.map((bank: any) => ({
+    ...bank,
+    questions: bank.questions.map((q: any) => {
+      const migrated = { ...q };
+      if (q.imageUrl && !q.imageUrls) {
+        migrated.imageUrls = [q.imageUrl];
+        delete migrated.imageUrl;
+      }
+      if (q.optionImages) {
+        migrated.optionImages = q.optionImages.map((img: any) =>
+          img === undefined || img === null ? undefined :
+          Array.isArray(img) ? img : [img]
+        );
+      }
+      return migrated;
+    }),
+  }));
 }
 
 export function useQuestionBank() {
   const [banks, setBanks] = useState<QuestionBank[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 初始加载（含数据迁移）
+  // 初始加载（IndexedDB + localStorage 迁移）
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const data = JSON.parse(raw);
-        // 迁移旧格式：imageUrl → imageUrls，optionImages string → string[]
-        const migratedData = data.map((bank: any) => ({
-          ...bank,
-          questions: bank.questions.map((q: any) => {
-            const migrated = { ...q };
-            // imageUrl → imageUrls
-            if (q.imageUrl && !q.imageUrls) {
-              migrated.imageUrls = [q.imageUrl];
-              delete migrated.imageUrl;
-            }
-            // optionImages 中的字符串 → 数组
-            if (q.optionImages) {
-              migrated.optionImages = q.optionImages.map((img: any) =>
-                img === undefined || img === null ? undefined :
-                Array.isArray(img) ? img : [img]
-              );
-            }
-            return migrated;
-          }),
-        }));
-        setBanks(migratedData);
+    let cancelled = false;
+
+    (async () => {
+      try {
+        // 1. 先尝试从 IndexedDB 读取
+        let data = await idbGet<QuestionBank[]>(STORES.QUESTION_BANKS);
+
+        // 2. 如果 IndexedDB 为空，尝试从 localStorage 迁移
+        if (!data) {
+          data = await migrateFromLocalStorage<QuestionBank[]>(
+            STORES.QUESTION_BANKS,
+            OLD_STORAGE_KEY,
+          );
+          // 迁移的旧数据可能需要格式迁移
+          if (data) {
+            data = migrateQuestionFormat(data);
+          }
+        }
+
+        if (data && !cancelled) {
+          // 确保格式一致
+          setBanks(migrateQuestionFormat(data));
+        }
+      } catch {
+        console.error('Failed to load question banks from IndexedDB');
       }
-    } catch {
-      console.error('Failed to load question banks');
-    }
-    setLoaded(true);
+
+      if (!cancelled) setLoaded(true);
+    })();
+
+    return () => { cancelled = true; };
   }, []);
 
-  // 持久化（带错误处理，防止 localStorage 满导致白屏）
+  // 持久化到 IndexedDB（防抖 500ms，避免频繁写入）
   useEffect(() => {
     if (!loaded) return;
-    try {
-      const data = JSON.stringify(banks);
-      localStorage.setItem(STORAGE_KEY, data);
-      setSaveError(null);
-    } catch (e: any) {
-      const msg = '⚠️ 题库保存失败：存储空间不足，请删除部分题目图片后重试';
-      console.error(msg, e);
-      setSaveError(msg);
-      // 尝试保存不含图片的轻量版本作为兜底
+
+    // 防抖：连续修改时只写最后一次
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+
+    saveTimer.current = setTimeout(async () => {
       try {
-        const lightBanks = banks.map(b => ({
-          ...b,
-          questions: b.questions.map(q => {
-            const { imageUrls, optionImages, ...rest } = q;
-            return rest;
-          }),
-        }));
-        localStorage.setItem(STORAGE_KEY + '-backup', JSON.stringify(lightBanks));
-      } catch {}
-    }
+        await idbSet(STORES.QUESTION_BANKS, banks);
+        setSaveError(null);
+      } catch (e: any) {
+        const msg = '⚠️ 题库保存失败：存储空间不足，请删除部分题目图片后重试';
+        console.error(msg, e);
+        setSaveError(msg);
+      }
+    }, 500);
+
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
   }, [banks, loaded]);
 
   // 创建题库

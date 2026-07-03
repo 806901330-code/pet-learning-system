@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { PetType, PokemonType } from '@/types/pet';
+import { idbGet, idbSet, migrateFromLocalStorage, STORES } from '@/utils/idb';
 
-const CUSTOM_PETS_KEY = 'pet-learning-system-custom-pets';
+const OLD_STORAGE_KEY = 'pet-learning-system-custom-pets';
 
 const EGG_COLORS: Record<PokemonType, string> = {
   grass: '#4CAF50',
@@ -42,25 +43,55 @@ export { EGG_COLORS, EGG_LABELS };
 export function useCustomPets() {
   const [customPets, setCustomPets] = useState<PetType[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 从 localStorage 加载
+  // 初始加载（IndexedDB + localStorage 迁移）
   useEffect(() => {
-    try {
-      const data = localStorage.getItem(CUSTOM_PETS_KEY);
-      if (data) {
-        setCustomPets(JSON.parse(data));
+    let cancelled = false;
+
+    (async () => {
+      try {
+        // 1. 先尝试从 IndexedDB 读取
+        let data = await idbGet<PetType[]>(STORES.CUSTOM_PETS);
+
+        // 2. 如果 IndexedDB 为空，尝试从 localStorage 迁移
+        if (!data) {
+          data = await migrateFromLocalStorage<PetType[]>(
+            STORES.CUSTOM_PETS,
+            OLD_STORAGE_KEY,
+          );
+        }
+
+        if (data && !cancelled) {
+          setCustomPets(data);
+        }
+      } catch {
+        console.error('Failed to load custom pets from IndexedDB');
       }
-    } catch {
-      console.error('Failed to load custom pets');
-    }
-    setLoaded(true);
+
+      if (!cancelled) setLoaded(true);
+    })();
+
+    return () => { cancelled = true; };
   }, []);
 
-  // 保存到 localStorage
+  // 持久化到 IndexedDB（防抖 500ms）
   useEffect(() => {
-    if (loaded) {
-      localStorage.setItem(CUSTOM_PETS_KEY, JSON.stringify(customPets));
-    }
+    if (!loaded) return;
+
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+
+    saveTimer.current = setTimeout(async () => {
+      try {
+        await idbSet(STORES.CUSTOM_PETS, customPets);
+      } catch {
+        console.error('Failed to save custom pets to IndexedDB');
+      }
+    }, 500);
+
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
   }, [customPets, loaded]);
 
   // 创建自定义宠物
