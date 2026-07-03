@@ -9,6 +9,7 @@ import { useClasses } from '@/hooks/useClasses';
 import { useTheme } from '@/hooks/useTheme';
 import { PET_TYPES } from '@/types/pet';
 import { exportStudentReport } from '@/utils/exportReport';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -336,6 +337,7 @@ function App() {
           主内容区
           ═══════════════════════════════════════════════════════ */}
       <main className="max-w-7xl mx-auto px-5 pt-8 pb-20">
+        <ErrorBoundary>
         <Suspense fallback={<TabLoading />}>
           {activeTab === 'students' && (
             <StudentManagement
@@ -381,6 +383,7 @@ function App() {
             <PkBattle students={students} petTypes={allPetTypes} onAddPoints={addPoints} />
           )}
         </Suspense>
+        </ErrorBoundary>
       </main>
 
       {/* ═══════════════════════════════════════════════════════

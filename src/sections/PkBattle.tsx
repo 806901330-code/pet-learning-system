@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { toast } from 'sonner';
 import badgeVictoryUrl from '/badge-victory.png';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,8 +38,8 @@ interface PkBattleProps {
 // ─────────────── 图片上传工具 ───────────────
 
 // 压缩图片（保持原始分辨率，仅降低画质以减小体积）
-// 输出格式：image/jpeg（比 png 小 5-10 倍），质量 0.75
-async function compressImage(file: File, maxDimension = 2400): Promise<Blob> {
+// 输出格式：image/jpeg（比 png 小 5-10 倍），质量 0.6
+async function compressImage(file: File, maxDimension = 1600): Promise<Blob> {
   return new Promise((res, rej) => {
     const img = new Image();
     const objectUrl = URL.createObjectURL(file);
@@ -63,7 +64,7 @@ async function compressImage(file: File, maxDimension = 2400): Promise<Blob> {
           else rej(new Error('压缩失败'));
         },
         'image/jpeg',
-        0.75,
+        0.6,
       );
     };
     img.onerror = () => {
@@ -74,13 +75,23 @@ async function compressImage(file: File, maxDimension = 2400): Promise<Blob> {
   });
 }
 
+// base64 最大允许大小（~400KB base64 ≈ 300KB 图片）
+const MAX_BASE64_SIZE = 400_000;
+
 function imageFileToBase64(file: File): Promise<string> {
   return new Promise(async (res, rej) => {
     try {
       // 非图片文件或 gif 直接原样转换
       if (!file.type.startsWith('image/') || file.type === 'image/gif') {
         const reader = new FileReader();
-        reader.onload = () => res(reader.result as string);
+        reader.onload = () => {
+          const result = reader.result as string;
+          if (result.length > MAX_BASE64_SIZE) {
+            rej(new Error('图片过大，请使用更小的图片'));
+            return;
+          }
+          res(result);
+        };
         reader.onerror = rej;
         reader.readAsDataURL(file);
         return;
@@ -88,7 +99,22 @@ function imageFileToBase64(file: File): Promise<string> {
       // 压缩后再转 base64
       const compressedBlob = await compressImage(file);
       const reader = new FileReader();
-      reader.onload = () => res(reader.result as string);
+      reader.onload = () => {
+        const result = reader.result as string;
+        if (result.length > MAX_BASE64_SIZE) {
+          // 尺寸过大，用更小尺寸再压一次
+          compressImage(file, 800).then(smallerBlob => {
+            const r2 = new FileReader();
+            r2.onload = () => res(r2.result as string);
+            r2.onerror = rej;
+            r2.readAsDataURL(smallerBlob);
+          }).catch(() => {
+            rej(new Error('图片过大，请使用更小的图片'));
+          });
+          return;
+        }
+        res(result);
+      };
       reader.onerror = rej;
       reader.readAsDataURL(compressedBlob);
     } catch (e) {
@@ -131,15 +157,23 @@ function ImageUploader({
     const newUrls: string[] = [];
     for (let i = 0; i < files.length; i++) {
       if (values.length + newUrls.length >= maxImages) break;
-      const b64 = await imageFileToBase64(files[i]);
-      newUrls.push(b64);
+      try {
+        const b64 = await imageFileToBase64(files[i]);
+        newUrls.push(b64);
+      } catch (err: any) {
+        toast.error(err?.message || '图片处理失败');
+      }
     }
     if (newUrls.length) onChange([...values, ...newUrls]);
   };
 
   const handlePaste = async (e: React.ClipboardEvent) => {
-    const url = await extractImageFromClipboard(e);
-    if (url && values.length < maxImages) onChange([...values, url]);
+    try {
+      const url = await extractImageFromClipboard(e);
+      if (url && values.length < maxImages) onChange([...values, url]);
+    } catch (err: any) {
+      toast.error(err?.message || '图片粘贴失败');
+    }
   };
 
   const removeImage = (idx: number) => {
