@@ -5,7 +5,7 @@
       "name": "王启杨",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -21,7 +21,7 @@
       "name": "闻婴昔",
       "pet": {
         "petTypeId": "pidgey",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -37,7 +37,7 @@
       "name": "叶尘烯",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 290,
+        "experience": 260,
         "stage": "baby",
         "stageHistory": []
       },
@@ -48,7 +48,7 @@
       "name": "喻星文",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 200,
+        "experience": 170,
         "stage": "baby",
         "stageHistory": []
       },
@@ -59,7 +59,7 @@
       "name": "陈明彬",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 260,
+        "experience": 230,
         "stage": "baby",
         "stageHistory": []
       },
@@ -70,7 +70,7 @@
       "name": "杨家睿",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -86,7 +86,7 @@
       "name": "高梓坤",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 420,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -102,7 +102,7 @@
       "name": "赵高羽杉",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -118,7 +118,7 @@
       "name": "希希",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -134,7 +134,7 @@
       "name": "李浩予",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 360,
+        "experience": 330,
         "stage": "teen",
         "stageHistory": [
           {
@@ -150,7 +150,7 @@
       "name": "张德俊骐",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 220,
+        "experience": 190,
         "stage": "baby",
         "stageHistory": [
           {
@@ -167,7 +167,7 @@
       "name": "李金祥",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -183,7 +183,7 @@
       "name": "张晋源",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -199,7 +199,7 @@
       "name": "韩艳勤",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -215,7 +215,7 @@
       "name": "杨睿熙",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -231,7 +231,7 @@
       "name": "李依哲",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -247,7 +247,7 @@
       "name": "徐睿浠",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -263,7 +263,7 @@
       "name": "王宝仪",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 380,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -279,7 +279,7 @@
       "name": "周凯顺",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -295,7 +295,7 @@
       "name": "郑梓洋",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -311,7 +311,7 @@
       "name": "吕朵柔",
       "pet": {
         "petTypeId": "pidgey",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -327,7 +327,7 @@
       "name": "范馨予",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -343,7 +343,7 @@
       "name": "韦霁恩",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 200,
+        "experience": 170,
         "stage": "baby",
         "stageHistory": []
       },
@@ -354,7 +354,7 @@
       "name": "邱蓝萱",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 390,
+        "experience": 360,
         "stage": "teen",
         "stageHistory": [
           {
@@ -371,7 +371,7 @@
       "name": "单欣",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -387,7 +387,7 @@
       "name": "曲心",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -403,7 +403,7 @@
       "name": "娄文豪",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 370,
+        "experience": 340,
         "stage": "teen",
         "stageHistory": [
           {
@@ -419,7 +419,7 @@
       "name": "卢佳瑶",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 390,
+        "experience": 360,
         "stage": "teen",
         "stageHistory": [
           {
@@ -435,7 +435,7 @@
       "name": "徐骏宇",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -451,7 +451,7 @@
       "name": "谢千慧",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 390,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -467,7 +467,7 @@
       "name": "伍淑景",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -483,7 +483,7 @@
       "name": "高俊熙",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -499,7 +499,7 @@
       "name": "田润泽",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -515,7 +515,7 @@
       "name": "李嘉乐",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -531,7 +531,7 @@
       "name": "何姝瑶",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 290,
+        "experience": 260,
         "stage": "baby",
         "stageHistory": []
       },
@@ -543,7 +543,7 @@
       "name": "马子妤",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 260,
+        "experience": 230,
         "stage": "baby",
         "stageHistory": []
       },
@@ -554,7 +554,7 @@
       "name": "黄中越",
       "pet": {
         "petTypeId": "cyndaquil",
-        "experience": 460,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -570,7 +570,7 @@
       "name": "马诗玥",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -586,7 +586,7 @@
       "name": "薛琦馨",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 400,
+        "experience": 360,
         "stage": "teen",
         "stageHistory": [
           {
@@ -602,7 +602,7 @@
       "name": "袁家昊",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -618,7 +618,7 @@
       "name": "刘向赫",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -634,7 +634,7 @@
       "name": "郭霖",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -650,14 +650,9 @@
       "name": "张雅惟",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 300,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1782523112385
-          }
-        ]
+        "experience": 270,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -666,7 +661,7 @@
       "name": "贾少为",
       "pet": {
         "petTypeId": "caterpie",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -682,7 +677,7 @@
       "name": "张明旺",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 330,
+        "experience": 300,
         "stage": "teen",
         "stageHistory": [
           {
@@ -698,7 +693,7 @@
       "name": "周旭峰",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -714,7 +709,7 @@
       "name": "牛浩仰",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -730,7 +725,7 @@
       "name": "温佳悦",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -746,7 +741,7 @@
       "name": "严楚峰",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -762,7 +757,7 @@
       "name": "张哲语",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -779,7 +774,7 @@
       "name": "小安",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 390,
+        "experience": 360,
         "stage": "teen",
         "stageHistory": [
           {
@@ -795,7 +790,7 @@
       "name": "司徒幸宜",
       "pet": {
         "petTypeId": "chikorita",
-        "experience": 550,
+        "experience": 520,
         "stage": "teen",
         "stageHistory": [
           {
@@ -811,7 +806,7 @@
       "name": "熊子铭",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 330,
+        "experience": 300,
         "stage": "teen",
         "stageHistory": [
           {
@@ -827,7 +822,7 @@
       "name": "黄彦清",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 220,
+        "experience": 180,
         "stage": "baby",
         "stageHistory": [
           {
@@ -843,7 +838,7 @@
       "name": "孙艺菲",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -859,7 +854,7 @@
       "name": "李梦梵",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -875,7 +870,7 @@
       "name": "李峻熙",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -891,7 +886,7 @@
       "name": "蔡景泽",
       "pet": {
         "petTypeId": "squirtle",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -907,7 +902,7 @@
       "name": "麻晏嘉",
       "pet": {
         "petTypeId": "pidgey",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -923,7 +918,7 @@
       "name": "优优",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 410,
+        "experience": 340,
         "stage": "teen",
         "stageHistory": [
           {
@@ -939,7 +934,7 @@
       "name": "杨博",
       "pet": {
         "petTypeId": "mudkip",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -955,7 +950,7 @@
       "name": "吴硕恩",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -971,7 +966,7 @@
       "name": "施一诺",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -987,7 +982,7 @@
       "name": "开心",
       "pet": {
         "petTypeId": "mudkip",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1003,7 +998,7 @@
       "name": "赵若锦",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 380,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1019,7 +1014,7 @@
       "name": "李卿源",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1035,7 +1030,7 @@
       "name": "何元浩",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 390,
+        "experience": 330,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1051,7 +1046,7 @@
       "name": "赵若彤",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 200,
+        "experience": 160,
         "stage": "baby",
         "stageHistory": [
           {
@@ -1067,7 +1062,7 @@
       "name": "刘峻豪",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1083,7 +1078,7 @@
       "name": "荣圣文",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1099,14 +1094,9 @@
       "name": "高豆豆",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 300,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1782523112385
-          }
-        ]
+        "experience": 270,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -1115,7 +1105,7 @@
       "name": "王如伊",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1131,7 +1121,7 @@
       "name": "李奕琦",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1147,7 +1137,7 @@
       "name": "汪仕蒙",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1163,7 +1153,7 @@
       "name": "高辰熙",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1179,7 +1169,7 @@
       "name": "徐志豪",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1195,7 +1185,7 @@
       "name": "李欣航",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 280,
+        "experience": 250,
         "stage": "baby",
         "stageHistory": [
           {
@@ -1211,14 +1201,9 @@
       "name": "陈优优",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 350,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967448925
-          }
-        ]
+        "experience": 280,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -1227,7 +1212,7 @@
       "name": "刘骏凌",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 390,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1243,14 +1228,9 @@
       "name": "任一碩",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 320,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781918341357
-          }
-        ]
+        "experience": 290,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -1259,14 +1239,9 @@
       "name": "徐赫泽",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 330,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967473288
-          }
-        ]
+        "experience": 260,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -1275,7 +1250,7 @@
       "name": "魏麟润",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 290,
+        "experience": 250,
         "stage": "baby",
         "stageHistory": []
       },
@@ -1286,7 +1261,7 @@
       "name": "李婧颐",
       "pet": {
         "petTypeId": "squirtle",
-        "experience": 550,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1302,14 +1277,9 @@
       "name": "李泓锐",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 360,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967448925
-          }
-        ]
+        "experience": 290,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579,
       "nickname": "李姿漫/泓锐"
@@ -1319,7 +1289,7 @@
       "name": "孙溪雅",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1335,7 +1305,7 @@
       "name": "范泽鑫",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1351,7 +1321,7 @@
       "name": "蒋陈",
       "pet": {
         "petTypeId": "mudkip",
-        "experience": 350,
+        "experience": 310,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1367,14 +1337,9 @@
       "name": "刘谨锋",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 320,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967473288
-          }
-        ]
+        "experience": 250,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -1383,7 +1348,7 @@
       "name": "张紫博",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1399,7 +1364,7 @@
       "name": "汪语桐",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1415,7 +1380,7 @@
       "name": "孙培硕/敏淇",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 560,
+        "experience": 490,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1432,7 +1397,7 @@
       "name": "胡溪昂",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 550,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1448,7 +1413,7 @@
       "name": "魏沛祺",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1464,7 +1429,7 @@
       "name": "周冶行",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1480,7 +1445,7 @@
       "name": "刘思远",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1496,7 +1461,7 @@
       "name": "黄鸣麒",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1512,7 +1477,7 @@
       "name": "江言泽",
       "pet": {
         "petTypeId": "squirtle",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1528,14 +1493,9 @@
       "name": "陈语翔/祺睿",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 360,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967448925
-          }
-        ]
+        "experience": 290,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579,
       "nickname": "陈语翔"
@@ -1545,7 +1505,7 @@
       "name": "黑轩豪",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 420,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1561,7 +1521,7 @@
       "name": "谭湘如",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1577,7 +1537,7 @@
       "name": "孙梦烁",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 390,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1593,7 +1553,7 @@
       "name": "陈思彤",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1609,7 +1569,7 @@
       "name": "李浩煜",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 260,
+        "experience": 230,
         "stage": "baby",
         "stageHistory": []
       },
@@ -1620,7 +1580,7 @@
       "name": "梁筠松",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1636,7 +1596,7 @@
       "name": "张茂彬",
       "pet": {
         "petTypeId": "mudkip",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1652,7 +1612,7 @@
       "name": "潘雨馨/沈昕",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1668,14 +1628,9 @@
       "name": "陈泓佳",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 340,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967473288
-          }
-        ]
+        "experience": 270,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -1684,7 +1639,7 @@
       "name": "兰梓硕",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 420,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1700,7 +1655,7 @@
       "name": "李泽桉",
       "pet": {
         "petTypeId": "chikorita",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1716,7 +1671,7 @@
       "name": "全天佑",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1732,7 +1687,7 @@
       "name": "夏晓冉",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 460,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1748,7 +1703,7 @@
       "name": "刘雨鑫",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1764,7 +1719,7 @@
       "name": "冯奕睿",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 390,
+        "experience": 320,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1780,7 +1735,7 @@
       "name": "刘景浩",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 380,
+        "experience": 340,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1796,14 +1751,9 @@
       "name": "李禹成",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 300,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1782018893904
-          }
-        ]
+        "experience": 260,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -1812,7 +1762,7 @@
       "name": "林妍熙",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1828,7 +1778,7 @@
       "name": "陶梓研/锦城",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 410,
+        "experience": 340,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1845,7 +1795,7 @@
       "name": "房心毅",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 510,
+        "experience": 340,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1861,7 +1811,7 @@
       "name": "时若涵",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 350,
+        "experience": 310,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1877,7 +1827,7 @@
       "name": "杜明遥",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1893,7 +1843,7 @@
       "name": "梁雨婷",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1909,7 +1859,7 @@
       "name": "邹心晨",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 420,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1925,7 +1875,7 @@
       "name": "赵懿锦",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1941,7 +1891,7 @@
       "name": "杨小寒",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 550,
+        "experience": 480,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1957,7 +1907,7 @@
       "name": "侯雅宁",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -1973,14 +1923,9 @@
       "name": "李书见",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 470,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781950810582
-          }
-        ]
+        "experience": 290,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -1989,7 +1934,7 @@
       "name": "于天晨",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2005,7 +1950,7 @@
       "name": "瀚波",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 330,
+        "experience": 300,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2021,7 +1966,7 @@
       "name": "文沁馨",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 390,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2037,7 +1982,7 @@
       "name": "高霄纯",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2053,7 +1998,7 @@
       "name": "农谨萌",
       "pet": {
         "petTypeId": "mudkip",
-        "experience": 550,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2069,7 +2014,7 @@
       "name": "振宇",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 380,
+        "experience": 310,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2085,7 +2030,7 @@
       "name": "宋锦冰",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2101,7 +2046,7 @@
       "name": "万一嘉",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 360,
+        "experience": 320,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2118,7 +2063,7 @@
       "name": "刘奕张凡",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2134,7 +2079,7 @@
       "name": "予童",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2150,7 +2095,7 @@
       "name": "林泓每",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2166,7 +2111,7 @@
       "name": "维维",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 360,
+        "experience": 330,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2182,7 +2127,7 @@
       "name": "陈梓欣",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2198,14 +2143,9 @@
       "name": "艾敏海日",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 310,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1782522928187
-          }
-        ]
+        "experience": 280,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -2214,14 +2154,9 @@
       "name": "陈思源",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 300,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1782018893904
-          }
-        ]
+        "experience": 230,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -2230,7 +2165,7 @@
       "name": "眭书瑄",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2246,7 +2181,7 @@
       "name": "杨锐峰",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2262,7 +2197,7 @@
       "name": "杨焱辰",
       "pet": {
         "petTypeId": "pidgey",
-        "experience": 390,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2278,7 +2213,7 @@
       "name": "林少涵",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 230,
+        "experience": 190,
         "stage": "baby",
         "stageHistory": [
           {
@@ -2294,7 +2229,7 @@
       "name": "向日葵",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 170,
+        "experience": 130,
         "stage": "baby",
         "stageHistory": [
           {
@@ -2310,7 +2245,7 @@
       "name": "夏文济",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 270,
+        "experience": 230,
         "stage": "baby",
         "stageHistory": []
       },
@@ -2321,14 +2256,9 @@
       "name": "高堃贤",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 310,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1782018819333
-          }
-        ]
+        "experience": 270,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579,
       "nickname": "堃贤"
@@ -2338,7 +2268,7 @@
       "name": "任梓睿",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2354,7 +2284,7 @@
       "name": "吕灏霖",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 200,
+        "experience": 160,
         "stage": "baby",
         "stageHistory": [
           {
@@ -2370,7 +2300,7 @@
       "name": "李美墨",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2386,7 +2316,7 @@
       "name": "李奕辰",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 390,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2402,14 +2332,9 @@
       "name": "林晨曦",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 300,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1782018893904
-          }
-        ]
+        "experience": 260,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -2418,7 +2343,7 @@
       "name": "陈栩星",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2434,7 +2359,7 @@
       "name": "陈羽杭",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2450,7 +2375,7 @@
       "name": "赖梓睿",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2466,14 +2391,9 @@
       "name": "吴靖森",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 360,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967448925
-          }
-        ]
+        "experience": 290,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -2482,7 +2402,7 @@
       "name": "赵鑫泽",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2498,7 +2418,7 @@
       "name": "周阳",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2514,7 +2434,7 @@
       "name": "黄轩越",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2530,7 +2450,7 @@
       "name": "许智善",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 420,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2547,7 +2467,7 @@
       "name": "段天阳",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 350,
+        "experience": 310,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2563,7 +2483,7 @@
       "name": "李慕柔",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2579,7 +2499,7 @@
       "name": "舒佳怡",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2596,14 +2516,9 @@
       "name": "李星佑",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 330,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967473288
-          }
-        ]
+        "experience": 260,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -2612,7 +2527,7 @@
       "name": "董佳晔",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2629,7 +2544,7 @@
       "name": "覃俊松",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2645,7 +2560,7 @@
       "name": "郝思梵",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2661,7 +2576,7 @@
       "name": "曾幸",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 290,
+        "experience": 250,
         "stage": "baby",
         "stageHistory": []
       },
@@ -2672,7 +2587,7 @@
       "name": "王岚",
       "pet": {
         "petTypeId": "squirtle",
-        "experience": 420,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2688,7 +2603,7 @@
       "name": "冯芷灵",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 240,
+        "experience": 200,
         "stage": "baby",
         "stageHistory": []
       },
@@ -2699,7 +2614,7 @@
       "name": "刘航",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2715,7 +2630,7 @@
       "name": "张振熙",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2731,7 +2646,7 @@
       "name": "李宸乐",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2747,7 +2662,7 @@
       "name": "杨浩轩",
       "pet": {
         "petTypeId": "cyndaquil",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2763,7 +2678,7 @@
       "name": "戴晨栩",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2779,7 +2694,7 @@
       "name": "刘书瑞",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2795,7 +2710,7 @@
       "name": "梁景硕",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 460,
+        "experience": 390,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2811,7 +2726,7 @@
       "name": "张潇月",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2827,14 +2742,9 @@
       "name": "何宇彤",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 360,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967448925
-          }
-        ]
+        "experience": 290,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -2843,7 +2753,7 @@
       "name": "姜清婉",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2860,14 +2770,9 @@
       "name": "李镔彧",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 300,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1782018893904
-          }
-        ]
+        "experience": 260,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -2876,7 +2781,7 @@
       "name": "孟俊逸",
       "pet": {
         "petTypeId": "mudkip",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2892,7 +2797,7 @@
       "name": "毛铭礼",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 420,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2908,14 +2813,9 @@
       "name": "李旭",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 330,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967473288
-          }
-        ]
+        "experience": 260,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -2924,7 +2824,7 @@
       "name": "卜伟豪",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2941,7 +2841,7 @@
       "name": "张青岚",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 520,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2957,7 +2857,7 @@
       "name": "蔡采含",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 390,
+        "experience": 320,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2973,7 +2873,7 @@
       "name": "丁宇赫",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -2989,14 +2889,9 @@
       "name": "江希圆",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 330,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967473288
-          }
-        ]
+        "experience": 260,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -3005,7 +2900,7 @@
       "name": "冯彧婕",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 390,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3021,7 +2916,7 @@
       "name": "韩紫灵",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3037,7 +2932,7 @@
       "name": "倪洋成",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 420,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3053,14 +2948,9 @@
       "name": "徐季龙",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 330,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967473288
-          }
-        ]
+        "experience": 260,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579,
       "nickname": "季龙"
@@ -3070,7 +2960,7 @@
       "name": "秦会泽",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3086,7 +2976,7 @@
       "name": "郑宇轩",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3102,7 +2992,7 @@
       "name": "孙灏权",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 380,
+        "experience": 310,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3118,7 +3008,7 @@
       "name": "马跃菀",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 420,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3134,7 +3024,7 @@
       "name": "刘紫萱",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 380,
+        "experience": 340,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3150,7 +3040,7 @@
       "name": "李莉霏",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3166,14 +3056,9 @@
       "name": "歆悦",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 430,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781966538441
-          }
-        ]
+        "experience": 280,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579,
       "nickname": "来歆悦"
@@ -3183,14 +3068,9 @@
       "name": "洋泽",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 360,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1781967448925
-          }
-        ]
+        "experience": 290,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579
     },
@@ -3199,7 +3079,7 @@
       "name": "李安然",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 410,
+        "experience": 340,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3215,7 +3095,7 @@
       "name": "王恩祥",
       "pet": {
         "petTypeId": "mudkip",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3231,14 +3111,9 @@
       "name": "龚一喆",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 300,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1782018893904
-          }
-        ]
+        "experience": 260,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779459773579,
       "nickname": "一喆"
@@ -3248,7 +3123,7 @@
       "name": "何嘉木",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 410,
+        "experience": 340,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3264,7 +3139,7 @@
       "name": "武熙苒",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 360,
+        "experience": 320,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3281,7 +3156,7 @@
       "name": "叶墨翎",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 420,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3297,7 +3172,7 @@
       "name": "刘子杨",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3313,7 +3188,7 @@
       "name": "张舒茜",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 550,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3329,7 +3204,7 @@
       "name": "李航宇",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3345,7 +3220,7 @@
       "name": "晏易闪",
       "pet": {
         "petTypeId": "pidgey",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3361,7 +3236,7 @@
       "name": "钟佳彤",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 390,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3378,7 +3253,7 @@
       "name": "黄博",
       "pet": {
         "petTypeId": "squirtle",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3394,7 +3269,7 @@
       "name": "吴默",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3410,7 +3285,7 @@
       "name": "周诗林",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 380,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3426,7 +3301,7 @@
       "name": "姚雨欣",
       "pet": {
         "petTypeId": "sprigatito",
-        "experience": 390,
+        "experience": 350,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3442,7 +3317,7 @@
       "name": "朱珺涵",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 290,
+        "experience": 250,
         "stage": "baby",
         "stageHistory": []
       },
@@ -3453,7 +3328,7 @@
       "name": "刘语辰",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 450,
+        "experience": 420,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3469,14 +3344,9 @@
       "name": "诺宝",
       "pet": {
         "petTypeId": "charmander",
-        "experience": 300,
-        "stage": "teen",
-        "stageHistory": [
-          {
-            "stage": "teen",
-            "upgradedAt": 1782523112386
-          }
-        ]
+        "experience": 270,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1779460223862
     },
@@ -3485,7 +3355,7 @@
       "name": "泳良泳辰",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 360,
+        "experience": 330,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3501,7 +3371,7 @@
       "name": "许岚萱",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 290,
+        "experience": 250,
         "stage": "baby",
         "stageHistory": []
       },
@@ -3512,7 +3382,7 @@
       "name": "测试 1",
       "pet": {
         "petTypeId": "bulbasaur",
-        "experience": 310,
+        "experience": 300,
         "stage": "teen",
         "stageHistory": [
           {
@@ -3535,5 +3405,5 @@
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-06-27T03:32:55.762Z"
+  "exportedAt": "2026-06-19T14:59:57.585Z"
 }

@@ -44,6 +44,8 @@ export function useCustomPets() {
   const [customPets, setCustomPets] = useState<PetType[]>([]);
   const [loaded, setLoaded] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestPets = useRef<PetType[]>([]);
+  const mountedRef = useRef(true);
 
   // 初始加载（IndexedDB + localStorage 迁移）
   useEffect(() => {
@@ -78,21 +80,44 @@ export function useCustomPets() {
   // 持久化到 IndexedDB（防抖 500ms）
   useEffect(() => {
     if (!loaded) return;
+    latestPets.current = customPets;
 
     if (saveTimer.current) clearTimeout(saveTimer.current);
 
     saveTimer.current = setTimeout(async () => {
+      saveTimer.current = null;
       try {
-        await idbSet(STORES.CUSTOM_PETS, customPets);
+        await idbSet(STORES.CUSTOM_PETS, latestPets.current);
       } catch {
-        console.error('Failed to save custom pets to IndexedDB');
+        if (mountedRef.current) {
+          console.error('Failed to save custom pets to IndexedDB');
+        }
       }
     }, 500);
 
     return () => {
-      if (saveTimer.current) clearTimeout(saveTimer.current);
+      if (saveTimer.current) {
+        clearTimeout(saveTimer.current);
+        saveTimer.current = null;
+      }
     };
   }, [customPets, loaded]);
+
+  // 组件卸载时 flush 未写入的数据
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      if (saveTimer.current) {
+        clearTimeout(saveTimer.current);
+        saveTimer.current = null;
+      }
+      if (loaded && latestPets.current.length > 0) {
+        idbSet(STORES.CUSTOM_PETS, latestPets.current).catch(() => {});
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded]);
 
   // 创建自定义宠物
   const createCustomPet = useCallback((

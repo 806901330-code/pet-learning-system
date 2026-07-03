@@ -18,7 +18,7 @@ type StoreName = (typeof STORES)[keyof typeof STORES];
 
 let dbPromise: Promise<IDBDatabase> | null = null;
 
-/** 打开/创建数据库（单例） */
+/** 打开/创建数据库（单例，失败后可重试） */
 function openDB(): Promise<IDBDatabase> {
   if (dbPromise) return dbPromise;
 
@@ -36,7 +36,11 @@ function openDB(): Promise<IDBDatabase> {
     };
 
     req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
+    req.onerror = () => {
+      // 失败时重置 promise，允许下次重试（如隐私模式退出后）
+      dbPromise = null;
+      reject(req.error);
+    };
   });
 
   return dbPromise;

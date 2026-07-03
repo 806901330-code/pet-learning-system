@@ -53,6 +53,8 @@ export function useQuestionBank() {
   const [loaded, setLoaded] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestBanks = useRef<QuestionBank[]>([]);
+  const mountedRef = useRef(true);
 
   // 初始加载（IndexedDB + localStorage 迁移）
   useEffect(() => {
@@ -92,25 +94,49 @@ export function useQuestionBank() {
   // 持久化到 IndexedDB（防抖 500ms，避免频繁写入）
   useEffect(() => {
     if (!loaded) return;
+    latestBanks.current = banks;
 
     // 防抖：连续修改时只写最后一次
     if (saveTimer.current) clearTimeout(saveTimer.current);
 
     saveTimer.current = setTimeout(async () => {
+      saveTimer.current = null;
       try {
-        await idbSet(STORES.QUESTION_BANKS, banks);
-        setSaveError(null);
+        await idbSet(STORES.QUESTION_BANKS, latestBanks.current);
+        if (mountedRef.current) setSaveError(null);
       } catch (e: any) {
-        const msg = '⚠️ 题库保存失败：存储空间不足，请删除部分题目图片后重试';
-        console.error(msg, e);
-        setSaveError(msg);
+        if (mountedRef.current) {
+          const msg = '⚠️ 题库保存失败：存储空间不足，请删除部分题目图片后重试';
+          console.error(msg, e);
+          setSaveError(msg);
+        }
       }
     }, 500);
 
     return () => {
-      if (saveTimer.current) clearTimeout(saveTimer.current);
+      if (saveTimer.current) {
+        clearTimeout(saveTimer.current);
+        saveTimer.current = null;
+      }
     };
   }, [banks, loaded]);
+
+  // 组件卸载时 flush 未写入的数据（防止切 tab 丢失最后 500ms 的修改）
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      if (saveTimer.current) {
+        clearTimeout(saveTimer.current);
+        saveTimer.current = null;
+      }
+      // 有未写入的数据时立即 flush
+      if (loaded && latestBanks.current.length > 0) {
+        idbSet(STORES.QUESTION_BANKS, latestBanks.current).catch(() => {});
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded]);
 
   // 创建题库
   const createBank = useCallback((name: string): QuestionBank => {
