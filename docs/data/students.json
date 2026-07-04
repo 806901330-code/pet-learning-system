@@ -3625,12 +3625,13 @@
       "name": "测试 2",
       "pet": {
         "petTypeId": "mudkip",
-        "experience": 150,
-        "stage": "baby"
+        "experience": 200,
+        "stage": "baby",
+        "stageHistory": []
       },
       "createdAt": 1780217215457
     }
   ],
   "customPets": [],
-  "exportedAt": "2026-07-04T09:20:11.553Z"
+  "exportedAt": "2026-07-04T09:20:57.221Z"
 }
