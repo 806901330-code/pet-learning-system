@@ -157,7 +157,8 @@
       "shortcutName": "宠物养成学习系统",
       "installerIcon": "public/icon.ico",
       "uninstallerIcon": "public/icon.ico",
-      "installerHeaderIcon": "public/icon.ico"
+      "installerHeaderIcon": "public/icon.ico",
+      "include": "electron/installer.nsh"
     },
     "portable": {
       "artifactName": "${productName}-${version}-portable.${ext}"

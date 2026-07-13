@@ -26,7 +26,7 @@ import { Plus, Pencil, Trash2, Users, Upload, X, School } from 'lucide-react';
 import type { ClassGroup } from '@/hooks/useClasses';
 import { CLASS_COLORS } from '@/hooks/useClasses';
 import type { Student, PetType } from '@/types/pet';
-import { Leaderboard } from './Leaderboard';
+import { FactionPK } from './FactionPK';
 
 interface ClassManagementProps {
   classes: ClassGroup[];
@@ -291,19 +291,19 @@ export function ClassManagement({
       )}
 
       {/* ═══════════════════════════════════════════════════════
-          排行榜 · 班级下方
+          阵营 PK · 班级下方
           ═══════════════════════════════════════════════════════ */}
       <div className="mt-2">
         <div className="flex items-center gap-3 mb-5">
-          <h2 className="text-lg font-game text-primary tracking-tight">🏆 排行榜</h2>
+          <h2 className="text-lg font-game text-primary tracking-tight">⚔️ 阵营 PK</h2>
           <span
             className="px-3 py-1 rounded-xl text-primary text-xs font-extrabold font-display border-2"
             style={{ backgroundColor: 'var(--color-accent-soft)', borderColor: 'var(--color-accent-soft)' }}
           >
-            全员
+            团队对战
           </span>
         </div>
-        <Leaderboard students={students} petTypes={petTypes} />
+        <FactionPK classes={classes} students={students} petTypes={petTypes} />
       </div>
 
       {/* ── 新建班级对话框 ────────────────────────────────────────────────────── */}

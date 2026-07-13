@@ -1329,7 +1329,6 @@ function VictoryScreen({
 export function PkBattle({ students, petTypes, onAddPoints }: PkBattleProps) {
   const {
     banks,
-    loaded,
     saveError,
     createBank,
     deleteBank,

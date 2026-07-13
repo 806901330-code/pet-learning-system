@@ -1,13 +1,13 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BatchImportDialog } from '@/components/BatchImportDialog';
 import type { Student, PetType } from '@/types/pet';
 import { STAGE_CONFIG, getStageByExperience, getPetImagePath, getNextStageExp } from '@/types/pet';
 import type { ClassGroup } from '@/hooks/useClasses';
 import { toast } from 'sonner';
-import { ChevronLeft, ChevronRight, RotateCcw, Users, Download, ImageIcon, School } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RotateCcw, Download, ImageIcon, School, Swords } from 'lucide-react';
 import html2canvas from 'html2canvas';
+import { useFactions } from '@/hooks/useFactions';
 
 interface StudentStatusViewProps {
   students: Student[];
@@ -30,9 +30,9 @@ function PokeballWatermark({ color, opacity = 0.06 }: { color: string; opacity?:
   );
 }
 
-function PokeballCorner({ className }: { className?: string }) {
+function PokeballCorner({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
-    <svg viewBox="0 0 16 16" className={className} fill="none">
+    <svg viewBox="0 0 16 16" className={className} style={style} fill="none">
       <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1" />
       <line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" strokeWidth="1" />
       <circle cx="8" cy="8" r="2" fill="none" stroke="currentColor" strokeWidth="1" />
@@ -56,12 +56,14 @@ const STAGE_COLORS: Record<string, { bg: string; text: string; emoji: string; la
 export function StudentStatusView({ students, petTypes, classes = [] }: StudentStatusViewProps) {
 
   const [filteredNames, setFilteredNames] = useState<string[]>([]);
-  const [showImport, setShowImport] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showAll, setShowAll] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
-  const [stageFilter, setStageFilter] = useState<string | null>(null);
+  const [stageFilters, setStageFilters] = useState<Set<string>>(new Set());
+  const [selectedFactionId, setSelectedFactionId] = useState<string | null>(null);
+
+  const { getFactions } = useFactions();
 
   /* ── 导出全部页面：state 驱动逐页切换 ── */
   const [exportAllQueue, setExportAllQueue] = useState<number[]>([]);
@@ -81,15 +83,25 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
         base = base.filter(s => nameSet.has(s.name));
       }
     }
+    // 阵营筛选
+    if (selectedFactionId) {
+      const factions = getFactions(selectedClassId || '');
+      const faction = factions.find(f => f.id === selectedFactionId);
+      if (faction) {
+        const nameSet = new Set(faction.studentNames);
+        base = base.filter(s => nameSet.has(s.name));
+      }
+    }
     if (!showAll && filteredNames.length > 0) {
       const nameSet = new Set(filteredNames);
       base = base.filter(s => nameSet.has(s.name));
     }
-    if (stageFilter) {
-      base = base.filter(s => s.pet.stage === stageFilter);
+    // 多选阶段筛选
+    if (stageFilters.size > 0) {
+      base = base.filter(s => stageFilters.has(s.pet.stage));
     }
     return base;
-  }, [sortedStudents, filteredNames, showAll, selectedClassId, stageFilter, classes]);
+  }, [sortedStudents, filteredNames, showAll, selectedClassId, stageFilters, classes, selectedFactionId, getFactions]);
 
   const totalPages = Math.max(1, Math.ceil(displayStudents.length / PAGE_SIZE));
   const safeCurrentPage = Math.min(currentPage, totalPages);
@@ -105,28 +117,34 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
     adult: displayStudents.filter(s => s.pet.stage === 'adult').length,
   }), [displayStudents]);
 
-  const handleImportNames = (names: string[]) => {
-    const matched = names.filter(n => students.some(s => s.name === n));
-    const unmatched = names.filter(n => !students.some(s => s.name === n));
-    setFilteredNames(matched);
-    setShowAll(false);
-    setCurrentPage(1);
-    if (matched.length > 0) toast.success(`✅ 已筛选 ${matched.length} 名学生`);
-    if (unmatched.length > 0) toast.warning(`${unmatched.length} 名学生未找到: ${unmatched.join('、')}`);
-  };
-
   const handleReset = () => {
     setFilteredNames([]);
     setShowAll(true);
     setSelectedClassId(null);
-    setStageFilter(null);
+    setStageFilters(new Set());
+    setSelectedFactionId(null);
     setCurrentPage(1);
   };
 
   const handleSelectClass = (classId: string | null) => {
     setSelectedClassId(classId);
+    setSelectedFactionId(null);
     setFilteredNames([]);
     setShowAll(true);
+    setCurrentPage(1);
+  };
+
+  // 切换阶段筛选（多选）
+  const toggleStageFilter = (stage: string) => {
+    setStageFilters(prev => {
+      const next = new Set(prev);
+      if (next.has(stage)) {
+        next.delete(stage);
+      } else {
+        next.add(stage);
+      }
+      return next;
+    });
     setCurrentPage(1);
   };
 
@@ -393,27 +411,20 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
           )}
 
           <div className="flex flex-wrap gap-3 items-center">
-            <button
-              className="game-btn game-btn-outline text-xs !py-2 !px-4 !gap-1.5 !rounded-xl"
-              onClick={() => setShowImport(true)}
-            >
-              <Users className="w-4 h-4" />
-              名单筛选
-            </button>
 
-            {/* 阶段筛选按钮 */}
+            {/* 阶段筛选按钮（多选） */}
             {[
               { key: 'egg', emoji: '🥚', label: '蛋', count: stageStats.egg, colors: { bg: '#fff7ed', text: '#c2410c', border: '#ffedd5' } },
               { key: 'baby', emoji: '🐣', label: '幼年', count: stageStats.baby, colors: { bg: '#eff6ff', text: '#1d4ed8', border: '#dbeafe' } },
               { key: 'teen', emoji: '⭐', label: '成长', count: stageStats.teen, colors: { bg: '#f5f3ff', text: '#6d28d9', border: '#ede9fe' } },
               { key: 'adult', emoji: '👑', label: '完全', count: stageStats.adult, colors: { bg: '#fef2f2', text: '#b91c1c', border: '#fee2e2' } },
             ].map(s => {
-              const isActive = stageFilter === s.key;
+              const isActive = stageFilters.has(s.key);
               return (
                 <button
                   key={s.key}
-                  onClick={() => setStageFilter(isActive ? null : s.key)}
-                  className="flex items-center gap-1.5 text-xs font-extrabold rounded-lg py-1.5 px-2.5 transition-all hover:scale-[1.02] cursor-pointer border-2 shrink-0"
+                  onClick={() => toggleStageFilter(s.key)}
+                  className="flex items-center gap-1.5 text-xs font-extrabold rounded-lg py-1.5 px-2.5 transition-all hover:scale-[1.02] cursor-pointer border-2 shrink-0 relative"
                   style={{
                     background: isActive ? s.colors.text : s.colors.bg,
                     color: isActive ? '#fff' : s.colors.text,
@@ -428,7 +439,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
               );
             })}
 
-            {(!showAll || selectedClassId !== null || stageFilter) && (
+            {(!showAll || selectedClassId !== null || stageFilters.size > 0 || selectedFactionId) && (
               <button
                 className="game-btn game-btn-blue text-xs !py-2 !px-4 !gap-1.5 !rounded-xl"
                 onClick={handleReset}
@@ -438,6 +449,72 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
               </button>
             )}
           </div>
+
+          {/* 阵营筛选（仅在选中班级时显示） */}
+          {selectedClassId && (() => {
+            const factions = getFactions(selectedClassId);
+            if (factions.length === 0) return null;
+            return (
+              <div>
+                <div className="text-xs font-extrabold text-primary/50 mb-2 flex items-center gap-1 font-display">
+                  <Swords className="w-3.5 h-3.5" />
+                  按阵营筛选 & 导出
+                </div>
+                <div className="flex flex-wrap gap-2 items-center">
+                  <button
+                    onClick={() => setSelectedFactionId(null)}
+                    className={`game-btn text-xs !py-1.5 !px-3 !rounded-full ${
+                      selectedFactionId === null ? 'game-btn-yellow' : 'game-btn-outline'
+                    }`}
+                  >
+                    全部 <span className="ml-1 opacity-60">{displayStudents.length}</span>
+                  </button>
+                  {factions.map(f => {
+                    const count = f.studentNames.filter(n => students.some(s => s.name === n)).length;
+                    const isActive = selectedFactionId === f.id;
+                    return (
+                      <button
+                        key={f.id}
+                        onClick={() => setSelectedFactionId(f.id)}
+                        className={`game-btn text-xs !py-1.5 !px-3 !rounded-full ${
+                          isActive ? 'game-btn-blue' : 'game-btn-outline'
+                        }`}
+                      >
+                        <span className="inline-block w-2 h-2 rounded-full mr-1.5" style={{ background: f.color }} />
+                        {f.name}
+                        <span className="ml-1 opacity-60">{count}</span>
+                      </button>
+                    );
+                  })}
+                  {/* 按阵营导出按钮 */}
+                  {selectedFactionId && (() => {
+                    const faction = getFactions(selectedClassId).find(f => f.id === selectedFactionId);
+                    const factionStudents = displayStudents;
+                    const totalPages = Math.max(1, Math.ceil(factionStudents.length / PAGE_SIZE));
+                    return (
+                      <button
+                        className="game-btn game-btn-yellow text-xs !py-1.5 !px-3 !gap-1.5 !rounded-full"
+                        onClick={async () => {
+                          if (factionStudents.length === 0) { toast.warning('该阵营暂无学生'); return; }
+                          const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+                          setIsExporting(true);
+                          toast.info(`正在导出「${faction?.name || ''}」阵营 ${totalPages} 页...`);
+                          // 临时设置分页导出
+                          setExportAllQueue(pages);
+                          setExportAllCurrent(0);
+                          isExportAllRef.current = true;
+                        }}
+                        disabled={isExporting}
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        {isExporting ? '导出中...' : `导出「${faction?.name || ''}」阵营`}
+                      </button>
+                    );
+                  })()}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* 班级提示 */}
           {selectedClassId && (() => {

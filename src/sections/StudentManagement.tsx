@@ -35,7 +35,7 @@ export function StudentManagement({
     if (!q && !stageFilter) return true;
     let match = true;
     if (q) {
-      match = s.name.toLowerCase().includes(q) || (s.nickname && s.nickname.toLowerCase().includes(q));
+      match = s.name.toLowerCase().includes(q) || (!!s.nickname && s.nickname.toLowerCase().includes(q));
     }
     if (stageFilter) {
       match = match && s.pet.stage === stageFilter;

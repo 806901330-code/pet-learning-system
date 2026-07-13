@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Toaster, toast } from 'sonner';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useStudents } from '@/hooks/useStudents';

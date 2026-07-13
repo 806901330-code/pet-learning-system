@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { Student, PetType } from '@/types/pet';
 import { getStageByExperience } from '@/types/pet';
 import { Pet } from './Pet';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
