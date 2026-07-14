@@ -73,7 +73,7 @@ function App() {
     classes, loaded: classesLoaded, createClass, renameClass,
     updateClassColor, importStudentsToClass, removeStudentFromClass, deleteClass,
   } = useClasses();
-  const { getFactions, loaded: factionsLoaded } = useFactions();
+  const { getFactions, classFactions, loaded: factionsLoaded } = useFactions();
   const { theme, toggleTheme } = useTheme();
 
   const allPetTypes = [...PET_TYPES, ...customPets];
@@ -109,14 +109,14 @@ function App() {
     if (isInitialLoad.current) { isInitialLoad.current = false; return; }
     if (!isGitHubPages) return;
     setHasPendingSync(true);
-  }, [students, customPets, loaded, customPetsLoaded, isGitHubPages]);
+  }, [students, customPets, classes, classFactions, loaded, customPetsLoaded, isGitHubPages]);
 
   useEffect(() => {
     if (!loaded || !customPetsLoaded) return;
     if (isInitialLoad.current) { isInitialLoad.current = false; return; }
     if (!isDevServer) return;
     const timer = setTimeout(() => {
-      const payload = { students, customPets, exportedAt: new Date().toISOString() };
+      const payload = { students, customPets, classes, classFactions, exportedAt: new Date().toISOString() };
       fetch('/api/export-query-data', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -139,7 +139,7 @@ function App() {
     if (!token) { setShowTokenSetup(true); return; }
     setSyncing(true);
     try {
-      const payload = JSON.stringify({ students, customPets, exportedAt: new Date().toISOString() }, null, 2);
+      const payload = JSON.stringify({ students, customPets, classes, classFactions, exportedAt: new Date().toISOString() }, null, 2);
       let sha = '';
       try {
         const getRes = await fetch(`${GITHUB_API_BASE}/contents/${DATA_FILE_PATH}`, {

@@ -821,27 +821,52 @@ var allStudents = [], customPets = [], dataLoaded = false;
 var studentClassMap = {}; // { studentName: { className, classColor } }
 var studentFactionMap = {}; // { studentName: { factionName, factionColor } }
 
-function loadClassesFactions() {
+function loadClassesFactions(data) {
   studentClassMap = {};
   studentFactionMap = {};
-  try {
-    var classes = JSON.parse(localStorage.getItem('pet-learning-system-classes') || '[]');
-    classes.forEach(function(c) {
-      c.studentNames.forEach(function(n) {
+  // 优先用 JSON 内嵌的 classes/classFactions（服务器同步的数据）
+  if (data && data.classes && Array.isArray(data.classes)) {
+    data.classes.forEach(function(c) {
+      if (c.studentNames) c.studentNames.forEach(function(n) {
         studentClassMap[n] = { className: c.name, classColor: c.color };
       });
     });
-  } catch(e) {}
-  try {
-    var factions = JSON.parse(localStorage.getItem('pet-learning-system-factions') || '{}');
-    Object.keys(factions).forEach(function(classId) {
-      factions[classId].forEach(function(f) {
-        f.studentNames.forEach(function(n) {
-          studentFactionMap[n] = { factionName: f.name, factionColor: f.color };
+  }
+  if (data && data.classFactions && typeof data.classFactions === 'object') {
+    Object.keys(data.classFactions).forEach(function(classId) {
+      var factions = data.classFactions[classId];
+      if (Array.isArray(factions)) {
+        factions.forEach(function(f) {
+          if (f.studentNames) f.studentNames.forEach(function(n) {
+            studentFactionMap[n] = { factionName: f.name, factionColor: f.color };
+          });
+        });
+      }
+    });
+  }
+  // 如果 JSON 中没有班级/阵营数据，回退到 localStorage
+  if (Object.keys(studentClassMap).length === 0) {
+    try {
+      var cls = JSON.parse(localStorage.getItem('pet-learning-system-classes') || '[]');
+      cls.forEach(function(c) {
+        c.studentNames.forEach(function(n) {
+          studentClassMap[n] = { className: c.name, classColor: c.color };
         });
       });
-    });
-  } catch(e) {}
+    } catch(e) {}
+  }
+  if (Object.keys(studentFactionMap).length === 0) {
+    try {
+      var factions = JSON.parse(localStorage.getItem('pet-learning-system-factions') || '{}');
+      Object.keys(factions).forEach(function(classId) {
+        factions[classId].forEach(function(f) {
+          f.studentNames.forEach(function(n) {
+            studentFactionMap[n] = { factionName: f.name, factionColor: f.color };
+          });
+        });
+      });
+    } catch(e) {}
+  }
 }
 
 function loadData(cb) {
@@ -850,7 +875,7 @@ function loadData(cb) {
     .then(function(d) {
       allStudents = d.students || [];
       customPets = d.customPets || [];
-      loadClassesFactions();
+      loadClassesFactions(d);
       dataLoaded = true;
       updateInfo();
       cb();
@@ -864,7 +889,7 @@ function loadData(cb) {
 function fallbackLocal(cb) {
   try { var d=localStorage.getItem('pet-learning-system-data'); allStudents=d?JSON.parse(d):[]; } catch(_){ allStudents=[]; }
   try { var c=localStorage.getItem('pet-learning-system-custom-pets'); customPets=c?JSON.parse(c):[]; } catch(_){ customPets=[]; }
-  loadClassesFactions();
+  loadClassesFactions(null);
   dataLoaded=true; updateInfo(); cb();
 }
 
