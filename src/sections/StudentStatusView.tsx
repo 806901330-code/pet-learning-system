@@ -117,6 +117,25 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
     adult: displayStudents.filter(s => s.pet.stage === 'adult').length,
   }), [displayStudents]);
 
+  /* ── 学生 → 班级/阵营 映射（导出卡片用） ── */
+  const studentClassFactionMap = useMemo(() => {
+    const map: Record<string, { className?: string; classColor?: string; factionName?: string; factionColor?: string }> = {};
+    for (const cls of classes) {
+      for (const name of cls.studentNames) {
+        map[name] = { className: cls.name, classColor: cls.color };
+      }
+      const factions = getFactions(cls.id);
+      for (const fac of factions) {
+        for (const name of fac.studentNames) {
+          if (!map[name]) map[name] = {};
+          map[name].factionName = fac.name;
+          map[name].factionColor = fac.color;
+        }
+      }
+    }
+    return map;
+  }, [classes, getFactions]);
+
   const handleReset = () => {
     setFilteredNames([]);
     setShowAll(true);
@@ -274,6 +293,7 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
     const progress = nextExp
       ? ((student.pet.experience - stageConf.minExp) / (nextExp - stageConf.minExp)) * 100
       : 100;
+    const cf = studentClassFactionMap[student.name];
 
     return (
       <div
@@ -318,6 +338,27 @@ export function StudentStatusView({ students, petTypes, classes = [] }: StudentS
                 {petType.pokemonType}
               </span>
             </div>
+            {/* 班级 & 阵营标签 */}
+            {(cf?.className || cf?.factionName) && (
+              <div className="flex gap-1 flex-wrap shrink-0 mt-[2px]">
+                {cf?.className && (
+                  <span
+                    className="text-[8px] font-bold font-display leading-none rounded px-1 py-[2px] flex items-center gap-0.5"
+                    style={{ background: `${cf.classColor}15`, color: cf.classColor }}
+                  >
+                    <School className="w-2 h-2" />{cf.className}
+                  </span>
+                )}
+                {cf?.factionName && (
+                  <span
+                    className="text-[8px] font-bold font-display leading-none rounded px-1 py-[2px] flex items-center gap-0.5"
+                    style={{ background: `${cf.factionColor}15`, color: cf.factionColor }}
+                  >
+                    <Swords className="w-2 h-2" />{cf.factionName}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* 右侧：宠物图片（占更大面积） */}
