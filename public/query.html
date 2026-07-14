@@ -844,29 +844,7 @@ function loadClassesFactions(data) {
       }
     });
   }
-  // 如果 JSON 中没有班级/阵营数据，回退到 localStorage
-  if (Object.keys(studentClassMap).length === 0) {
-    try {
-      var cls = JSON.parse(localStorage.getItem('pet-learning-system-classes') || '[]');
-      cls.forEach(function(c) {
-        c.studentNames.forEach(function(n) {
-          studentClassMap[n] = { className: c.name, classColor: c.color };
-        });
-      });
-    } catch(e) {}
-  }
-  if (Object.keys(studentFactionMap).length === 0) {
-    try {
-      var factions = JSON.parse(localStorage.getItem('pet-learning-system-factions') || '{}');
-      Object.keys(factions).forEach(function(classId) {
-        factions[classId].forEach(function(f) {
-          f.studentNames.forEach(function(n) {
-            studentFactionMap[n] = { factionName: f.name, factionColor: f.color };
-          });
-        });
-      });
-    } catch(e) {}
-  }
+  // 所有数据仅从服务器 JSON 读取，不依赖任何本地 localStorage
 }
 
 function loadData(cb) {
@@ -881,16 +859,11 @@ function loadData(cb) {
       cb();
     })
     .catch(function(e) {
-      console.warn('服务器数据加载失败，尝试本地:', e.message);
-      fallbackLocal(cb);
+      console.error('服务器数据加载失败:', e.message);
+      dataLoaded = false;
+      updateInfo();
+      cb();
     });
-}
-
-function fallbackLocal(cb) {
-  try { var d=localStorage.getItem('pet-learning-system-data'); allStudents=d?JSON.parse(d):[]; } catch(_){ allStudents=[]; }
-  try { var c=localStorage.getItem('pet-learning-system-custom-pets'); customPets=c?JSON.parse(c):[]; } catch(_){ customPets=[]; }
-  loadClassesFactions(null);
-  dataLoaded=true; updateInfo(); cb();
 }
 
 function updateInfo() {
