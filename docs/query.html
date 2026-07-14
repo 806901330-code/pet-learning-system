@@ -420,6 +420,18 @@
     .dex-type-fairy { background: #FCE7F3; color: #9D174D; }
     .dex-type-psychic { background: #FCE7F3; color: #9D174D; }
 
+    /* 班级 & 阵营标签 */
+    .dex-class-tag {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 2px 8px; border-radius: 8px;
+      font-size: 11px; font-weight: 600;
+    }
+    .dex-faction-tag {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 2px 8px; border-radius: 8px;
+      font-size: 11px; font-weight: 600;
+    }
+
     /* 分割线 */
     .dex-divider {
       height: 1px; background: var(--dex-screen-divider);
@@ -806,6 +818,31 @@ var dexLikeBtn = document.getElementById('dexLikeBtn');
 var dexLikeCount = document.getElementById('dexLikeCount');
 
 var allStudents = [], customPets = [], dataLoaded = false;
+var studentClassMap = {}; // { studentName: { className, classColor } }
+var studentFactionMap = {}; // { studentName: { factionName, factionColor } }
+
+function loadClassesFactions() {
+  studentClassMap = {};
+  studentFactionMap = {};
+  try {
+    var classes = JSON.parse(localStorage.getItem('pet-learning-system-classes') || '[]');
+    classes.forEach(function(c) {
+      c.studentNames.forEach(function(n) {
+        studentClassMap[n] = { className: c.name, classColor: c.color };
+      });
+    });
+  } catch(e) {}
+  try {
+    var factions = JSON.parse(localStorage.getItem('pet-learning-system-factions') || '{}');
+    Object.keys(factions).forEach(function(classId) {
+      factions[classId].forEach(function(f) {
+        f.studentNames.forEach(function(n) {
+          studentFactionMap[n] = { factionName: f.name, factionColor: f.color };
+        });
+      });
+    });
+  } catch(e) {}
+}
 
 function loadData(cb) {
   fetch('./data/students.json?' + Date.now())
@@ -813,6 +850,7 @@ function loadData(cb) {
     .then(function(d) {
       allStudents = d.students || [];
       customPets = d.customPets || [];
+      loadClassesFactions();
       dataLoaded = true;
       updateInfo();
       cb();
@@ -826,6 +864,7 @@ function loadData(cb) {
 function fallbackLocal(cb) {
   try { var d=localStorage.getItem('pet-learning-system-data'); allStudents=d?JSON.parse(d):[]; } catch(_){ allStudents=[]; }
   try { var c=localStorage.getItem('pet-learning-system-custom-pets'); customPets=c?JSON.parse(c):[]; } catch(_){ customPets=[]; }
+  loadClassesFactions();
   dataLoaded=true; updateInfo(); cb();
 }
 
@@ -880,6 +919,17 @@ function showResult(s) {
   var prog=Math.min(100,Math.max(0,((pet.experience-sc.minExp)/((next||600)-sc.minExp))*100));
   var stageName=pt&&pt.stages?pt.stages[stage]:sc.name;
 
+  // 班级、阵营标签 HTML
+  var classFactionHTML = '';
+  var cf = studentClassMap[s.name];
+  if (cf) {
+    classFactionHTML += '<span class="dex-class-tag" style="background:'+R(cf.classColor,0.15)+';color:'+cf.classColor+'">🏫 '+esc(cf.className)+'</span>';
+  }
+  var ff = studentFactionMap[s.name];
+  if (ff) {
+    classFactionHTML += '<span class="dex-faction-tag" style="background:'+R(ff.factionColor,0.15)+';color:'+ff.factionColor+'">⚔️ '+esc(ff.factionName)+'</span>';
+  }
+
   dexScreen.innerHTML =
     /* 宠物头部信息 */
     '<div class="dex-result-header">'+
@@ -891,6 +941,7 @@ function showResult(s) {
           '<span class="dex-stage-tag dex-stage-'+stage+'">'+sc.label+'</span>'+
           (pt?'<span class="dex-type-tag dex-type-'+pt.pokemonType+'">'+pt.emoji+' '+pt.pokemonType+'</span>':'')+
         '</div>'+
+        (classFactionHTML ? '<div class="details" style="margin-top:6px;">'+classFactionHTML+'</div>' : '')+
       '</div>'+
     '</div>'+
 
@@ -951,6 +1002,13 @@ function getRank(sid) {
 
 function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
+// hex → rgba，用于标签半透明底色
+function R(hex, alpha) {
+  if (!hex || hex.length < 7) return 'rgba(0,0,0,'+alpha+')';
+  var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return 'rgba('+r+','+g+','+b+','+alpha+')';
+}
+
 // ═══════════════ 多结果 ═══════════════
 function showMulti(matches) {
   currentStudentId = null;
@@ -959,10 +1017,14 @@ function showMulti(matches) {
   var h='<div class="dex-multi-header">🔍 找到 '+matches.length+' 个匹配：</div>';
   for(var i=0;i<matches.length;i++) {
     var s=matches[i], pt=findPet(s.pet.petTypeId,customPets), stage=getStage(s.pet.experience);
+    var cf=studentClassMap[s.name], ff=studentFactionMap[s.name];
+    var cfHTML='';
+    if(cf) cfHTML+='<span class="t" style="background:'+R(cf.classColor,0.15)+';color:'+cf.classColor+'">🏫 '+esc(cf.className)+'</span>';
+    if(ff) cfHTML+='<span class="t" style="background:'+R(ff.factionColor,0.15)+';color:'+ff.factionColor+'">⚔️ '+esc(ff.factionName)+'</span>';
     h+='<div class="dex-multi-item" data-sid="'+s.id+'" onclick="pickStudent(\''+s.id+'\')">'+
       '<div class="mini-av">'+petImg(pt,stage)+'</div>'+
       '<div class="mini-info"><div class="n">'+esc(s.name)+'</div>'+
-      '<div class="m"><span class="t">'+(pt?pt.emoji+' '+pt.name:'未知')+'</span><span class="t">'+STAGE_CONFIG[stage].label+'</span><span>'+s.pet.experience+' EXP</span></div>'+
+      '<div class="m"><span class="t">'+(pt?pt.emoji+' '+pt.name:'未知')+'</span><span class="t">'+STAGE_CONFIG[stage].label+'</span><span>'+s.pet.experience+' EXP</span>'+cfHTML+'</div>'+
       '</div></div>';
   }
   dexScreen.innerHTML = h;
