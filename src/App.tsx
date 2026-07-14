@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 import { Toaster, toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useStudents } from '@/hooks/useStudents';
 import { useCustomPets } from '@/hooks/useCustomPets';
 import { useClasses } from '@/hooks/useClasses';
+import { useFactions } from '@/hooks/useFactions';
 import { useTheme } from '@/hooks/useTheme';
 import { PET_TYPES } from '@/types/pet';
-import { exportStudentReport } from '@/utils/exportReport';
+import { exportStudentReport, type StudentExtraInfo } from '@/utils/exportReport';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import {
   AlertDialog,
@@ -72,9 +73,24 @@ function App() {
     classes, loaded: classesLoaded, createClass, renameClass,
     updateClassColor, importStudentsToClass, removeStudentFromClass, deleteClass,
   } = useClasses();
+  const { getFactions, loaded: factionsLoaded } = useFactions();
   const { theme, toggleTheme } = useTheme();
 
   const allPetTypes = [...PET_TYPES, ...customPets];
+
+  /* ── 学生→班级/阵营 映射（导出 CSV 用） ── */
+  const studentExtraMap = useMemo((): Record<string, StudentExtraInfo> => {
+    const map: Record<string, StudentExtraInfo> = {};
+    for (const cls of classes) {
+      const factions = getFactions(cls.id);
+      for (const name of cls.studentNames) {
+        map[name] = { ...map[name], className: cls.name };
+        const fac = factions.find(f => f.studentNames.includes(name));
+        if (fac) map[name] = { ...map[name], factionName: fac.name };
+      }
+    }
+    return map;
+  }, [classes, getFactions]);
 
   /* ── 同步逻辑（保持不变）── */
   const [syncing, setSyncing] = useState(false);
@@ -202,7 +218,7 @@ function App() {
   };
 
   /* ── 加载状态 ── */
-  if (!loaded || !customPetsLoaded || !classesLoaded) {
+  if (!loaded || !customPetsLoaded || !classesLoaded || !factionsLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center space-y-6">
@@ -293,7 +309,7 @@ function App() {
                 {students.length > 0 && (
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => exportStudentReport(students, allPetTypes)}
+                      onClick={() => exportStudentReport(students, allPetTypes, studentExtraMap)}
                       className="game-btn game-btn-outline text-xs px-3 py-2"
                       title="导出宠物成长报告（CSV）"
                     >

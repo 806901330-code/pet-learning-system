@@ -20,8 +20,18 @@ function getUpgradeDate(
   return formatDate(record?.upgradedAt);
 }
 
+/** 学生附加信息：班级 & 阵营 */
+export interface StudentExtraInfo {
+  className?: string;
+  factionName?: string;
+}
+
 /** 生成 CSV 内容（含 BOM，Excel 可直接双击打开） */
-export function buildCSV(students: Student[], petTypes: PetType[]): string {
+export function buildCSV(
+  students: Student[],
+  petTypes: PetType[],
+  extraMap?: Record<string, StudentExtraInfo>
+): string {
   const getPetName = (petTypeId: string): string => {
     const pt = petTypes.find(p => p.id === petTypeId);
     return pt?.name ?? '未知';
@@ -36,6 +46,8 @@ export function buildCSV(students: Student[], petTypes: PetType[]): string {
 
   const header = [
     '学生姓名',
+    '所属班级',
+    '所属阵营',
     '宠物名称',
     '当前阶段',
     '经验值',
@@ -46,8 +58,11 @@ export function buildCSV(students: Student[], petTypes: PetType[]): string {
   ].join(',');
 
   const rows = students.map(s => {
+    const extra = extraMap?.[s.name];
     const cols = [
       `"${s.name}"`,
+      `"${extra?.className || '—'}"`,
+      `"${extra?.factionName || '—'}"`,
       `"${getPetName(s.pet.petTypeId)}"`,
       `"${getStageName(s.pet.experience)}"`,
       s.pet.experience,
@@ -77,10 +92,14 @@ export function downloadCSV(content: string, filename: string): void {
 }
 
 /** 一键导出入口 */
-export function exportStudentReport(students: Student[], petTypes: PetType[]): void {
+export function exportStudentReport(
+  students: Student[],
+  petTypes: PetType[],
+  extraMap?: Record<string, StudentExtraInfo>
+): void {
   const now = new Date();
   const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
   const filename = `宠物成长报告_${dateStr}.csv`;
-  const csv = buildCSV(students, petTypes);
+  const csv = buildCSV(students, petTypes, extraMap);
   downloadCSV(csv, filename);
 }
